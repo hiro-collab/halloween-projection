@@ -1,3 +1,4 @@
 * text=auto eol=lf
 *.cmd -text
 web/* text eol=lf
+web/assets/*.png -text

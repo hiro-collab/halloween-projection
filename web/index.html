@@ -2,20 +2,21 @@
 <html lang="ja">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; font-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Halloween Projection — 非公開Web技術試作 0.1.2</title>
+<title>Halloween Projection — 非公開Web技術試作 0.1.3</title>
 <link rel="stylesheet" href="./styles.css"></head>
 <body>
 <aside id="controls" aria-label="操作パネル">
 <div class="brand">HALLOWEEN / PROJECTION</div><h1>壁が、ハロウィンの<br>ステージになる。</h1>
-<p class="lead">ブラウザで開いて、そのまま投影。<br>初回無料 · 非公開Web技術試作 0.1.2</p>
+<p class="lead">ブラウザで開いて、そのまま投影。<br>初回無料 · 非公開Web技術試作 0.1.3</p>
 <div class="label">エフェクト</div><div class="effects">
 <button id="skeleton" data-effect="skeleton" aria-pressed="true">くるくる骸骨<small>簡易 2D ベクター</small></button>
-<button id="bats" data-effect="bats" aria-pressed="false">コウモリと文字<small>中央のメッセージ</small></button></div>
+<button id="bats" data-effect="bats" aria-pressed="false">コウモリと文字<small>本人の原図案60フレーム</small></button></div>
 <label for="text">中央の文字</label><textarea id="text" maxlength="240" spellcheck="false">HAPPY
 HALLOWEEN</textarea>
 <p class="help">コウモリで表示。最大240字・8行。長文は自動で縮小。</p>
-<label class="range-label" for="speed"><span>動く速さ</span><output id="speed-value">1.0 ×</output></label><input id="speed" type="range" min="0.2" max="2" step="0.1" value="1">
+<label class="range-label" for="speed"><span id="speed-label">動く速さ</span><output id="speed-value">1.0 ×</output></label><input id="speed" type="range" min="0.2" max="2" step="0.1" value="1">
 <label class="range-label" for="size"><span>エフェクトの大きさ</span><output id="size-value">100 %</output></label><input id="size" type="range" min="50" max="150" step="5" value="100">
+<section id="bat-options" hidden><label class="range-label" for="flap"><span>図案・羽ばたきの再生</span><output id="flap-value">1.00 ×</output></label><input id="flap" type="range" min="0.25" max="2" step="0.25" value="1"><p class="help">保存された本人図案を再生。飛び方・最終合成は原作との比較待ちです。</p></section>
 <div class="transport"><button id="pause">一時停止</button><button id="reset">リセット</button><button id="stop">停止・解放</button><button id="resume">再開</button></div>
 <button id="project" class="primary">投影開始 · 全画面</button><button id="hide">操作パネルを隠す（H）</button>
 <button id="quit">表示を終了</button>
@@ -25,7 +26,7 @@ HALLOWEEN</textarea>
 <h2>接続なしで使う準備</h2><p id="offline-status" role="status" aria-live="polite">保存状態を確認しています…</p>
 <div class="offline-buttons"><button id="offline-save" data-maintenance>この端末へ保存</button><button id="offline-check" data-maintenance disabled>更新を確認</button><button id="offline-clear" data-maintenance disabled>保存を解除</button><button id="offline-apply" data-maintenance hidden>最新版に切り替える</button></div>
 <p class="help">初回の保存には接続が必要です。入力した文字・調整は保存しません。ブラウザーが保存を削除した場合は、もう一度準備してください。共有PCでは使い終わったら「保存を解除」してください。</p></section>
-<div class="footer"><button id="guide">はじめての投影ガイド</button><br>黒い背景・音なし・点滅なし。<br>3D 原作品とは異なる簡易図案の試作です。原VJの3D頭・下顎・流体・原作コウモリは未実装です。<br><a href="./LICENSE.txt" target="_blank" rel="noopener noreferrer">MITライセンス</a> · <a href="./RIGHTS.txt" target="_blank" rel="noopener noreferrer">素材と権利</a></div>
+<div class="footer"><button id="guide">はじめての投影ガイド</button><br>黒い背景・音なし・点滅なし。<br>Aは簡易2D骸骨、Bは本人コウモリの保存図案を比較再生しています。3D頭・下顎・流体・原作飛翔/最終合成は未再現です。<br><a href="./LICENSE.txt" target="_blank" rel="noopener noreferrer">MITライセンス</a> · <a href="./RIGHTS.txt" target="_blank" rel="noopener noreferrer">素材と権利</a></div>
 </aside>
 <main id="stage" aria-label="投影映像"><canvas id="canvas" aria-label="骸骨またはコウモリのアニメーション"></canvas><div id="message" hidden><div id="message-text"></div></div></main>
 <dialog id="guide-dialog"><h2>はじめての投影</h2><ol>
@@ -36,4 +37,4 @@ HALLOWEEN</textarea>
 <li><b>Esc</b>で操作へ戻ります。Hでパネルを切り替えられます。</li>
 <li><b>表示を終了</b>を押し、終了表示を確認したらタブを閉じます。もう一度使うときはページを開き直してください。</li>
 </ol><p>黒もプロジェクターの明るさとして残ります。文字の読みやすさ・パネルが映らないこと・ブラウザー枠の消失は実機で確認してください。原VJの3D再現・流体・実機投影の検収は未完です。</p><button id="close-guide">閉じる</button></dialog>
-<script defer src="./app.js"></script><script defer src="./offline.js"></script></body></html>
+<script defer src="./control-api.js"></script><script defer src="./bat-art.js"></script><script defer src="./app.js"></script><script defer src="./offline.js"></script></body></html>

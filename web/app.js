@@ -3,15 +3,16 @@
 'use strict';
 const $=id=>document.getElementById(id),canvas=$('canvas'),stage=$('stage'),ctx=canvas.getContext('2d',{alpha:false});
 const controls=$('controls'),message=$('message'),messageText=$('message-text');
-const settings={effect:'skeleton',text:$('text').value,speed:1,size:1};
+const settings={effect:'skeleton',text:$('text').value,speed:1,size:1,flapRate:1,frameLock:null};
+let api;
 let active=null,phase='stopped',raf=0,previous=0,time=0,hiddenSuspension=false,destroyed=false;
-let width=1,height=1,revision=0,fitFont=0,fullscreenError='',quitting=false;
+let width=1,height=1,revision=0,fitFont=0,fullscreenError='',quitting=false,assetError='';
 const stats={frames:0,created:0,disposed:0,resets:0,maxPendingRAF:0};
 const listeners=[];
 function listen(target,event,fn){target.addEventListener(event,fn);listeners.push(()=>target.removeEventListener(event,fn));}
 function cancel(){if(raf)cancelAnimationFrame(raf);raf=0;previous=0;}
 function schedule(){if(raf||!active||phase!=='running'||document.hidden||destroyed)return;raf=requestAnimationFrame(tick);stats.maxPendingRAF=Math.max(stats.maxPendingRAF,1);}
-function tick(now){raf=0;if(!active||phase!=='running'||document.hidden)return;const dt=previous?Math.min(.05,Math.max(0,(now-previous)/1000)):0;previous=now;time+=dt*settings.speed;render();stats.frames++;schedule();}
+function tick(now){raf=0;if(!active||phase!=='running'||document.hidden)return;const dt=previous?Math.min(.05,Math.max(0,(now-previous)/1000)):0;previous=now;time+=dt*settings.speed;active.advance?.(dt);render();stats.frames++;schedule();}
 function fitText(){
  messageText.textContent=settings.text;
  if(settings.effect!=='bats'||!active){message.hidden=true;fitFont=0;return;}
@@ -61,33 +62,39 @@ function makeSkeleton(){
 }
 function makeBats(){
  let flock=Array.from({length:24},(_,i)=>({phase:i*2.39996,ring:i%3,scale:.7+(i%5)*.1,rate:.14+(i%4)*.027}));
- return {kind:'bats',resourceCount:()=>flock?24:0,draw(t){
- for(const b of flock){
- const a=b.phase+t*b.rate;
- const x=width/2+Math.cos(a)*(width*(.37+b.ring*.045));
- const y=height/2+Math.sin(a)*(height*(.34+b.ring*.06));
- const s=Math.min(width,height)*.0017*settings.size*b.scale;
- ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(a)*.2);
- const flap=.68+.27*Math.sin(t*5+b.phase);
- ctx.scale(s,s*flap);
- const tint=b.ring===0?'#f3e4ff':b.ring===1?'#c5a4e3':'#9677b8';
- ctx.fillStyle=tint;ctx.beginPath();ctx.moveTo(-3,-4);ctx.lineTo(-28,-26);ctx.quadraticCurveTo(-37,-23,-48,-6);ctx.quadraticCurveTo(-31,-13,-29,4);ctx.quadraticCurveTo(-19,-3,-16,11);ctx.quadraticCurveTo(-8,5,-4,13);ctx.lineTo(4,13);ctx.quadraticCurveTo(8,5,16,11);ctx.quadraticCurveTo(19,-3,29,4);ctx.quadraticCurveTo(31,-13,48,-6);ctx.quadraticCurveTo(37,-23,28,-26);ctx.lineTo(3,-4);ctx.closePath();ctx.fill();
- ctx.beginPath();ctx.ellipse(0,4,6,13,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-5,-4);ctx.lineTo(-5,-15);ctx.lineTo(0,-9);ctx.lineTo(5,-15);ctx.lineTo(5,-4);ctx.fill();
- ctx.fillStyle='#fff';ctx.fillRect(-3,-5,1.6,1.6);ctx.fillRect(1.4,-5,1.6,1.6);ctx.restore();
- }
- },dispose(){flock=null;}};
+ let disposed=false,flapTime=0;
+ const art=HalloweenBatArt.create(()=>{if(!disposed&&active===owner){if(art.status().state==='error'){stop();phase='error';assetError='原図案を読めません。接続・保存を確認して再開してください。';publish();}else{render();publish();}}});
+ const frame=()=>settings.frameLock??Math.floor(flapTime*30)%60;
+ const owner={kind:'bats',resourceCount:()=>flock?24+(art.ready?1:0):0,
+  advance(dt){if(art.ready&&settings.frameLock===null)flapTime+=dt*settings.flapRate;},
+  probe:()=>({...art.status(),frameIndex:frame(),flapTime}),
+  draw(t){if(!flock||!art.ready)return;
+   for(const b of flock){
+    const a=b.phase+t*b.rate,x=width/2+Math.cos(a)*(width*(.37+b.ring*.045)),y=height/2+Math.sin(a)*(height*(.34+b.ring*.06));
+    const scale=Math.min(width,height)*.0017*settings.size*b.scale;
+    ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(a)*.2);
+    art.drawFrame(ctx,frame(),-48*scale,-27*scale,96*scale,54*scale);ctx.restore();
+   }
+  },dispose(){disposed=true;art.dispose();flock=null;}
+ };
+ return owner;
 }
 const factories={skeleton:makeSkeleton,bats:makeBats};
 function render(){if(!ctx)return;ctx.save();ctx.setTransform(canvas.width/width,0,0,canvas.height/height,0,0);ctx.fillStyle='#000';ctx.fillRect(0,0,width,height);if(active)active.draw(time);ctx.restore();}
 function disposeActive(){cancel();if(active){active.dispose();active=null;stats.disposed++;}}
 function publish(){
  const label=settings.effect==='skeleton'?'くるくる骸骨':'コウモリと文字';
- $('status').textContent=label+' · '+(phase==='running'?'表示中':phase==='paused'?'一時停止':'停止・解放済み')+(fullscreenError?' · '+fullscreenError:'');
- $('pause').textContent=phase==='paused'?'再開':'一時停止';$('pause').disabled=phase==='stopped';$('reset').disabled=phase==='stopped';
+ $('status').textContent=label+' · '+(phase==='running'?'表示中':phase==='paused'?'一時停止':phase==='error'?'読み込みエラー':'停止・解放済み')+(fullscreenError?' · '+fullscreenError:'')+(assetError?' · '+assetError:'');
+ $('pause').textContent=phase==='paused'?'再開':'一時停止';$('pause').disabled=!active;$('reset').disabled=!active;
  for(const b of document.querySelectorAll('[data-effect]'))b.setAttribute('aria-pressed',String(b.dataset.effect===settings.effect));
+ if($('text').value!==settings.text)$('text').value=settings.text;$('speed').value=settings.speed;$('size').value=settings.size*100;
  $('speed-value').textContent=settings.speed.toFixed(1)+' ×';$('size-value').textContent=Math.round(settings.size*100)+' %';
+ $('speed-label').textContent=settings.effect==='bats'?'飛ぶ速さ（仮軌道）':'動く速さ';
+ $('bat-options').hidden=settings.effect!=='bats';$('flap').value=settings.flapRate;$('flap-value').textContent=settings.flapRate.toFixed(2)+' ×';
+ if(active?.probe&&active.probe().state==='loading')$('status').textContent+=' · 原図案を準備中';
+ if(active?.probe&&active.probe().state==='error')$('status').textContent+=' · 図案を読めません。接続・保存を確認して再開してください。';
 }
-function select(id){if(!factories[id]||destroyed)return;disposeActive();settings.effect=id;time=0;active=factories[id]();stats.created++;revision++;phase='running';resize();publish();schedule();}
+function select(id){if(!factories[id]||destroyed)return;assetError='';disposeActive();Object.assign(settings,api.values(id),{effect:id});time=0;active=factories[id]();stats.created++;revision++;phase='running';resize();publish();schedule();}
 function pause(){if(!active)return;cancel();phase=phase==='paused'?'running':'paused';publish();schedule();}
 function stop(){disposeActive();phase='stopped';time=0;message.hidden=true;canvas.width=1;canvas.height=1;render();revision++;publish();}
 function resume(){if(!active){select(settings.effect);return;}cancel();phase='running';publish();schedule();}
@@ -118,11 +125,19 @@ async function quit(){
 }
 window.halloweenEnd=quit;
 
-for(const button of document.querySelectorAll('[data-effect]'))listen(button,'click',()=>select(button.dataset.effect));
-listen($('text'),'input',()=>{let value=$('text').value;const lines=value.split('\n');if(lines.length>8)value=lines.slice(0,7).join('\n')+'\n'+lines.slice(7).join(' ');$('text').value=value;settings.text=value;fitText();});
-listen($('speed'),'input',()=>{settings.speed=Number($('speed').value);publish();});
-listen($('size'),'input',()=>{settings.size=Number($('size').value)/100;render();publish();});
-listen($('pause'),'click',pause);listen($('stop'),'click',stop);listen($('resume'),'click',resume);listen($('reset'),'click',reset);
+api=HalloweenControlAPI.create($('text').value,{
+ select,
+ changed(id){if(id!==settings.effect)return;Object.assign(settings,api.values(id));$('text').value=settings.text;$('speed').value=settings.speed;$('size').value=settings.size*100;fitText();render();publish();},
+ pause(){if(phase==='running')pause();},resume,
+ reset(id){if(id===settings.effect)reset();},stop,status:()=>window.halloweenDiagnostics()
+});
+window.halloweenControl=api;
+for(const button of document.querySelectorAll('[data-effect]'))listen(button,'click',()=>api.select(button.dataset.effect));
+listen($('text'),'input',()=>api.setText(settings.effect,$('text').value));
+listen($('speed'),'input',()=>api.set(settings.effect,'speed',Number($('speed').value)));
+listen($('size'),'input',()=>api.set(settings.effect,'size',Number($('size').value)/100));
+listen($('flap'),'input',()=>api.set('bats','flapRate',Number($('flap').value)));
+listen($('pause'),'click',()=>phase==='paused'?api.resume():api.pause());listen($('stop'),'click',api.stop);listen($('resume'),'click',api.resume);listen($('reset'),'click',()=>api.reset(settings.effect));
 listen($('quit'),'click',quit);
 listen(document,'fullscreenerror',fullscreenFailed);
 listen($('project'),'click',fullscreen);listen($('hide'),'click',()=>projection(true));
@@ -135,7 +150,7 @@ listen(document,'keydown',e=>{
  if(e.key==='Escape'){projection(false);if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});return;}
  const key=e.key.toLowerCase();
  if(key==='h'){projection(!document.body.classList.contains('projection'));}
- else if(key==='f')fullscreen();else if(key===' '){e.preventDefault();if(active)pause();else resume();}else if(key==='r')reset();
+ else if(key==='f')fullscreen();else if(key===' '){e.preventDefault();if(phase==='paused'||!active)api.resume();else api.pause();}else if(key==='r')api.reset(settings.effect);
 });
 listen(document,'visibilitychange',()=>{if(document.hidden){hiddenSuspension=true;cancel();}else{hiddenSuspension=false;previous=0;schedule();}});
 listen(window,'resize',resize);
@@ -143,8 +158,8 @@ function destroy(){if(destroyed)return;stop();destroyed=true;observer.disconnect
 listen(window,'pagehide',e=>{if(e.persisted){stop();observer.disconnect();}else destroy();});
 listen(window,'pageshow',e=>{if(e.persisted&&!destroyed){observer.observe(stage);resize();}});
 const observer=new ResizeObserver(resize);observer.observe(stage);
-window.halloweenDiagnostics=()=>({version:'0.1.2-web-preview',renderer:'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0});
+window.halloweenDiagnostics=()=>({version:'0.1.3-bat-source-preview',renderer:'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,sprite:active?.probe?.()??null,imageResources:HalloweenBatArt.diagnostics()});
 if(!ctx){$('status').textContent='Canvas 2D を開始できません。別のブラウザで確認してください。';return;}
-select('skeleton');
-if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){pause();$('fit-note').textContent='端末の動きを減らす設定に合わせて一時停止で開始しました。再開できます。';}
+api.select('skeleton');
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){api.pause();$('fit-note').textContent='端末の動きを減らす設定に合わせて一時停止で開始しました。再開できます。';}
 })();

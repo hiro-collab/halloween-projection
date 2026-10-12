@@ -4,7 +4,7 @@
   const workerURL = new URL('sw.js', scope).href;
   const prefix = 'halloween-projection:' + scope + ':';
   const supported = !!navigator.serviceWorker && isSecureContext && /^https?:$/.test(location.protocol) && !!globalThis.caches;
-  const assetURLs = ['index.html','styles.css','app.js','offline.js','README.txt','LICENSE.txt','RIGHTS.txt'].map(n => new URL(n,scope).href);
+  const assetURLs = ['index.html','styles.css','app.js','offline.js','README.txt','LICENSE.txt','RIGHTS.txt','control-api.js','bat-art.js','assets/owner-bat-atlas.png','assets/OWNER-BAT-ASSET.txt'].map(n => new URL(n,scope).href);
   const status = document.getElementById('offline-status');
   const save = document.getElementById('offline-save');
   const check = document.getElementById('offline-check');
@@ -77,7 +77,7 @@
       observe(r);
       if (r.installing) await new Promise((resolve,reject) => {
         const worker = r.installing;
-        const timer = setTimeout(() => reject(Error('Install timeout')),80000);
+        const timer = setTimeout(() => reject(Error('Install timeout')),120000);
         const done = () => {
           if (worker.state === 'installed' || worker.state === 'activated') { clearTimeout(timer); resolve(); }
           else if (worker.state === 'redundant') { clearTimeout(timer); reject(Error('Install failed')); }

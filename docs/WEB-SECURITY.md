@@ -45,3 +45,7 @@ cacheの7ファイル/入力非保存、offline reload/新規tab、他cache保�
 
 ライセンス: 自作code/新2D/説明文は本人承諾のMIT。原素材・外部素材は別条件で、現在は含めない。
 公開切替、費用、新規重要権限、原素材採用は今回範囲外。
+
+## 0.1.3第一段の差分（検証継続）
+private本人bat atlas PNGを初めて採用、MIT外/外部配布未許諾として区分。配信12file/cache11asset、image fetchも同一origin固定URL・SHA/サイズ制限。
+文字RAM/HTML非解釈、no CMD/CDN、privateの境界は保持。0.1.2合格と新画像/11asset版の未検証を区別する。詳細BAT-STAGE-CHECKPOINT.md。
