@@ -1,11 +1,11 @@
 'use strict';
-const BUILD = "0.1.3-bat-source-preview-57e4d6629ade";
+const BUILD = "0.1.4-bat-reference-preview-7aac0a99a650";
 const HASHES = {
-  "index.html": "2a643f5e38c8cec3c606375df78ca7f1a4c32c40a767b776d0940ad17ac1522f",
+  "index.html": "d7dc1a8178db9f762e3f42276bf38bf1158c36ee02fa6679954a2fce23487844",
   "styles.css": "964af3c8762251de59e5ee1af2b8fe047449d393c338252faf0132d4d06e777a",
-  "app.js": "638a6b28b23f6b152adac27c1be1ce938d7e8502483b6581e6b8bcc267ad2269",
+  "app.js": "bbfda658b8269ca1d9c231723928f4cb66bf57800c7b1403420208cd052bfbc5",
   "offline.js": "1f5391450d8e1ee86a1260151bfded3694ccb6b42c39e4644283dba12c9c068c",
-  "README.txt": "ff77b6e02622ee0db0051acb750bc1c1198b8efed1491fd6c768df27d984f380",
+  "README.txt": "f1e6719f9436e95a90e327f3f8a5d955d9030a221493e72f48f8c3690c429551",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
   "RIGHTS.txt": "a2ab62b640bcd06939edf6e700c95b276bdadd91fb07bdd18c28a5398f2767e9",
   "control-api.js": "780a45a767df569faed6f74cff741c0597d39763de61b1947923b76887985eb2",
