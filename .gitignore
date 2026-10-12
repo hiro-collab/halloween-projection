@@ -20,3 +20,5 @@ auth.json
 *.png
 *.jpg
 *.zip
+.playwright-cli/
+.playwright/

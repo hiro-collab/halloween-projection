@@ -1,6 +1,6 @@
 async (page) => {
 const testURL=page.url();
-if(new URL(testURL).hostname!=='127.0.0.1')throw Error('Loopback URL required');
+if(!/^http:\/\/127\.0\.0\.1:\d+\/$/.test(testURL))throw Error('Loopback URL required');
 const report={utc:new Date().toISOString(),checks:[],browser:await page.context().browser().version(),url:''};
 const check=(name,ok,details={})=>report.checks.push({name,ok,details});
 await page.addInitScript(()=>{
