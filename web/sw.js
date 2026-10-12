@@ -1,13 +1,13 @@
 'use strict';
-const BUILD = "0.1.2-web-preview-4de4101f4160";
+const BUILD = "0.1.2-web-preview-2233b3a7e8e5";
 const HASHES = {
   "index.html": "72716425378c5a7186ea48760ef1ce59de0595cbf4b073886a8b0e5c2a505d31",
   "styles.css": "964af3c8762251de59e5ee1af2b8fe047449d393c338252faf0132d4d06e777a",
   "app.js": "72f6eca72c97b5a43030db955974710a8d20c208c6c1b819c762a061076136ac",
   "offline.js": "4a8bdba686870509340883254b0b9431a2aa0b6c4b0ce933752a58b8e1da43dc",
   "README.txt": "5dc3a86726296d10cf850ef3107b7bb1d665b55d41e6d09d5039a75af23a144a",
-  "LICENSE.txt": "0dcd0ead3f15e23747bcbb177f5b39ffb8e974b96d63e7d9c890a32f4510ac50",
-  "RIGHTS.txt": "2ccc1269348525ce01041f65d26b6900c0c33779913b587713747047530b80cf"
+  "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
+  "RIGHTS.txt": "3d065100a709700f61133b6387c2303514077dc6f25cde78d77450b924397c17"
 };
 const SCOPE = self.registration.scope;
 const PREFIX = 'halloween-projection:' + SCOPE + ':';

@@ -20,4 +20,6 @@ cache解除のconfirm UIを観測。自動集計は隔離fixture内でconfirm結
 file://オフライン保存はサポートしない。原VJの3D再現版は未実装で合格対象外。
 
 保存処理修正後にも13/13・4/4・3/3を再実行。workerコードだけを変更しasset hashは同じ合成更新でもbuildが変わり、不一致assetで稼働cacheを消さないことを確認。
-最終build 0.1.2-web-preview-4de4101f4160、Web ZIP16,439bytes、SHA256 a9580459faa54da1294657b0bde4edad51a6f13dd6e6fac26a7fabf65985038e。
+最終build 0.1.2-web-preview-2233b3a7e8e5、Web ZIP16,420bytes、SHA256 798469d957a825013b16e7b953b11629747039f1e0b2dbb4d9645e3257ba81ae。
+
+Web assetsをUTF-8/BOMなし/LFへ固定。Git blobとZIP/cache manifestの全asset SHA一致を確認。LF正規化後のオフライン再起動は追加確認中。

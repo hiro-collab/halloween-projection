@@ -8,6 +8,11 @@ ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / 'web'
 APP_VERSION = '0.1.2-web-preview'
 ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt', 'LICENSE.txt', 'RIGHTS.txt']
+for name in ASSETS:
+    raw = (WEB / name).read_bytes()
+    canonical = raw.decode('utf-8-sig').replace('\r\n', '\n').encode('utf-8')
+    if raw != canonical:
+        raise ValueError('Web assets must use UTF-8 without BOM and LF: ' + name)
 hashes = {name: hashlib.sha256((WEB / name).read_bytes()).hexdigest() for name in ASSETS}
 worker_template = r"""'use strict';
 const BUILD = __BUILD__;
