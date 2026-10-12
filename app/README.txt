@@ -1,5 +1,12 @@
-Halloween Projection v0.1 technical preview
-Windows: extract ZIP and run START.cmd. Keep console open. Ctrl+C stops the local server.
-No Node/Python/TouchDesigner/PowerShell7 installation for end users.
-This preview uses new simple 2D graphics. Original 3D skull/jaw + fluid and bat scenes are not complete.
-UI settings are provisional. Future pricing and usage terms are undecided.
+﻿ハロウィン投影アプリ 技術試作0.1.1
+1. ZIPを右クリックし「すべて展開」を選びます。ZIPの中から直接起動しないでください。
+2. 展開したフォルダーを開き、一番上のSTART.cmdをダブルクリックします。
+3. ブラウザーが開いたら、エフェクト・文字・動き・大きさを選びます。
+4. 終了は画面の「終了」を押し、「終了しました」と表示されたらタブを閉じます。
+
+利用者にコマンド入力やPython/Node/TouchDesignerの導入は不要です。
+現在は本人向けの技術試作です。原VJの3Dドクロ/顎/流体と忠実再現は未完成。
+GitHubは非公開で、本人またはアクセス権を持つ人だけが取得できます。
+Download ZIPは開発用の全体です。配布候補ZIPは必要なファイルだけを最上位へまとめています。
+WindowsのExplorer操作・既定ブラウザー実画面・安全警告は現在の担当環境で未実測です。
+全画面に入れなければパネルが戻ります。パネル非表示と実際の全画面は別の機能です。

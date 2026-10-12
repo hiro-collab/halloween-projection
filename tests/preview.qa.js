@@ -16,6 +16,7 @@ const errors=[];page.on('pageerror',e=>errors.push(String(e)));
 await page.setViewportSize({width:1366,height:768});
 await page.waitForTimeout(200);
 let d=await page.evaluate(()=>window.halloweenDiagnostics());
+const baselineListeners=d.listeners;
 check('initial Canvas2D visible skeleton',d.renderer==='Canvas2D'&&d.phase==='running'&&d.liveEffects===1,d);
 const p0=await page.evaluate(()=>document.querySelector('canvas').toDataURL());
 await page.waitForTimeout(350);
@@ -56,7 +57,7 @@ for(let batchIndex=0;batchIndex<3;batchIndex++){
  batch.push({switches:(batchIndex+1)*100,heap:await client.send('Runtime.getHeapUsage'),d:await page.evaluate(()=>window.halloweenDiagnostics()),audit:await page.evaluate(()=>window.nativeLoopAudit())});
 }
 d=batch[3].d;
-check('300 rapid switches: one active effect, one native RAF',d.liveEffects===1&&d.stats.created-d.stats.disposed===1&&d.listeners===20&&batch.every(b=>!b.audit||b.audit.maxPending===1),{batches:batch});
+check('300 rapid switches: one active effect, one native RAF',d.liveEffects===1&&d.stats.created-d.stats.disposed===1&&d.listeners===baselineListeners&&batch.every(b=>!b.audit||b.audit.maxPending===1),{batches:batch});
 check('heap does not grow by 1 MiB over 300 switches',batch[3].heap.usedSize-batch[0].heap.usedSize<1048576,{baseline:batch[0].heap.usedSize,final:batch[3].heap.usedSize,delta:batch[3].heap.usedSize-batch[0].heap.usedSize});
 await page.locator('#stop').click();
 d=await page.evaluate(()=>window.halloweenDiagnostics());
@@ -96,9 +97,10 @@ await page.locator('#bats').click();await page.locator('#pause').click();d=await
 check('loaded app operates in browser offline mode',d.selected==='bats'&&d.phase==='paused',d);
 await page.context().setOffline(false);
 await page.locator('#guide').click();const guide=await page.locator('#guide-dialog').innerText();
-check('guide opens and names actual launcher',guide.includes('START.cmd')&&guide.includes('Win + P')&&guide.includes('Ctrl + C'));await page.locator('#close-guide').click();
+check('guide opens and names actual launcher',guide.includes('START.cmd')&&guide.includes('Win + P')&&guide.includes('終了')&&!guide.includes('Ctrl + C'));await page.locator('#close-guide').click();
 check('no page exceptions',errors.length===0,{errors});
 await client.detach();
 report.passed=report.checks.filter(c=>c.ok).length;report.failed=report.checks.filter(c=>!c.ok).length;
-return JSON.stringify(report).replace(/[^\x00-\x7f]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4,'0'));
+await page.evaluate(value=>{window.previewTestReport=value;},report);
+return JSON.stringify({passed:report.passed,failed:report.failed,browser:report.browser,checks:report.checks.map(c=>({name:c.name,ok:c.ok}))});
 }

@@ -1,5 +1,8 @@
-# v0.1ブラウザ検証
-preview.qa.jsは既存本体検証を移したPlaywright CLI run-code用関数。開発者用。
-START.cmd --no-browserのloopback URLを既存CLIで開き、output/を作成してからrun-codeへ関数を渡す。関数は現在のpage.url()を検証して再読込する。
-300切替、停止/再開/Reset、文字、全画面、サイズ、例外を確認。結果/画像はoutput/へ置きGitへ含めない。
-利用者の起動にPlaywright/Nodeは不要。原作再現と新APIの試験は未実装。
+# 技術仮版のブラウザ検証
+開発者用。利用者は最上位START.cmdをダブルクリックして起動する。
+
+開発者はSTART.cmd --test-console --no-browserで返るloopback URLを既存Playwright CLIで開き、
+output/を作成してpreview.qa.jsをrun-codeへ渡す。操作/300切替/停止/文字/サイズ/API全画面を確認。
+続けてstartup.qa.jsで失敗時のパネル復帰・認証検証・画面終了と所有起動処理の停止を確認する。
+startup.qa.jsは最後にこのサーバーを通常終了する。結果は小さな集計で返し、詳細はページのpreviewTestReportに保持。
+画像や生ログはGitへ追加しない。製品版ブラウザ枠除去・Explorer UI・原作再現は別検収。

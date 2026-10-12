@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="ja">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'">
-<title>Halloween Projection — 初回無料提供版 0.1</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'self'; font-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'">
+<title>Halloween Projection — 初回無料提供版 0.1.1</title>
 <style>
 *{box-sizing:border-box} :root{--edge:24px;--orange:#ffb35c;--muted:#a7a5b2;--panel:#15141b}
 html,body{margin:0;width:100%;height:100%;background:#000;color:#f9f5ed;font-family:system-ui,-apple-system,"Yu Gothic",Meiryo,sans-serif}
@@ -35,7 +35,7 @@ dialog::backdrop{background:#000b}dialog h2{font-size:21px;margin-top:0}dialog b
 <body>
 <aside id="controls" aria-label="操作パネル">
 <div class="brand">HALLOWEEN / PROJECTION</div><h1>壁が、ハロウィンの<br>ステージになる。</h1>
-<p class="lead">ブラウザで開いて、そのまま投影。<br>初回無料提供版 · 試作 0.1</p>
+<p class="lead">ブラウザで開いて、そのまま投影。<br>初回無料提供版 · 技術試作 0.1.1</p>
 <div class="label">エフェクト</div><div class="effects">
 <button id="skeleton" data-effect="skeleton" aria-pressed="true">くるくる骸骨<small>簡易 2D ベクター</small></button>
 <button id="bats" data-effect="bats" aria-pressed="false">コウモリと文字<small>中央のメッセージ</small></button></div>
@@ -46,18 +46,18 @@ HALLOWEEN</textarea>
 <label class="range-label" for="size"><span>エフェクトの大きさ</span><output id="size-value">100 %</output></label><input id="size" type="range" min="50" max="150" step="5" value="100">
 <div class="transport"><button id="pause">一時停止</button><button id="reset">リセット</button><button id="stop">停止・解放</button><button id="resume">再開</button></div>
 <button id="project" class="primary">投影開始 · 全画面</button><button id="hide">操作パネルを隠す（H）</button>
+<button id="quit" style="width:100%;margin-top:12px">終了</button>
 <p id="status" role="status" aria-live="polite"></p><p id="fit-note"></p>
 <p class="help">H：パネル切替 · F：全画面 · Space：一時停止<br>R：リセット · Esc / ダブルクリック：操作に戻る</p>
 <div class="footer"><button id="guide">はじめての投影ガイド</button><br>黒い背景・音なし・点滅なし。<br>3D 原作品とは異なる簡易図案の試作です。</div>
 </aside>
 <main id="stage" aria-label="投影映像"><canvas id="canvas" aria-label="骸骨またはコウモリのアニメーション"></canvas><div id="message" hidden><div id="message-text"></div></div></main>
-<dialog id="guide-dialog"><h2>はじめての投影</h2><ol>
-<li>ZIP を「すべて展開」し、Windows では <b>START.cmd</b> を開きます。ローカル起動窓を開いたまま、ブラウザで操作します。TouchDesigner やサーバーの準備は不要です。</li>
+<dialog id="guide-dialog"><h2>はじめての投影</h2><ol><li>ZIPを「すべて展開」し、最上位の <b>START.cmd</b> をダブルクリックします。ブラウザーが自動で開く設計で、起動画面は自動で閉じます。</li>
 <li>プロジェクターを PC へ接続し、Windows では Win + P で「複製」または「拡張」にします。「複製」は PC と同じ画面、「拡張」は別の画面です。白い壁やスクリーンへ向け、ピント・台形補正を調整します。</li>
 <li>「拡張」の場合、このブラウザのウィンドウをプロジェクターの画面へ移動します。初めは室内照明を落とし、黒背景と文字を確認してください。</li>
-<li>効果と文字、速さ・大きさを設定し、<b>投影開始</b>を押します。パネルとカーソルが消えます。</li>
-<li><b>Esc</b> で操作に戻ります。全画面が使えないときは H でパネルを隠し、ブラウザの全画面操作も利用できます。</li>
-<li>終わったら<b>停止・解放</b>。ブラウザのタブを閉じ、起動窓で Ctrl + C を押してローカル起動も終了します。</li></ol>
+<li>効果・文字・動き・大きさを選び、<b>投影開始・全画面</b> を押します。全画面に入れた場合はパネルとカーソルが消えます。入れなければ案内と操作パネルが戻ります。</li>
+<li><b>Esc</b>で操作へ戻ります。パネル非表示はブラウザーの枠を消す機能とは別です。</li>
+<li>画面の <b>終了</b> を押し、「終了しました」と出たらタブを閉じます。起動処理も終了するため、端末の操作は不要です。</li></ol>
 <p>黒もプロジェクターの明るさとして残ります。色・明るさ・読める文字サイズは実機で調整してください。投影位置のマッピングや複数プロジェクターの補正は初版の範囲外です。</p><button id="close-guide">閉じる</button></dialog>
 <script>
 (()=>{
@@ -66,7 +66,10 @@ const $=id=>document.getElementById(id),canvas=$('canvas'),stage=$('stage'),ctx=
 const controls=$('controls'),message=$('message'),messageText=$('message-text');
 const settings={effect:'skeleton',text:$('text').value,speed:1,size:1};
 let active=null,phase='stopped',raf=0,previous=0,time=0,hiddenSuspension=false,destroyed=false;
-let width=1,height=1,revision=0,fitFont=0,fullscreenError='';
+let width=1,height=1,revision=0,fitFont=0,fullscreenError='',quitting=false,heartbeat=0;
+const localRuntime=window.halloweenLocalRuntime;
+const ownsHost=!!localRuntime&&localRuntime.kind==='windows-local'&&location.hostname==='127.0.0.1'&&/^[0-9a-f]{32}$/.test(localRuntime.token);
+if(ownsHost)heartbeat=setInterval(()=>fetch('/alive/'+localRuntime.token,{method:'POST'}).catch(()=>{if(navigator.onLine&&!quitting){clearInterval(heartbeat);heartbeat=0;stop();projection(false);$('status').textContent='起動処理が終了しました。このタブを閉じてください。';}}),10000);
 const stats={frames:0,created:0,disposed:0,resets:0,maxPendingRAF:0};
 const listeners=[];
 function listen(target,event,fn){target.addEventListener(event,fn);listeners.push(()=>target.removeEventListener(event,fn));}
@@ -154,16 +157,45 @@ function stop(){disposeActive();phase='stopped';time=0;message.hidden=true;canva
 function resume(){if(!active){select(settings.effect);return;}cancel();phase='running';publish();schedule();}
 function reset(){if(!active)return;const hold=phase;select(settings.effect);if(hold==='paused'){cancel();phase='paused';}stats.resets++;publish();}
 function projection(on){document.body.classList.toggle('projection',on);resize();}
+function fullscreenFailed(){
+ projection(false);
+ fullscreenError='全画面にできませんでした。操作パネルを戻しました。ブラウザーの全画面メニューを使うか、パネルを隠して表示できます。';
+ publish();
+}
 async function fullscreen(){
  fullscreenError='';
- try{if(document.fullscreenElement){await document.exitFullscreen();projection(false);}else{projection(true);await document.documentElement.requestFullscreen();}}
- catch(e){fullscreenError='全画面は使えません。H / ブラウザの全画面操作を利用';publish();}
+ try{
+  if(document.fullscreenElement){await document.exitFullscreen();projection(false);publish();return;}
+  if(typeof document.documentElement.requestFullscreen!=='function'){fullscreenFailed();return;}
+  await document.documentElement.requestFullscreen();
+  if(!document.fullscreenElement){fullscreenFailed();return;}
+  projection(true);publish();
+ }catch(e){fullscreenFailed();}
 }
+async function quit(){
+ if(quitting)return;quitting=true;
+ if(heartbeat){clearInterval(heartbeat);heartbeat=0;}
+ projection(false);
+ if(document.fullscreenElement)await document.exitFullscreen().catch(()=>{});
+ destroy();
+ for(const button of controls.querySelectorAll('button'))button.disabled=true;
+ $('status').textContent='表示を終了しました。';
+ if(ownsHost){
+  try{
+   const response=await fetch('/quit/'+localRuntime.token,{method:'POST'});
+   if(!response.ok)throw Error('Local exit failed');
+   $('status').textContent='終了しました。このタブを閉じてください。';
+  }catch(e){$('status').textContent='表示を終了しました。このタブを閉じてください。起動処理は自動で終了します。';}
+ }else{$('status').textContent='表示を終了しました。このタブを閉じてください。';}
+}
+
 for(const button of document.querySelectorAll('[data-effect]'))listen(button,'click',()=>select(button.dataset.effect));
 listen($('text'),'input',()=>{let value=$('text').value;const lines=value.split('\n');if(lines.length>8)value=lines.slice(0,7).join('\n')+'\n'+lines.slice(7).join(' ');$('text').value=value;settings.text=value;fitText();});
 listen($('speed'),'input',()=>{settings.speed=Number($('speed').value);publish();});
 listen($('size'),'input',()=>{settings.size=Number($('size').value)/100;render();publish();});
 listen($('pause'),'click',pause);listen($('stop'),'click',stop);listen($('resume'),'click',resume);listen($('reset'),'click',reset);
+listen($('quit'),'click',quit);
+listen(document,'fullscreenerror',fullscreenFailed);
 listen($('project'),'click',fullscreen);listen($('hide'),'click',()=>projection(true));
 listen(stage,'dblclick',()=>{projection(false);if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});});
 listen($('guide'),'click',()=>$('guide-dialog').showModal());listen($('close-guide'),'click',()=>$('guide-dialog').close());
@@ -178,11 +210,11 @@ listen(document,'keydown',e=>{
 });
 listen(document,'visibilitychange',()=>{if(document.hidden){hiddenSuspension=true;cancel();}else{hiddenSuspension=false;previous=0;schedule();}});
 listen(window,'resize',resize);
-function destroy(){if(destroyed)return;stop();destroyed=true;observer.disconnect();for(const remove of listeners)remove();listeners.length=0;}
+function destroy(){if(destroyed)return;if(heartbeat){clearInterval(heartbeat);heartbeat=0;}stop();destroyed=true;observer.disconnect();for(const remove of listeners)remove();listeners.length=0;}
 listen(window,'pagehide',e=>{if(e.persisted){stop();observer.disconnect();}else destroy();});
 listen(window,'pageshow',e=>{if(e.persisted&&!destroyed){observer.observe(stage);resize();}});
 const observer=new ResizeObserver(resize);observer.observe(stage);
-window.halloweenDiagnostics=()=>({version:'0.1.0',renderer:'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length});
+window.halloweenDiagnostics=()=>({version:'0.1.1-startup',renderer:'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:ownsHost,heartbeat:heartbeat?1:0});
 if(!ctx){$('status').textContent='Canvas 2D を開始できません。別のブラウザで確認してください。';return;}
 select('skeleton');
 if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){pause();$('fit-note').textContent='端末の動きを減らす設定に合わせて一時停止で開始しました。再開できます。';}
