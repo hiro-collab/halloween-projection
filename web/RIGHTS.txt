@@ -1,4 +1,4 @@
-素材と権利 — Web技術試作0.1.3
+素材と権利 — Web技術試作0.1.5
 
 このリポジトリーの自作コード・新規2D図形・説明文はMITライセンスです。
 既存GitHub名義hiro-collabを著作権表示に使用しています。
@@ -23,3 +23,19 @@ source URL/作者/ライセンス/版/ハッシュ/変更/帰属を台帳へ記�
 本人自作TDコウモリの保存キャッシュ60フレームをprivate本人確認で再利用します。
 この画像はコードのMIT対象外です。一般公開/外部配布条件は未確定。
 詳細はassets/OWNER-BAT-ASSET.txt。原データ・色・alphaを変えず配置したRGBA8候補で、TD実再生との照合は未完です。
+
+
+0.1.5追加: CC0別候補の頭/顎モデル（app.js内の埋込模型データ）。
+作者: CDmir / Human Skull
+一次出典: https://opengameart.org/content/human-skull-0
+ライセンス: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+配布元の対象archive: skull-obj.zip
+対象OBJ: skull-obj/skull-Low4K.obj
+これは本人の元TDモデルを同定したものではなく、別候補の私的比較用です。
+素材データはCC0、独自の描画/操作コードはMIT。本人bat PNGは引き続きMIT外のprivate素材です。
+変換: fan三角化、float32位置、頭/上歯と顎/下歯へのラベル付け、独自binary埋込。
+texture/normal/AO画像は使用・同梱しません。面の切断・欠落・重複なし。
+CC0は改変・商用・再配布を含む条件ですが、今回の試作全体の一般公開/外部配布は行っていません。
+source archive SHA256: 067899af520649177c0dd5de1a4b18bd4f46daf667df04a405dc9a27d206011b
+source OBJ SHA256: f24014fa02de4b3e3be2926df887114f42cb49361592b103a47d7cac8d8225af
+converted model SHA256: bb38451e202e30ce2d84cdc224433ac27aafd43539ed362e6127a980b3538706

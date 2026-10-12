@@ -31,3 +31,5 @@ dialog::backdrop{background:#000b}dialog h2{font-size:21px;margin-top:0}dialog b
 .offline{border-top:1px solid #302c39;margin-top:20px;padding-top:14px}.offline h2{font-size:13px;margin:0 0 8px}
 #offline-status{font-size:11px;line-height:1.65;color:var(--muted);min-height:36px}.offline-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .offline-buttons button{font-size:11px;padding:8px}#offline-apply{grid-column:1/-1}#offline-apply[hidden]{display:none}
+
+[hidden]{display:none!important}

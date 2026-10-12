@@ -23,3 +23,6 @@ source URL/作者/ライセンス/版/ハッシュ/変更/帰属を台帳へ記�
 
 ## 0.1.3 private段階の例外
 本人が生成画像群再利用を許容した正しいcircle bat枝のcacheだけを採用。PNG atlas60frameはMIT外・private確認用、一般配布許諾未決。モデル/TOE/動画/私的logは引き続き不採用。
+
+## 0.1.5 CC0別モデルの私的採用
+Human Skull/CDmir、OpenGameArtのskull-obj.zip内skull-obj/skull-Low4K.objを一致照合し、CC0として模型データをapp.jsへ埋込。texture画像は未同梱。全hash/変換/対象file/著作権区分はCC0-SKULL-TRIAL.mdとweb/RIGHTS.txt。本人元ドクロを同定したものではなく、本人batのprivate/MIT外条件は保持。一般公開なし。

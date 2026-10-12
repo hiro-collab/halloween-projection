@@ -4,18 +4,21 @@ window.HalloweenControlAPI = Object.freeze({
   create(initialText, hooks) {
     const values = {
       skeleton:{speed:1,size:1,text:initialText},
-      bats:{speed:1,size:1,text:initialText,flapRate:1,frameLock:null}
+      bats:{speed:1,size:1,text:initialText,flapRate:1,frameLock:null},
+      skull3d:{size:1,text:initialText,headRate:1,jawRate:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0}
     };
     const assertScene = id => { if(!Object.hasOwn(values,id)) throw new RangeError('Unknown scene'); };
     const copy = id => { assertScene(id);return {...values[id]}; };
-    const ranges = {speed:[.2,2],size:[.5,1.5],flapRate:[.25,2]};
+    const ranges = {speed:[.2,2],size:[.5,1.5],flapRate:[.25,2],headRate:[0,2],jawRate:[0,2],jawOpen:[0,45],pivotY:[-1.15,-.65],pivotZ:[-.3,.2],jawTint:[0,1]};
     const api = {
       values:copy,
       select(id){assertScene(id);hooks.select(id);return api.status();},
       set(id,key,value){
         assertScene(id);
         if(!Object.hasOwn(values[id],key)||key==='text')throw new RangeError('Unknown numeric key');
-        if(key==='frameLock'){
+        if(key==='jawTint'){
+          if(value!==0&&value!==1)throw new RangeError('Tint must be 0 or 1');
+        }else if(key==='frameLock'){
           if(value!==null&&(!Number.isInteger(value)||value<0||value>59))throw new RangeError('Frame must be null or 0..59');
         }else{
           const r=ranges[key];
@@ -33,7 +36,7 @@ window.HalloweenControlAPI = Object.freeze({
       resume(){hooks.resume();return api.status();},
       reset(id){assertScene(id);hooks.reset(id);return api.status();},
       stop(){hooks.stop();return api.status();},
-      status(){return {schema:1,values:{skeleton:copy('skeleton'),bats:copy('bats')},runtime:hooks.status()};}
+      status(){return {schema:1,values:{skeleton:copy('skeleton'),bats:copy('bats'),skull3d:copy('skull3d')},runtime:hooks.status()};}
     };
     return Object.freeze(api);
   }

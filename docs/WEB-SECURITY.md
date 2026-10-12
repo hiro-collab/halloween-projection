@@ -46,3 +46,6 @@ hashは更新の完全性を検出し、配信元の信頼や認証を代替し�
 private HTTPS、製品Chrome/Edge、別PC、物理切断、長時間、storage eviction、Windows枠消失、実機投影/収録は未試験。
 原Aの3D頭/下顎/流体/背景文字、原B飛翔/最終合成の忠実再現は未実装/未検収。
 公開、販売、追加費用、新規権限、保護回避、他アプリ強制終了は行っていません。
+
+## 0.1.5 CC0別模型
+追加模型61,068bytesはapp.js内のCC0 dataで、第三の比較シーンが同期展開するだけです。外部通信/新path/保存数/権限は増やさず12file/cache11を保持。Stopで模型・描画buffer0、Endで保持文字列も0。自作codeのMITとCC0 dataとprivate本人batを区分します。TD参照用コピー/採取DAT/原model/生logsは配布しません。今回の別模型は原VJのモデル同定ではありません。
