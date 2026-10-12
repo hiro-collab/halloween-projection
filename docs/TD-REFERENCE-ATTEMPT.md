@@ -1,5 +1,7 @@
 # 元Bの自己採取 — 実行環境確認
 
+これは起動停止時点の履歴です。その後、保存済み基準採取の正常終了と72 PNGを確認し、build33230で独立時計の比較も実行しました。現在の結果は[VJ入力・時計の検証](VJ-INPUT-TIMING-VALIDATION.md)を参照してください。
+
 最新本人/親指示により、原TOEの私的copyを作り、既存TouchDesignerで基準を自ら採れるか実行しました。
 原アーカイブhash照合、27,230,064-byte原TOE copy、公式toecollapseで875 selected filesの原B隔離copyを構築、実起動まで成功。
 元データ/原本/既存版を変更せず、起動前のTD/TouchPlayerプロセス0件を確認して所有する別instanceだけを開始。

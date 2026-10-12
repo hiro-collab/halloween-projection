@@ -1,7 +1,7 @@
 # 技術試作のQA（開発者用）
 
 現在のWebはtests/serve-web-preview.pyでweb/だけを127.0.0.1へ配信し、
-隔離Playwright profileでweb.qa.js（19）→offline-security.qa.js（13）をrun-codeする。
+隔離Playwright profileでweb.qa.js（19）→offline-security.qa.js（15）をrun-codeする。
 output/を作成。offline/security testは合成入力と専用cacheだけを扱う。
 update.qa.js（4）は隔離fixtureでRIGHTSを変更してtools/build-web-package.pyを実行後に使う。
 corrupt-update.qa.js（3）はさらに異なるbuildを作った後、fixture app.jsだけを不一致にして使う。元Webに不一致を加えない。
@@ -13,3 +13,13 @@ serve-web-preview.pyの--stdin-controlは所有serverをstdin quitで通常終�
 
 preview.qa.js/startup.qa.jsは旧Windows試作の履歴検証。現在の一般向け起動手順には使わない。
 画面画像/生ログ/私的パスをGitへ追加しない。
+
+0.1.6 VJ入力比較:
+- node tests/vj-input-contract.qa.cjs: 8項目。Web/端末非依存の入力契約。
+- vj-browser.qa.js: 22項目。実キー・UI・候補粒子への反映、初速誕生時適用、連打/境界/切替/終了。
+- offline-vj-restart.qa.js: 7項目。所有persistent browserを通常close/open後、blankからofflineで先にgotoする。隔離ZIPのloopback fixtureは8766/web-preview/を使う。
+- ZIP照合後の展開先でVJ入力・B資源22・位相6・保存15・通常再起動7・更新4・不一致更新3を実行。
+- Chrome profileは短い所有Tempパスを使う。長いcheckout配下ではCacheStorage.open内部エラーを観測した。セキュリティ解除はしない。
+- QA serverを--stdin-controlで正常終了する場合、PTYでstdinを保持する。ユーザーや他担当のprocessを終了しない。
+
+検証範囲と未一致はdocs/VJ-INPUT-TIMING-VALIDATION.mdを参照。

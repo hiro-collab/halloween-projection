@@ -3,8 +3,9 @@
 'use strict';
 const $=id=>document.getElementById(id),canvas=$('canvas'),stage=$('stage'),ctx=canvas.getContext('2d',{alpha:false});
 const controls=$('controls'),message=$('message'),messageText=$('message-text');
-const settings={effect:'skeleton',text:$('text').value,speed:1,size:1,flapRate:1,frameLock:null};
-let api;
+const settings={effect:'skeleton',text:$('text').value,speed:1,size:1,flapRate:1,frameLock:null,initialSpeed:1.3,motionMix:.5};
+let api,vj;
+function syncVJ(){vj?.observe({scene:settings.effect==='bats'&&active?'bats':'inactive',paused:phase!=='running'});}
 let active=null,phase='stopped',raf=0,previous=0,time=0,hiddenSuspension=false,destroyed=false;
 let width=1,height=1,revision=0,fitFont=0,fullscreenError='',quitting=false,assetError='';
 const stats={frames:0,created:0,disposed:0,resets:0,maxPendingRAF:0};
@@ -133,23 +134,48 @@ function makeSkeleton(){
  },dispose(){ornaments=null;}};
 }
 function makeBats(){
- // Saved root cookrate=60. Only the locked Trail x2 contribution is reproduced here.
- // Random Noise and rolling Trail terms still need a live reference; flight remains provisional.
+ // Candidate particle solver: source force controls, 5-second life, 60Hz steps.
+ // TD's emission/noise/solver and final composite still require matching.
  const replayFps=60;
  const lockedTrail=Array.from({length:40},(_,i)=>128+Math.floor(i/2));
- let flock=Array.from({length:24},(_,i)=>({phase:i*2.39996,ring:i%3,scale:.7+(i%5)*.1,rate:.14+(i%4)*.027,frameOffset:(2*lockedTrail[i])%60}));
+ let births=0,steps=0,flightTime=0,accumulator=0;
+ const birth=(i,age=0)=>{
+  const angle=i*2.39996+births*.17,speed=settings.initialSpeed;
+  births++;
+  return {i,age,x:Math.cos(angle)*.72,y:Math.sin(angle)*.72,
+   vx:-Math.sin(angle)*speed*.22,vy:Math.cos(angle)*speed*.22,spawnSpeed:speed,
+   angle,scale:.7+(i%5)*.1,frameOffset:(2*lockedTrail[i])%60};
+ };
+ let flock=Array.from({length:24},(_,i)=>birth(i,i*5/24));
  let disposed=false,flapTime=0;
+ const sourceParameters=()=>({Initialspeed:settings.initialSpeed,Cross:settings.motionMix,Vortex:5-4*settings.motionMix,Spiral:-1.7+.8*settings.motionMix,rotationCross:.77*(1-settings.motionMix)});
+ function step(dt){
+  const p=sourceParameters();flightTime+=dt;steps++;
+  for(let i=0;i<flock.length;i++){
+   let b=flock[i];b.age+=dt;if(b.age>=5)b=flock[i]=birth(i);
+   const noiseX=Math.sin(flightTime*2.3+i*1.9)*.2,noiseY=Math.cos(flightTime*1.7+i*2.7)*.2;
+   const ax=-b.y*p.Vortex*.14+b.x*p.Spiral*.1+noiseX+.1;
+   const ay=b.x*p.Vortex*.14+b.y*p.Spiral*.1+noiseY+.1;
+   const drag=Math.exp(-5*dt);
+   b.vx=(b.vx+ax*dt)*drag;b.vy=(b.vy+ay*dt)*drag;
+   b.x+=b.vx*dt;b.y+=b.vy*dt;
+   b.angle=Math.atan2(b.vy,b.vx)*p.rotationCross;
+  }
+ }
  const art=HalloweenBatArt.create(()=>{if(!disposed&&active===owner){if(art.status().state==='error'){stop();phase='error';assetError=HalloweenBatArt.diagnostics().encodedBytes?'図案データは取得済みですが描画できません。再開を試すか、対応するブラウザーで確認してください。':'原図案は未取得です。接続中に再開するか、投影前にこの端末へ保存してください。';publish();}else{render();publish();}}});
  const frame=()=>settings.frameLock??Math.floor(flapTime*replayFps)%60;
  const instanceFrame=b=>settings.frameLock??(frame()+b.frameOffset)%60;
  const owner={kind:'bats',resourceCount:()=>flock?24+(art.ready?1:0):0,
-  advance(dt){if(art.ready&&settings.frameLock===null)flapTime+=dt*settings.flapRate;},
-  probe:()=>({...art.status(),frameIndex:frame(),flapTime,replayFps,phaseModel:'locked-trail-reference-only',instanceFrames:flock?.map(instanceFrame)||[]}),
+  advance(dt){if(!art.ready)return;if(settings.frameLock===null)flapTime+=dt*settings.flapRate;
+   accumulator+=dt*settings.speed;while(accumulator>=1/60){step(1/60);accumulator-=1/60;}},
+  probe:()=>({...art.status(),frameIndex:frame(),flapTime,replayFps,phaseModel:'locked-trail-reference-only',instanceFrames:flock?.map(instanceFrame)||[],
+   motionModel:'source-controls-candidate-solver',parameters:sourceParameters(),flightTime,steps,births,
+   particles:flock?.map(b=>({x:b.x,y:b.y,vx:b.vx,vy:b.vy,age:b.age,spawnSpeed:b.spawnSpeed,angle:b.angle}))||[]}),
   draw(t){if(!flock||!art.ready)return;
    for(const b of flock){
-    const a=b.phase+t*b.rate,x=width/2+Math.cos(a)*(width*(.37+b.ring*.045)),y=height/2+Math.sin(a)*(height*(.34+b.ring*.06));
+    const x=width/2+b.x*width*.45,y=height/2+b.y*height*.45;
     const scale=Math.min(width,height)*.0017*settings.size*b.scale;
-    ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(a)*.2);
+    ctx.save();ctx.translate(x,y);ctx.rotate(b.angle);
     art.drawFrame(ctx,instanceFrame(b),-48*scale,-27*scale,96*scale,54*scale);ctx.restore();
    }
   },dispose(){disposed=true;art.dispose();flock=null;}
@@ -166,20 +192,21 @@ function publish(){
  for(const b of document.querySelectorAll('[data-effect]'))b.setAttribute('aria-pressed',String(b.dataset.effect===settings.effect));
  if($('text').value!==settings.text)$('text').value=settings.text;$('speed').value=settings.speed;$('size').value=settings.size*100;
  $('speed-value').textContent=settings.speed.toFixed(1)+' ×';$('size-value').textContent=Math.round(settings.size*100)+' %';
- $('speed-label').textContent=settings.effect==='bats'?'飛ぶ速さ（仮軌道）':'動く速さ';
+ $('speed-label').textContent=settings.effect==='bats'?'比較再生の速さ':'動く速さ';
  $('skull-options').hidden=settings.effect!=='skull3d';$('text-options').hidden=settings.effect==='skull3d';
  $('speed').hidden=settings.effect==='skull3d';$('speed-label').closest('label').hidden=settings.effect==='skull3d';
  if(settings.effect==='skull3d'){for(const key of ['headRate','jawRate','jawOpen','pivotY','pivotZ']){$('skull-'+key).value=settings[key];$('skull-'+key+'-value').textContent=settings[key].toFixed(key==='jawOpen'?0:2);} $('skull-jawTint').checked=!!settings.jawTint;}
  $('bat-options').hidden=settings.effect!=='bats';$('flap').value=settings.flapRate;$('flap-value').textContent=settings.flapRate.toFixed(2)+' ×';
+ for(const key of ['initialSpeed','motionMix']){$('bat-'+key).value=settings[key];$('bat-'+key+'-value').textContent=settings[key].toFixed(2);}
  $('bat-readiness').textContent=HalloweenBatArt.diagnostics().encodedBytes?'図案取得済み。このページ内では接続なしでも切り替えられます。':'図案未取得のofflineでは表示できません。接続中に取得するか、先に端末へ保存してください。';
  if(active?.probe&&active.probe().state==='loading')$('status').textContent+=' · 原図案を準備中';
  if(active?.probe&&active.probe().state==='error')$('status').textContent+=' · 図案を読めません。接続・保存を確認して再開してください。';
 }
-function select(id){if(!factories[id]||destroyed)return;assetError='';disposeActive();Object.assign(settings,api.values(id),{effect:id});time=0;active=factories[id]();stats.created++;revision++;phase='running';resize();publish();schedule();}
-function pause(){if(!active)return;cancel();phase=phase==='paused'?'running':'paused';publish();schedule();}
-function stop(){disposeActive();phase='stopped';time=0;message.hidden=true;canvas.width=1;canvas.height=1;render();revision++;publish();}
-function resume(){if(!active){select(settings.effect);return;}cancel();phase='running';publish();schedule();}
-function reset(){if(!active)return;const hold=phase;select(settings.effect);if(hold==='paused'){cancel();phase='paused';}stats.resets++;publish();}
+function select(id){if(!factories[id]||destroyed)return;assetError='';disposeActive();Object.assign(settings,api.values(id),{effect:id});time=0;active=factories[id]();stats.created++;revision++;phase='running';syncVJ();resize();publish();schedule();}
+function pause(){if(!active)return;cancel();phase=phase==='paused'?'running':'paused';syncVJ();publish();schedule();}
+function stop(){disposeActive();phase='stopped';time=0;syncVJ();message.hidden=true;canvas.width=1;canvas.height=1;render();revision++;publish();}
+function resume(){if(!active){select(settings.effect);return;}cancel();phase='running';syncVJ();publish();schedule();}
+function reset(){if(!active)return;const hold=phase;select(settings.effect);if(hold==='paused'){cancel();phase='paused';}syncVJ();stats.resets++;publish();}
 function projection(on){document.body.classList.toggle('projection',on);resize();}
 function fullscreenFailed(){
  projection(false);
@@ -213,11 +240,22 @@ api=HalloweenControlAPI.create($('text').value,{
  reset(id){if(id===settings.effect)reset();},stop,status:()=>window.halloweenDiagnostics()
 });
 window.halloweenControl=api;
+vj=HalloweenControlAPI.createVJ({apply(command,next){
+ if(destroyed)throw Error('Projection ended');
+ if(command.type==='set'){settings[command.key]=next[command.key];render();publish();}
+ else if(command.type==='select'){if(next.scene==='bats')api.select('bats');else if(settings.effect==='bats')api.stop();}
+ else if(command.type==='pause'){if(settings.effect==='bats')api.pause();}
+ else if(command.type==='resume'){if(settings.effect!=='bats')api.select('bats');else api.resume();}
+ else if(command.type==='reset'){if(settings.effect==='bats')api.reset('bats');}
+}});
+window.halloweenVJ=vj;
 for(const button of document.querySelectorAll('[data-effect]'))listen(button,'click',()=>api.select(button.dataset.effect));
 listen($('text'),'input',()=>api.setText(settings.effect,$('text').value));
 listen($('speed'),'input',()=>api.set(settings.effect,'speed',Number($('speed').value)));
 listen($('size'),'input',()=>api.set(settings.effect,'size',Number($('size').value)/100));
 listen($('flap'),'input',()=>api.set('bats','flapRate',Number($('flap').value)));
+listen($('bat-initialSpeed'),'input',()=>vj.apply({type:'set',key:'initialSpeed',value:Number($('bat-initialSpeed').value)}));
+listen($('bat-motionMix'),'input',()=>vj.apply({type:'set',key:'motionMix',value:Number($('bat-motionMix').value)}));
  for(const key of ['headRate','jawRate','jawOpen','pivotY','pivotZ'])listen($('skull-'+key),'input',()=>api.set('skull3d',key,Number($('skull-'+key).value)));
  listen($('skull-jawTint'),'change',()=>api.set('skull3d','jawTint',$('skull-jawTint').checked?1:0));
 listen($('pause'),'click',()=>phase==='paused'?api.resume():api.pause());listen($('stop'),'click',api.stop);listen($('resume'),'click',api.resume);listen($('reset'),'click',()=>api.reset(settings.effect));
@@ -228,10 +266,11 @@ listen(stage,'dblclick',()=>{projection(false);if(document.fullscreenElement)doc
 listen($('guide'),'click',()=>$('guide-dialog').showModal());listen($('close-guide'),'click',()=>$('guide-dialog').close());
 listen(document,'fullscreenchange',()=>{if(!document.fullscreenElement)projection(false);else resize();});
 listen(document,'keydown',e=>{
- if(e.target.closest('input,textarea')||e.ctrlKey||e.metaKey||e.altKey||$('guide-dialog').open)return;
+ if(e.target?.closest?.('input,textarea,select,[contenteditable]')||e.ctrlKey||e.metaKey||e.altKey||$('guide-dialog').open)return;
  if(e.repeat)return;
  if(e.key==='Escape'){projection(false);if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});return;}
  const key=e.key.toLowerCase();
+ if(settings.effect==='bats'&&vj.keyboard({key:e.key,repeat:e.repeat,editable:false,ctrlKey:e.ctrlKey,metaKey:e.metaKey,altKey:e.altKey})){e.preventDefault();return;}
  if(key==='h'){projection(!document.body.classList.contains('projection'));}
  else if(key==='f')fullscreen();else if(key===' '){e.preventDefault();if(phase==='paused'||!active)api.resume();else api.pause();}else if(key==='r')api.reset(settings.effect);
 });
@@ -241,7 +280,7 @@ function destroy(){if(destroyed)return;stop();HalloweenBatArt.release();skullMod
 listen(window,'pagehide',e=>{if(e.persisted){stop();observer.disconnect();}else destroy();});
 listen(window,'pageshow',e=>{if(e.persisted&&!destroyed){observer.observe(stage);resize();}});
 const observer=new ResizeObserver(resize);observer.observe(stage);
-window.halloweenDiagnostics=()=>({version:'0.1.5-skull-candidate-preview',renderer:'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,sprite:settings.effect==='bats'?(active?.probe?.()??null):null,skull:settings.effect==='skull3d'?(active?.probe?.()??null):null,skullResources:{...skullResources,encodedChars:skullModelEncoded.length,pending:0},imageResources:HalloweenBatArt.diagnostics()});
+window.halloweenDiagnostics=()=>({version:'0.1.6-vj-input-preview',renderer:'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,vj:vj?.values(),sprite:settings.effect==='bats'?(active?.probe?.()??null):null,skull:settings.effect==='skull3d'?(active?.probe?.()??null):null,skullResources:{...skullResources,encodedChars:skullModelEncoded.length,pending:0},imageResources:HalloweenBatArt.diagnostics()});
 if(!ctx){$('status').textContent='Canvas 2D を開始できません。別のブラウザで確認してください。';return;}
 api.select('skeleton');
 HalloweenBatArt.preload().then(()=>{if(!destroyed)publish();});
