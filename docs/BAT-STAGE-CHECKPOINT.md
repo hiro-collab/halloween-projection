@@ -25,3 +25,13 @@ frameLock(nullまたは0..59)は比較用API。speedは仮飛翔時間倍率でT
 Aの阻害: 外部ドクロモデルの出典URL/再配布条件、locked形状の頭/顎対応・支点と原作実表示が未確認。
 Aの3D頭/下顎/流体/背景文字は未実装。推測した代替モデルは同梱しない。
 共有GUI側のファイルは参照だけ。変更はハロウィンrepo内に限定、private維持、外部Webなし。
+
+## 今回の実測と回帰
+ブラウザーでB ready=true、60frame、ImageBitmap1、RAF1、中央文字を実表示しページscreenshotを保存。
+旧19項目の再試験は「読込済みページでネットワークoffline→B切替→Pause」で中断した。合格数は未確定。
+未保存/Service Workerなしの状態でBの新しいPNG fetchが失敗し、画像errorからPauseがdisabledとなりlocatorが30秒timeout。
+0.1.2では画像fetchが不要だったため通ったケースで、読込後offline切替の互換をまだ保持できていない。
+失敗後はphase=error、created=disposed=307、RAF0、effect/object0、bitmap created=closed=2/open0/pending0。
+300切替を実行した後の観測ではnative RAF最大1、listener23を確認。ただし新画像の長期/遅延/全反復の合格とはしない。
+次の修正はキャッシュ準備の有無と読込後offlineの契約を整理し、ネット切替で新bitmapを作れるasset取得を実装/検証すること。
+このブランチは未完candidateの保存。0.1.2安定ブランチやmainへ統合していない。
