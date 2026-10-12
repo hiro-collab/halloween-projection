@@ -16,7 +16,7 @@ HALLOWEEN</textarea>
 <p class="help">コウモリで表示。最大240字・8行。長文は自動で縮小。</p>
 <label class="range-label" for="speed"><span id="speed-label">動く速さ</span><output id="speed-value">1.0 ×</output></label><input id="speed" type="range" min="0.2" max="2" step="0.1" value="1">
 <label class="range-label" for="size"><span>エフェクトの大きさ</span><output id="size-value">100 %</output></label><input id="size" type="range" min="50" max="150" step="5" value="100">
-<section id="bat-options" hidden><label class="range-label" for="flap"><span>図案・羽ばたきの再生</span><output id="flap-value">1.00 ×</output></label><input id="flap" type="range" min="0.25" max="2" step="0.25" value="1"><p class="help">保存された本人図案を再生。飛び方・最終合成は原作との比較待ちです。</p></section>
+<section id="bat-options" hidden><label class="range-label" for="flap"><span>図案・羽ばたきの再生</span><output id="flap-value">1.00 ×</output></label><input id="flap" type="range" min="0.25" max="2" step="0.25" value="1"><p class="help">保存された本人図案を再生。飛び方・最終合成は原作との比較待ちです。</p><p class="help" id="bat-readiness"></p><p class="help">停止は描画bitmapを解放します。検証済みPNG約61KBはページ内に保持し、表示終了で破棄します。</p></section>
 <div class="transport"><button id="pause">一時停止</button><button id="reset">リセット</button><button id="stop">停止・解放</button><button id="resume">再開</button></div>
 <button id="project" class="primary">投影開始 · 全画面</button><button id="hide">操作パネルを隠す（H）</button>
 <button id="quit">表示を終了</button>

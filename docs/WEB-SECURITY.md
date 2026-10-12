@@ -1,51 +1,48 @@
-# Webセキュリティ確認 — private技術試作0.1.2
+# Webセキュリティ確認 — private試作0.1.3
 
-公開状態: GitHub private維持。Web公開・Pages設定・秘密URLの公開を行わない。QAは127.0.0.1だけ。
-privateリポジトリーとWeb配信の非公開は別。私用HTTPSへ載せるときは配信先の認証/アクセス制限が必要。
+GitHub privateを維持し、外部Web/Pages/Releaseを作成していません。QAは所有127.0.0.1だけ。
+private repositoryと配信の認証は別です。将来のHTTPS配信は実際の認証/アクセス制限/headersの検収が必要です。
 
-## 配信と通信
-配信対象はweb/の8ファイルだけ。CMD/PS/開発ツール/QA/Git/.env/原VJ解析文書を配信しない。
-自作JS/CSS/Canvas2D。CDN、外部ライブラリ、外部モデル、画像、動画、フォント、解析/広告通信なし。
-アプリのHTTP要求は同一originの静的ファイルだけ。alive/quitのhost連携API・localhost bridgeなし。
-ブラウザー/OS自身の通常通信はこのアプリのネットワーク保証に含めない。
-利用者は追加ランタイム・端末コマンド・Windows起動スクリプトを実行しない。
+## 配信・入力・通信
 
-入力文字はtextContentで描画しHTML解釈しない。eval/innerHTML/script生成、任意file read/write、camera/mic/位置情報/APIキーなし。
-文字/速度/大きさはメモリーだけ。localStorage/sessionStorage/IndexedDBへ保存せず、ページを開き直すと初期値。
+web/の12ファイルだけを配信/ZIP化。CMD/PS/開発ツール/QA/Git/.env/原TOE/モデル/動画/生ログは配信しません。
+Canvas2D、自作JS/CSS、同一originの本人bat atlas。CDN/第三者ライブラリ/外部フォント/解析/広告通信なし。
+利用者の端末コマンド・追加TD/ランタイム実行、alive/quit host API、camera/mic/位置/APIキー/任意ファイルアクセスなし。
+ブラウザー/OS自身の通信はアプリの通信保証に含めません。
 
-CSPはdefault-src none、script/style self、worker/connect self、object/base/form禁止。inline script/styleなし。
-開発用静的server例はHTTP frame-ancestors none、X-Frame-Options DENY、nosniff、no-referrer、camera/mic/location禁止も付加。
-frame-ancestorsはmetaでは指定できないため、将来HTTPS配信でもHTTP headerを整える。単にweb/を置くだけで同等headersとはしない。
-他のアプリが同じoriginで悪意あるJSを実行できる環境には置かない。専用の私用origin/フォルダーを使う。
+文字はtextContentで表示しHTML解釈しません。文字/調整はRAMだけ、localStorage/sessionStorage/IndexedDBへ保存しません。
+CSPはdefault-src none、script/style/worker/connect self、object/base/form禁止。inline script/styleなし。
+開発serverはframe-ancestors none、DENY/nosniff/no-referrer、camera/mic/location禁止header付き。
+将来の配信headerは別途確認。専用の私用origin/フォルダーを使用してください。
 
-## 保存・更新・解除
-オフライン保存は画面で選ぶ。保存未選択の初期表示でService Workerを自動登録しない。
-保存対象はindex.html/styles.css/app.js/offline.js/README.txt/LICENSE.txt/RIGHTS.txtの7つ。
-sw.jsは更新確認の対象で、Cache APIへ保存しない。URL query、任意navigation、他のpath、ユーザー文字、ログ、認証ページはcacheへ入れない。
-インストール時にstatus200・redirect禁止・個別SHA256一致・受信streamを262144bytes以内に制限。各fetchは10秒timeout。
-manifest/hashが不一致なら新cacheを破棄し、既存の稼働版を残す。hashは配信元そのものを信頼する根拠ではなく、誤配信/不完全な更新を検出する。
-assetとworker templateのcontent hashからbuild識別子を作り、全assetの準備後に新workerを待機させる。利用者が更新を選ぶまで稼働画面をreloadしない。
-明示更新は描画を終了してreload、文字/調整が初期値へ戻ると説明。activate時に同じscopeの古いapp cacheだけ削除。
-保存解除は正確なapp scopeのworker unregisterとapp専用prefixのcacheだけ削除。他のcache/worker/ブラウザー全体のデータを消さない。
-同じscopeに他アプリのworkerがある場合は上書きせず保存を拒否する。
-初回保存は接続が必要。ブラウザー削除/容量制限/別profile/別端末では再準備。file://保存非対応を明示。
-端末に保存したMITアプリ本体はログアウト後も残り得る。認証ログアウトとローカル保存解除は別。共有PCでは解除を案内。
+## 図案の取得・解放
 
-## 検査
-19の描画/操作項目、13のWeb/入力/cache安全性、4の更新、3の不一致更新をlocalhost展開版で合格。
-cacheの7ファイル/入力非保存、offline reload/新規tab、他cache保持、解除後cold start不可、更新待機、旧cache整理、不一致拒否を確認。
-合成不一致のworker install errorは期待した拒否。通常のpage例外の合格と混同しない。
-履歴含むprivacy scan、素材・依存区分、MITと著作権表示を確認。元TOE/モデル/60frame原作画像/動画/生logはコミットしない。
+bat-art.jsは固定同一origin URL、200、redirect拒否、SHA256一致、stream128KiB上限、fetch10秒timeout。
+ページ開始時に圧縮PNG61,130bytesだけ準備し、描画bitmapはBのactive scopeが所有します。
+共有取得は最大1件。Stop/切替はpendingをabortし、遅延decodeが終了したbitmapもcloseします。
+Stopはbitmap/RAF/effect/pendingを0へ戻し、検証済み圧縮PNGを同ページの再開用RAMに保持します。
+Endは圧縮PNGも0へ。準備前のofflineはerror/案内を表示し、描画資源を解放。接続後の再開でretryできます。
+取得/準備状態をUI表示。未取得/未保存画像がofflineで取得可能とはしません。
 
-## 残る境界
-私用HTTPSの認証/headers/hostingの実際の設定は未試験。この作業は外部配信を作成していない。
-物理ネット切断、製品版Chrome/Edge・別PC・長時間・storage eviction・実機投影は未試験。
-全画面API成立と実デスクトップの枠消失は別。cloud側でAPI成立でも枠が残る所見を保持。
-原VJの3D頭/下顎・流体・原作コウモリ/APIは未実装。技術試作を完成品とは称しない。
+## 選択式保存・更新・解除
 
-ライセンス: 自作code/新2D/説明文は本人承諾のMIT。原素材・外部素材は別条件で、現在は含めない。
-公開切替、費用、新規重要権限、原素材採用は今回範囲外。
+初期表示でService Workerを自動登録しません。「この端末へ保存」は11assetだけを保存します。
+index.html/styles.css/app.js/offline.js/README.txt/LICENSE.txt/RIGHTS.txt/control-api.js/bat-art.jsとassets内のPNG/帰属書。
+sw.jsは更新確認対象、Cache API対象外。query/任意navigation/他path/入力/認証ページ/ログを保存しません。
+個別SHA256/200/redirect拒否/受信stream256KiB上限/fetch10秒。assetとworker templateのhashでbuildを識別します。
+新asset準備失敗では新cacheだけを破棄、旧版継続。準備済み更新は明示選択まで待機、適用はEnd/reloadして入力初期化。
+activateは同scopeの旧app cacheだけ削除。解除は正確scopeのunregister/専用prefixだけ削除し、他cacheを保持。
+初回保存は接続が必要。保存済み同profile/同URLでは再読込・新tab・通常再起動後もofflineでB取得できます。
+ブラウザー保存削除/eviction/別profile/別PCは再準備が必要。file://の起動/保存を保証しません。
+ログアウトと端末保存解除は別です。共有PCでは保存解除を案内。同scopeの別workerは上書きしません。
+hashは更新の完全性を検出し、配信元の信頼や認証を代替しません。
 
-## 0.1.3第一段の差分（検証継続）
-private本人bat atlas PNGを初めて採用、MIT外/外部配布未許諾として区分。配信12file/cache11asset、image fetchも同一origin固定URL・SHA/サイズ制限。
-文字RAM/HTML非解釈、no CMD/CDN、privateの境界は保持。0.1.2合格と新画像/11asset版の未検証を区別する。詳細BAT-STAGE-CHECKPOINT.md。
+## 検証と残る境界
+
+今回の19操作・22API/画像資源・15保存安全・4更新・3不一致PNG更新を独立に検証。
+全60frameの不透明画素をraw RGBA候補と比較。元TDの最終render/alpha/色管理/合成一致の証拠ではありません。
+詳細と最終配布情報は[B回帰修正](BAT-OFFLINE-FIX-VALIDATION.md)。
+原atlasはMIT対象外のprivate本人比較用。外部配布条件未確定。自作code/新2D/説明のMITを画像へ拡張しません。
+private HTTPS、製品Chrome/Edge、別PC、物理切断、長時間、storage eviction、Windows枠消失、実機投影/収録は未試験。
+原Aの3D頭/下顎/流体/背景文字、原B飛翔/最終合成の忠実再現は未実装/未検収。
+公開、販売、追加費用、新規権限、保護回避、他アプリ強制終了は行っていません。

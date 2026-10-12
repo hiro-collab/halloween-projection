@@ -1,4 +1,6 @@
-# Web検証 — 0.1.2 private preview
+# Web検証 — 0.1.2安定版の記録
+
+B画像を追加した0.1.3の現在の検証は[B回帰修正](BAT-OFFLINE-FIX-VALIDATION.md)を参照。以下は安定版の履歴です。
 
 Windows上の所有localhost server、独立フォルダーへ全展開したWeb ZIP、隔離したpersistent Chromium154.0.8037.98 profileで検証。
 UIの全画面APIと、Windowsブラウザー枠消失は区別。実機・private HTTPS配信の合格へ拡大しない。

@@ -63,7 +63,7 @@ function makeSkeleton(){
 function makeBats(){
  let flock=Array.from({length:24},(_,i)=>({phase:i*2.39996,ring:i%3,scale:.7+(i%5)*.1,rate:.14+(i%4)*.027}));
  let disposed=false,flapTime=0;
- const art=HalloweenBatArt.create(()=>{if(!disposed&&active===owner){if(art.status().state==='error'){stop();phase='error';assetError='原図案を読めません。接続・保存を確認して再開してください。';publish();}else{render();publish();}}});
+ const art=HalloweenBatArt.create(()=>{if(!disposed&&active===owner){if(art.status().state==='error'){stop();phase='error';assetError=HalloweenBatArt.diagnostics().encodedBytes?'図案データは取得済みですが描画できません。再開を試すか、対応するブラウザーで確認してください。':'原図案は未取得です。接続中に再開するか、投影前にこの端末へ保存してください。';publish();}else{render();publish();}}});
  const frame=()=>settings.frameLock??Math.floor(flapTime*30)%60;
  const owner={kind:'bats',resourceCount:()=>flock?24+(art.ready?1:0):0,
   advance(dt){if(art.ready&&settings.frameLock===null)flapTime+=dt*settings.flapRate;},
@@ -81,7 +81,7 @@ function makeBats(){
 }
 const factories={skeleton:makeSkeleton,bats:makeBats};
 function render(){if(!ctx)return;ctx.save();ctx.setTransform(canvas.width/width,0,0,canvas.height/height,0,0);ctx.fillStyle='#000';ctx.fillRect(0,0,width,height);if(active)active.draw(time);ctx.restore();}
-function disposeActive(){cancel();if(active){active.dispose();active=null;stats.disposed++;}}
+function disposeActive(){cancel();HalloweenBatArt.cancelPending();if(active){active.dispose();active=null;stats.disposed++;}}
 function publish(){
  const label=settings.effect==='skeleton'?'くるくる骸骨':'コウモリと文字';
  $('status').textContent=label+' · '+(phase==='running'?'表示中':phase==='paused'?'一時停止':phase==='error'?'読み込みエラー':'停止・解放済み')+(fullscreenError?' · '+fullscreenError:'')+(assetError?' · '+assetError:'');
@@ -91,6 +91,7 @@ function publish(){
  $('speed-value').textContent=settings.speed.toFixed(1)+' ×';$('size-value').textContent=Math.round(settings.size*100)+' %';
  $('speed-label').textContent=settings.effect==='bats'?'飛ぶ速さ（仮軌道）':'動く速さ';
  $('bat-options').hidden=settings.effect!=='bats';$('flap').value=settings.flapRate;$('flap-value').textContent=settings.flapRate.toFixed(2)+' ×';
+ $('bat-readiness').textContent=HalloweenBatArt.diagnostics().encodedBytes?'図案取得済み。このページ内では接続なしでも切り替えられます。':'図案未取得のofflineでは表示できません。接続中に取得するか、先に端末へ保存してください。';
  if(active?.probe&&active.probe().state==='loading')$('status').textContent+=' · 原図案を準備中';
  if(active?.probe&&active.probe().state==='error')$('status').textContent+=' · 図案を読めません。接続・保存を確認して再開してください。';
 }
@@ -154,12 +155,13 @@ listen(document,'keydown',e=>{
 });
 listen(document,'visibilitychange',()=>{if(document.hidden){hiddenSuspension=true;cancel();}else{hiddenSuspension=false;previous=0;schedule();}});
 listen(window,'resize',resize);
-function destroy(){if(destroyed)return;stop();destroyed=true;observer.disconnect();for(const remove of listeners)remove();listeners.length=0;}
+function destroy(){if(destroyed)return;stop();HalloweenBatArt.release();destroyed=true;observer.disconnect();for(const remove of listeners)remove();listeners.length=0;}
 listen(window,'pagehide',e=>{if(e.persisted){stop();observer.disconnect();}else destroy();});
 listen(window,'pageshow',e=>{if(e.persisted&&!destroyed){observer.observe(stage);resize();}});
 const observer=new ResizeObserver(resize);observer.observe(stage);
 window.halloweenDiagnostics=()=>({version:'0.1.3-bat-source-preview',renderer:'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,sprite:active?.probe?.()??null,imageResources:HalloweenBatArt.diagnostics()});
 if(!ctx){$('status').textContent='Canvas 2D を開始できません。別のブラウザで確認してください。';return;}
 api.select('skeleton');
+HalloweenBatArt.preload().then(()=>{if(!destroyed)publish();});
 if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){api.pause();$('fit-note').textContent='端末の動きを減らす設定に合わせて一時停止で開始しました。再開できます。';}
 })();

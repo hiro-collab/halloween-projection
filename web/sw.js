@@ -1,15 +1,15 @@
 'use strict';
-const BUILD = "0.1.3-bat-source-preview-d18b60c26f3a";
+const BUILD = "0.1.3-bat-source-preview-57e4d6629ade";
 const HASHES = {
-  "index.html": "eac5167829c8e9daeff86db7a7311fff4d5b6d0406af43dc3aad8091b2040816",
+  "index.html": "2a643f5e38c8cec3c606375df78ca7f1a4c32c40a767b776d0940ad17ac1522f",
   "styles.css": "964af3c8762251de59e5ee1af2b8fe047449d393c338252faf0132d4d06e777a",
-  "app.js": "68baab31d277ac98f4b4c94ffabdb3c1a6cc234395bf65f0c976d3d1bb205a0b",
+  "app.js": "638a6b28b23f6b152adac27c1be1ce938d7e8502483b6581e6b8bcc267ad2269",
   "offline.js": "1f5391450d8e1ee86a1260151bfded3694ccb6b42c39e4644283dba12c9c068c",
-  "README.txt": "b0865d4d5b87cbe9166b938e99ddb5d86bf1b01e273e2b0291627c9fa1a6d557",
+  "README.txt": "ff77b6e02622ee0db0051acb750bc1c1198b8efed1491fd6c768df27d984f380",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
   "RIGHTS.txt": "a2ab62b640bcd06939edf6e700c95b276bdadd91fb07bdd18c28a5398f2767e9",
   "control-api.js": "780a45a767df569faed6f74cff741c0597d39763de61b1947923b76887985eb2",
-  "bat-art.js": "743855363fcfb48dcd480203f77307aa971d2b0ea9e575aa526bf370bc64ef32",
+  "bat-art.js": "f89665267c6b921270f88ed6c9b52a1aaa4ae82d79bc5b7221a2384a4278e083",
   "assets/owner-bat-atlas.png": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",
   "assets/OWNER-BAT-ASSET.txt": "1c87dd8e950d7070b54608917fb4e9aae44abcbdb070e92d60b3bb784c6b9379"
 };

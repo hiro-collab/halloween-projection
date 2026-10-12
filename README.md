@@ -32,4 +32,6 @@ web/index.html、app.js、styles.css、offline.jsが編集対象。自作JS/CSS�
 tests/serve-web-preview.pyは127.0.0.1限定の開発確認サーバー。利用者向けの起動方法ではありません。
 app/とSTART.cmdは以前の技術試作の履歴です。本人のSAC保護環境で起動拒否があり、一般向け配布として使いません。
 旧Windows版ZIPや原本を上書きしません。公開化・料金・新権限・証明書購入は別の判断です。
-\n## 現在の一段階\n0.1.3はB原図案/羽ばたき+入力APIのprivate実装候補です。[確認/未検証](docs/BAT-STAGE-CHECKPOINT.md)。0.1.2のcache合格をこの版の合格へ流用しません。\n
+
+## 現在の一段階
+0.1.3はB原図案/羽ばたき+入力APIのprivate実装候補です。[確認/未検証](docs/BAT-STAGE-CHECKPOINT.md)。0.1.2のcache合格をこの版の合格へ流用しません。

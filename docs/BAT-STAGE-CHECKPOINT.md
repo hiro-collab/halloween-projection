@@ -1,4 +1,6 @@
-# 第一段のprivate実装チェックポイント — 0.1.3
+# 第一段の未完チェックポイント — 履歴
+
+後継は[オフライン回帰修正と実測](BAT-OFFLINE-FIX-VALIDATION.md)。以下は修正前の記録です。
 
 対象: Bの本人circle bat保存図案/羽ばたき再生と入力API分離。
 原VJのbat_set/bat/batImgs/tex3d1.dataを参照。60×160×90×RGBA候補、原pixelを10×6atlasへ配置。
