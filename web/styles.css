@@ -1,0 +1,33 @@
+
+*{box-sizing:border-box} :root{--edge:24px;--orange:#ffb35c;--muted:#a7a5b2;--panel:#15141b}
+html,body{margin:0;width:100%;height:100%;background:#000;color:#f9f5ed;font-family:system-ui,-apple-system,"Yu Gothic",Meiryo,sans-serif}
+body{display:grid;grid-template-columns:328px minmax(0,1fr);overflow:hidden}
+button,input,textarea{font:inherit}button{cursor:pointer;border:1px solid #46434f;border-radius:10px;background:#24222d;color:#fff;min-height:44px;padding:10px 12px;transition:background .15s}
+button:hover{background:#38333f}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+button[aria-pressed=true],button.primary{background:var(--orange);border-color:var(--orange);color:#23180c}button:disabled{opacity:.45;cursor:default}
+#controls{padding:26px 22px 20px;background:var(--panel);border-right:1px solid #2f2b36;overflow:auto;z-index:2}
+.brand{font-size:11px;letter-spacing:.16em;color:var(--orange)}h1{font-size:26px;line-height:1.17;margin:12px 0 7px;letter-spacing:-.02em}
+.lead{font-size:12px;color:var(--muted);line-height:1.7;margin:0 0 22px}
+label,.label{display:block;font-size:13px;font-weight:600;margin:20px 0 8px}.effects{display:grid;grid-template-columns:1fr 1fr;gap:8px}.effects button{text-align:left;font-size:13px;line-height:1.5}
+.effects small{display:block;font-weight:400;opacity:.75;font-size:11px}
+textarea{resize:vertical;min-height:80px;width:100%;padding:10px;border:1px solid #46434f;border-radius:9px;background:#09090d;color:#fff;line-height:1.45}
+.help{font-size:11px;line-height:1.65;color:var(--muted);margin:6px 0 0}
+.range-label{display:flex;justify-content:space-between;gap:10px}.range-label output{font-weight:400;color:var(--orange)}
+input[type=range]{width:100%;accent-color:var(--orange);height:22px;margin:0}
+.transport{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0 8px}.transport button{font-size:12px}
+#project{width:100%;margin-top:12px;font-weight:650}#hide{width:100%;margin-top:8px;font-size:12px}
+#status{font-size:12px;line-height:1.6;color:var(--orange);margin:15px 0 0;min-height:20px}#fit-note{font-size:11px;color:var(--muted);line-height:1.5;margin:5px 0 0}
+.footer{margin-top:20px;padding-top:16px;border-top:1px solid #302c39;font-size:11px;color:var(--muted);line-height:1.7}.footer button{padding:0;background:none;border:none;min-height:30px;text-decoration:underline;text-underline-offset:3px;font-size:12px;color:#ded8e9}
+#stage{position:relative;min-width:0;min-height:0;background:#000;overflow:hidden}canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+#message[hidden]{display:none}#message-text{color:#fff;text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.3;font-weight:750;padding:16px 20px;background:#000;border-radius:20px;max-width:82%;text-shadow:0 2px 4px #000}
+body.projection{grid-template-columns:minmax(0,1fr);cursor:none}body.projection #controls{display:none}
+dialog{color:#eee;background:#1b1822;border:1px solid #524751;border-radius:16px;padding:24px;max-width:600px;width:calc(100% - 32px);max-height:85vh;line-height:1.75;font-size:14px}
+dialog::backdrop{background:#000b}dialog h2{font-size:21px;margin-top:0}dialog button{float:right}dialog li{margin-bottom:8px}
+@media(max-width:760px){body{grid-template-columns:1fr;grid-template-rows:minmax(220px,40dvh) minmax(0,1fr)}#stage{grid-row:1}#controls{grid-row:2;padding:20px;border-right:0;border-top:1px solid #2f2b36}h1{font-size:22px}body.projection{grid-template-rows:minmax(0,1fr)}body.projection #stage{grid-row:1}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+
+#quit{width:100%;margin-top:12px}.footer a{color:#ded8e9;text-underline-offset:3px}
+.offline{border-top:1px solid #302c39;margin-top:20px;padding-top:14px}.offline h2{font-size:13px;margin:0 0 8px}
+#offline-status{font-size:11px;line-height:1.65;color:var(--muted);min-height:36px}.offline-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.offline-buttons button{font-size:11px;padding:8px}#offline-apply{grid-column:1/-1}#offline-apply[hidden]{display:none}

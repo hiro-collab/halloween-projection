@@ -1,0 +1,57 @@
+async (page) => {
+  const checks=[], check=(name,ok,details={})=>checks.push({name,ok,details});
+  const url=page.url(), origin=url.match(/^http:\/\/[^/]+/)[0];
+  if(!/^http:\/\/127\.0\.0\.1:\d+\/web-preview\/$/.test(url))throw Error('Private loopback only');
+  await page.setViewportSize({width:1366,height:900});
+  await page.context().setOffline(false);
+  await page.waitForFunction(()=>window.halloweenOfflineDiagnostics&&!window.halloweenOfflineDiagnostics().busy);
+  const requests=[];page.context().on('request',r=>requests.push({url:r.url(),method:r.method()}));
+  check('offline cache is opt in',!(await page.evaluate(()=>window.halloweenOfflineDiagnostics().saved)));
+  const headers=(await page.request.get(url)).headers();
+  check('static response has strict CSP and frame protection',headers['content-security-policy'].includes("frame-ancestors 'none'")&&!headers['content-security-policy'].includes('unsafe-inline')&&headers['x-content-type-options']==='nosniff');
+  const paths=['/tests/web.qa.js','/.git/config','/docs/REQUIREMENTS.md','/web-preview/../LICENSE'];
+  check('development and repository files are not served',(await Promise.all(paths.map(async p=>(await page.request.get(origin+p)).status()))).every(n=>n===404));
+  await page.locator('#bats').click();
+  const text='<img src=x onerror="window.__webXSS=1">日本語 & <script>bad()</script>';
+  await page.locator('#text').fill(text);
+  const safe=await page.evaluate(t=>({literal:document.getElementById('message-text').textContent===t,noElement:!document.querySelector('#message-text img,#message-text script'),notExecuted:window.__webXSS!==1,storageEmpty:localStorage.length===0&&sessionStorage.length===0}),text);
+  check('input stays literal and is not stored',Object.values(safe).every(Boolean),safe);
+  await page.evaluate(async()=>{const c=await caches.open('qa-unrelated-cache');await c.put(new URL('/synthetic-fixture',location.origin).href,new Response('synthetic'));});
+  await page.locator('#offline-save').click();
+  await page.waitForFunction(()=>window.halloweenOfflineDiagnostics().saved&&!window.halloweenOfflineDiagnostics().busy&&navigator.serviceWorker.controller,{},{timeout:30000});
+  const cache=await page.evaluate(async t=>{
+    const prefix='halloween-projection:'+new URL('./',location.href).href+':';
+    const names=(await caches.keys()).filter(k=>k.startsWith(prefix));
+    const c=await caches.open(names[0]);const keys=await c.keys();
+    const bodies=await Promise.all(keys.map(async r=>(await c.match(r)).text()));
+    return {count:names.length,files:keys.map(r=>new URL(r.url).pathname.split('/').pop()).sort(),hasInput:bodies.some(b=>b.includes(t))};
+  },text);
+  check('cache holds only seven approved static files',cache.count===1&&cache.files.join(',')==='LICENSE.txt,README.txt,RIGHTS.txt,app.js,index.html,offline.js,styles.css',cache);
+  check('typed text is absent from offline cache',!cache.hasInput);
+  await page.context().setOffline(true);
+  const response=await page.reload();await page.waitForFunction(()=>window.halloweenDiagnostics?.().phase==='running');
+  check('offline reload starts app from Service Worker',response.fromServiceWorker()&&await page.locator('#controls').isVisible());
+  check('reopened app resets user input',(await page.locator('#text').inputValue()).includes('HAPPY')&&!(await page.locator('#text').inputValue()).includes('__webXSS'));
+  const fresh=await page.context().newPage();
+  const cold=await fresh.goto(url);await fresh.waitForFunction(()=>window.halloweenDiagnostics?.().phase==='running');
+  check('new tab starts while network is offline',cold.fromServiceWorker());
+  await fresh.locator('#quit').click();
+  const ended=await fresh.evaluate(()=>window.halloweenDiagnostics());
+  check('Web exit frees renderer without host requests',ended.destroyed&&ended.liveEffects===0&&ended.pendingRAF===0&&ended.listeners===0&&ended.heartbeat===0&&(await fresh.locator('#status').innerText()).includes('タブを閉じ'));
+  await fresh.close();
+  await page.evaluate(()=>{window.qaConfirm=window.confirm;window.confirm=()=>true;});
+  await page.locator('#offline-clear').click();
+  await page.evaluate(()=>{window.confirm=window.qaConfirm;delete window.qaConfirm;});
+  await page.waitForFunction(()=>document.getElementById('offline-status').textContent.includes('保存を解除しました'));
+  const cleared=await page.evaluate(async()=>({registration:!!(await navigator.serviceWorker.getRegistration(new URL('./',location.href).href)),owned:(await caches.keys()).filter(k=>k.startsWith('halloween-projection:'+new URL('./',location.href).href+':')).length,unrelated:await caches.has('qa-unrelated-cache')}));
+  check('clear removes owned registration/cache only',!cleared.registration&&cleared.owned===0&&cleared.unrelated,cleared);
+  const uncached=await page.context().newPage();let coldFailed=false;
+  try{const r=await uncached.goto(url);coldFailed=r.status()>=400;}catch(_){coldFailed=true;}
+  check('offline cold start fails after explicit cache removal',coldFailed);await uncached.close();
+  await page.context().setOffline(false);await page.reload();
+  await page.locator('#offline-save').click();
+  await page.waitForFunction(()=>window.halloweenOfflineDiagnostics().saved&&!window.halloweenOfflineDiagnostics().busy&&navigator.serviceWorker.controller,{},{timeout:30000});
+  await page.evaluate(()=>caches.delete('qa-unrelated-cache'));
+  check('requests stay on private origin with no POST',requests.every(r=>r.url.startsWith(origin+'/')&&r.method==='GET'),{count:requests.length});
+  return JSON.stringify({passed:checks.filter(c=>c.ok).length,failed:checks.filter(c=>!c.ok).length,checks,physicalNetworkDisconnect:'not tested',actualBrowserFrameRemoval:'not tested'});
+}
