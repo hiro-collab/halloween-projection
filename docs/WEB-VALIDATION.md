@@ -22,4 +22,4 @@ file://オフライン保存はサポートしない。原VJの3D再現版は未
 保存処理修正後にも13/13・4/4・3/3を再実行。workerコードだけを変更しasset hashは同じ合成更新でもbuildが変わり、不一致assetで稼働cacheを消さないことを確認。
 最終build 0.1.2-web-preview-2233b3a7e8e5、Web ZIP16,420bytes、SHA256 798469d957a825013b16e7b953b11629747039f1e0b2dbb4d9645e3257ba81ae。
 
-Web assetsをUTF-8/BOMなし/LFへ固定。Git blobとZIP/cache manifestの全asset SHA一致を確認。LF正規化後のオフライン再起動は追加確認中。
+Web assetsをUTF-8/BOMなし/LFへ固定。Git blobとZIP/cache manifestの全asset SHA一致を確認。LF正規化後も保存/オフライン再読込/ブラウザー通常close→同profile open→offline cold start/表示終了が合格。
