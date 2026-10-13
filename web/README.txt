@@ -123,3 +123,10 @@ TDの力・最終合成の再現は未完です。入力と制御のAPIを分離
 - 各描画で1/60秒1step、30Hz上限。原60Hzの実時間・動的noise・移流補間は未一致です。
 - Pause/Reset/Stop/Resume/Endで検査できます。Stopで所有格子buffer、Endで固定fieldのencoded参照も破棄します。
 - 原の数値field参照はMIT外・private比較限定です。原shader/原modelを追加していません。旧ZIPを保持します。
+
+
+0.1.15 source A comparison:
+- Startup/Reset models two cold cooks in the measured source fluid graph. GPU interpolation weights conserve constants, including ties.
+- Optional blue body-color branch: gain .96, RGBA8, HSV hue224. Edge glow, alpha, lighting, background text and final composite remain incomplete.
+- Local GUI benchmark: 22.70 solver steps/s and 22.70 mesh draws/s, measured separately. The default GUI velocity field is still frozen at tz0; dynamic noise is not generated.
+- Earlier stable and comparison packages are preserved. Native reference fields remain MIT-excluded and private.

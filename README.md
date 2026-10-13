@@ -1,5 +1,7 @@
 # Halloween Projection — private Web preview
 
+最新ローカル比較版は0.1.15。原A流体の開始/Reset・補間を分離し、原の時刻可変速度入力で同callback比較を保存しました。[検証と残差](docs/A-FLUID-RESET-VALIDATION.md)。青色のRGB枝を一段接続しています。動的noise生成・照明・背景文字・最終合成は未完です。旧版は保持しています。
+
 利用者はWebページをブラウザーで開き、改変する人はソースを使う構成です。
 **現在はGitHub private・本人確認用。一般公開のWeb URLやGitHub Pagesは作成していません。**
 
