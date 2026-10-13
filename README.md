@@ -49,3 +49,9 @@ SparseをXYZ空間で評価し、40枠方向のLag、生存数別Random/rolling/
 [測定・修正・未一致](docs/B-SIGNALS-FIRE-VALIDATION.md)と[原VJ/Webの技法対応](docs/VJ-TECHNIQUE-MAP.md)。
 原粒子計算、最終Noise/Blur/文字マスク、10秒境界、原A流体/背景文字は未完です。
 0.1.7の独立レビュー不合格を保持し、自己テスト合格を原再現合格として扱いません。
+
+## 0.1.9 B発生入力・位置更新比較
+
+原と同じReset/seedの120stepを採取し、42発生点と速度/位置更新を小さく修正しました。
+[出生step・原入力・抵抗対照・残る力場差](docs/B-PARTICLE-STEP-VALIDATION.md)。
+最初の出生位相と原Force SOPは未一致です。d4e38b6/0.1.8を保持し、外部送信は保留しています。

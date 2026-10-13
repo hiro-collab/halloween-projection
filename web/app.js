@@ -141,12 +141,9 @@ function makeBats(){
  const lockedTrail=Array.from({length:40},(_,i)=>128+Math.floor(i/2));
  let births=0,steps=0,flightTime=0,accumulator=0,nextBirth=.2;
  const birth=(i,age=0)=>{
-  const angle=i*2.39996+births*.17,speed=settings.initialSpeed;
-  births++;
-  const nz=1-2*((i*.61803398875+.5)%1),r=Math.sqrt(1-nz*nz),nx=Math.cos(angle)*r,ny=Math.sin(angle)*r;
-  const directionAngle=Math.atan2(ny,nx)-Math.PI/2,noiseAngle=Math.sin(i*.31)*Math.PI*2,mix=.77*(1-settings.motionMix);
-  return {i,age,x:nx*.06,y:ny*.06,z:.03+nz*.06,
-   vx:nx*speed,vy:ny*speed,vz:nz*speed,spawnSpeed:speed,
+  const speed=settings.initialSpeed,point=HalloweenBatParticle.birth(i,speed,age);births++;
+  const directionAngle=Math.atan2(point.vy,point.vx)-Math.PI/2,noiseAngle=Math.sin(i*.31)*Math.PI*2,mix=.77*(1-settings.motionMix);
+  return {...point,i,justBorn:true,spawnSpeed:speed,
    angle:-(noiseAngle*(1-mix)+directionAngle*mix),directionAngle,noiseAngle};
  };
  let flock=[];
@@ -155,16 +152,14 @@ function makeBats(){
  function step(dt){
   const p=sourceParameters();flightTime+=dt;steps++;
   flock=flock.filter(b=>b.age<5-1e-8);
-  while(flightTime+1e-8>=nextBirth){flock.push(birth(births));nextBirth+=.2;}
+  while(flightTime+1e-8>=nextBirth){flock.push(birth(births,Math.max(0,flightTime-nextBirth)));nextBirth+=.2;}
   for(let i=0;i<flock.length;i++){
-   const b=flock[i];b.age+=dt;
+   const b=flock[i];if(b.justBorn){b.justBorn=false;}else{b.age+=dt;
    const noiseX=Math.sin(flightTime*2.3+i*1.9)*.2,noiseY=Math.cos(flightTime*1.7+i*2.7)*.2;
    const ax=-b.y*p.Vortex*.14+b.x*p.Spiral*.1+noiseX+.1;
    const ay=b.x*p.Vortex*.14+b.y*p.Spiral*.1+noiseY+.1;
-   const drag=Math.exp(-5*dt);
-   b.vx=(b.vx+ax*dt)*drag;b.vy=(b.vy+ay*dt)*drag;
-   b.vz=(b.vz+(.1+Math.sin(flightTime*1.9+i*.7)*.2)*dt)*drag;
-   b.x+=b.vx*dt;b.y+=b.vy*dt;b.z+=b.vz*dt;
+   HalloweenBatParticle.integrate(b,ax,ay,.1+Math.sin(flightTime*1.9+i*.7)*.2,dt);
+   }
    b.directionAngle=Math.atan2(b.vy,b.vx)-Math.PI/2;
    b.noiseAngle=sparseField.sample(b.x,b.y*height/width,b.z)*Math.PI/180;
    b.angle=-(b.noiseAngle*(1-p.rotationCross)+b.directionAngle*p.rotationCross);
@@ -197,7 +192,7 @@ function makeBats(){
   advance(dt){if(!art.ready)return;if(settings.frameLock===null)flapTime+=dt*settings.flapRate;
    accumulator+=dt*settings.speed;while(accumulator>=1/60){step(1/60);accumulator-=1/60;}},
   probe:()=>({...art.status(),frameIndex:frame(),flapTime,replayFps,phaseModel:'source-random-rolling-locked',instanceFrames:flock?HalloweenBatSignals.instanceIndices(flock.length,Math.floor(flapTime*60),settings.frameLock):[],instancePoses:instancePoses(),
-   motionModel:'source-controls-candidate-solver',parameters:sourceParameters(),flightTime,steps,births,
+   motionModel:'source-emitter-euler-candidate-force',emitterCount:42,birthJitterMatched:false,parameters:sourceParameters(),flightTime,steps,births,
    projection:{orthowidth:1.26,yGain:height/width,rectangle:.24,flipV:true},birthRate:5,life:5,instanceCount:40,composite:composite?.status()??{mode:'pending'},fire:fire?.status()??{mode:'pending'},
    particles:flock?.map(b=>({x:b.x,y:b.y,z:b.z,vx:b.vx,vy:b.vy,vz:b.vz,age:b.age,spawnSpeed:b.spawnSpeed,angle:b.angle,directionAngle:b.directionAngle??0,noiseAngle:b.noiseAngle??0}))||[]}),
   draw(t){if(!flock||!art.ready)return;
@@ -312,7 +307,7 @@ function destroy(){if(destroyed)return;stop();HalloweenBatArt.release();Hallowee
 listen(window,'pagehide',e=>{if(e.persisted){stop();observer.disconnect();}else destroy();});
 listen(window,'pageshow',e=>{if(e.persisted&&!destroyed){observer.observe(stage);resize();}});
 const observer=new ResizeObserver(resize);observer.observe(stage);
-window.halloweenDiagnostics=()=>({version:'0.1.8-b-signals-fire-preview',renderer:settings.effect==='bats'&&active?.probe?.().composite?.mode==='source-circle-candidate'?'Canvas2D+WebGL2':'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,vj:vj?.values(),sprite:settings.effect==='bats'?(active?.probe?.()??null):null,skull:settings.effect==='skull3d'?(active?.probe?.()??null):null,compositeResources:HalloweenBatComposite.diagnostics(),fireResources:HalloweenBatFire.diagnostics(),motionResources:HalloweenBatMotion.diagnostics(),skullResources:{...skullResources,encodedChars:skullModelEncoded.length,pending:0},imageResources:HalloweenBatArt.diagnostics()});
+window.halloweenDiagnostics=()=>({version:'0.1.9-b-particle-step-preview',renderer:settings.effect==='bats'&&active?.probe?.().composite?.mode==='source-circle-candidate'?'Canvas2D+WebGL2':'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,vj:vj?.values(),sprite:settings.effect==='bats'?(active?.probe?.()??null):null,skull:settings.effect==='skull3d'?(active?.probe?.()??null):null,compositeResources:HalloweenBatComposite.diagnostics(),fireResources:HalloweenBatFire.diagnostics(),motionResources:HalloweenBatMotion.diagnostics(),skullResources:{...skullResources,encodedChars:skullModelEncoded.length,pending:0},imageResources:HalloweenBatArt.diagnostics()});
 if(!ctx){$('status').textContent='Canvas 2D を開始できません。別のブラウザで確認してください。';return;}
 api.select('skeleton');
 HalloweenBatArt.preload().then(()=>{if(!destroyed)publish();});
