@@ -33,3 +33,5 @@ b-fire.qa.js（12）はGPU/文字mask/静止/停止/終了/fallback。原映像�
 bat-source-phase.qa.js（6）はRandom/rolling/locked位相候補とframeLock/時計/Resetを検証。
 offline-security.qa.jsは13静的assetの完全一覧のみ許可。ZIPはsw.jsを加えた14file。
 同じ原画像の合成比較と未一致はdocs/B-SIGNALS-FIRE-VALIDATION.md。
+
+0.1.10: b-birth-phase.qa.cjs / b-birth-browser.qa.jsは原20出生/240stepの出生数とReset位相だけを検証。部分age RNG/Force SOP一致を示さない。原4入力対照はdocs/B-BIRTH-PHASE-FORCE-SPLIT.md。

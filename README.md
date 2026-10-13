@@ -55,3 +55,9 @@ SparseをXYZ空間で評価し、40枠方向のLag、生存数別Random/rolling/
 原と同じReset/seedの120stepを採取し、42発生点と速度/位置更新を小さく修正しました。
 [出生step・原入力・抵抗対照・残る力場差](docs/B-PARTICLE-STEP-VALIDATION.md)。
 最初の出生位相と原Force SOPは未一致です。d4e38b6/0.1.8を保持し、外部送信は保留しています。
+
+## 0.1.10 B出生位相比較
+
+原240stepの20出生と同じ位相に修正。部分ageの乱数は未一致です。
+[出生/Force入力の有限切り分け](docs/B-BIRTH-PHASE-FORCE-SPLIT.md)・[原Aの確認順](docs/A-LOCAL-REPRODUCTION-OUTLOOK.md)。
+同じ新生状態で大きい配置差がForce SOP入力から増えることを確認。力場は今回変更していません。

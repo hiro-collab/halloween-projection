@@ -29,5 +29,7 @@ window.HalloweenBatParticle=(()=>{
  function birth(index,speed,age=0){const p=emitter[index%emitter.length],vx=p[3]*speed,vy=p[4]*speed,vz=p[5]*speed;
   return {x:p[0]+vx*age,y:p[1]+vy*age,z:p[2]+vz*age,vx,vy,vz,age};}
  function integrate(p,ax,ay,az,dt,drag=5){const keep=Math.max(0,1-drag*dt);p.vx=p.vx*keep+ax*dt;p.vy=p.vy*keep+ay*dt;p.vz=p.vz*keep+az*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;return p;}
- return Object.freeze({birth,integrate,emitterCount:42});
+ function createBirthClock(){const increment=Math.fround(5/60);let residual=increment;
+  return {step(){residual=Math.fround(residual+increment);if(residual<=.5)return 0;const count=Math.ceil(residual-.5);residual=Math.fround(residual-count);return count;}};}
+ return Object.freeze({birth,integrate,createBirthClock,emitterCount:42});
 })();
