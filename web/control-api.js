@@ -50,7 +50,7 @@ window.HalloweenControlAPI = Object.freeze({
     const values = {
       skeleton:{speed:1,size:1,text:initialText},
       bats:{speed:1,size:1,text:initialText,flapRate:1,frameLock:null},
-      skull3d:{size:1,text:initialText,headRate:1,jawRate:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0}
+      skull3d:{size:1,text:initialText,headRate:1,jawRate:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0}
     };
     const assertScene = id => { if(!Object.hasOwn(values,id)) throw new RangeError('Unknown scene'); };
     const copy = id => { assertScene(id);return {...values[id]}; };
@@ -61,7 +61,7 @@ window.HalloweenControlAPI = Object.freeze({
       set(id,key,value){
         assertScene(id);
         if(!Object.hasOwn(values[id],key)||key==='text')throw new RangeError('Unknown numeric key');
-        if(key==='jawTint'||key==='rigMode'||key==='jawPivotMode'||key==='fluidMode'||key==='fluidColor'){
+        if(key==='jawTint'||key==='rigMode'||key==='jawPivotMode'||key==='fluidMode'||key==='fluidColor'||key==='aCompositeMode'){
           if(value!==0&&value!==1)throw new RangeError('Tint must be 0 or 1');
         }else if(key==='frameLock'){
           if(value!==null&&(!Number.isInteger(value)||value<0||value>59))throw new RangeError('Frame must be null or 0..59');
@@ -69,7 +69,7 @@ window.HalloweenControlAPI = Object.freeze({
           const r=ranges[key];
           if(typeof value!=='number'||!Number.isFinite(value)||!r||value<r[0]||value>r[1])throw new RangeError('Value outside range');
         }
-        values[id][key]=value;hooks.changed(id);return api.status();
+        values[id][key]=value;if(id==='skull3d'&&key==='aCompositeMode'&&value===1){values[id].fluidMode=values[id].rigMode=values[id].jawPivotMode=1;}if(id==='skull3d'&&key==='fluidMode'&&value===0)values[id].aCompositeMode=0;hooks.changed(id);return api.status();
       },
       setText(id,text){
         assertScene(id);if(typeof text!=='string')throw new TypeError('Text must be a string');

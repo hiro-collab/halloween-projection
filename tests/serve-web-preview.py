@@ -13,7 +13,7 @@ parser.add_argument('--port', type=int, default=0)
 parser.add_argument('--stdin-control', action='store_true')
 args = parser.parse_args()
 folder = args.directory.resolve(strict=True)
-allowed = {'index.html', 'styles.css', 'app.js', 'offline.js', 'sw.js', 'README.txt', 'LICENSE.txt', 'RIGHTS.txt', 'control-api.js', 'bat-motion.js', 'bat-art.js', 'bat-fire.js', 'a-fluid.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt'}
+allowed = {'index.html', 'styles.css', 'app.js', 'offline.js', 'sw.js', 'README.txt', 'LICENSE.txt', 'RIGHTS.txt', 'control-api.js', 'bat-motion.js', 'bat-art.js', 'bat-fire.js', 'a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt'}
 csp = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 
 class Handler(BaseHTTPRequestHandler):

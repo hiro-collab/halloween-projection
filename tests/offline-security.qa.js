@@ -27,7 +27,7 @@ async (page) => {
     const bodies=await Promise.all(keys.map(async r=>(await c.match(r)).text()));
     return {count:names.length,files:keys.map(r=>r.url.replace(new URL('./',location.href).href,'')).sort(),hasInput:bodies.some(b=>b.includes(t))};
   },text);
-  check('cache holds only fourteen approved static files',cache.count===1&&cache.files.join(',')==='LICENSE.txt,README.txt,RIGHTS.txt,a-fluid.js,app.js,assets/OWNER-BAT-ASSET.txt,assets/owner-bat-atlas.png,bat-art.js,bat-fire.js,bat-motion.js,control-api.js,index.html,offline.js,styles.css',cache);
+  check('cache holds only fifteen approved static files',cache.count===1&&cache.files.join(',')==='LICENSE.txt,README.txt,RIGHTS.txt,a-composite.js,a-fluid.js,app.js,assets/OWNER-BAT-ASSET.txt,assets/owner-bat-atlas.png,bat-art.js,bat-fire.js,bat-motion.js,control-api.js,index.html,offline.js,styles.css',cache);
   check('typed text is absent from offline cache',!cache.hasInput);
   await page.context().setOffline(true);
   const response=await page.reload();await page.waitForFunction(()=>window.halloweenDiagnostics?.().phase==='running');

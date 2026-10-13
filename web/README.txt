@@ -130,3 +130,11 @@ TDの力・最終合成の再現は未完です。入力と制御のAPIを分離
 - Optional blue body-color branch: gain .96, RGBA8, HSV hue224. Edge glow, alpha, lighting, background text and final composite remain incomplete.
 - Local GUI benchmark: 22.70 solver steps/s and 22.70 mesh draws/s, measured separately. The default GUI velocity field is still frozen at tz0; dynamic noise is not generated.
 - Earlier stable and comparison packages are preserved. Native reference fields remain MIT-excluded and private.
+
+
+0.1.16 integrated source A comparison:
+- In 3D Skull, enable the integrated comparison checkbox to show skull, fluid and background text in source order. It selects the registered CC0 alternate and original jaw pivot. Text uses the upstream Arial settings.
+- Source light (0,0,10), diffuse .4, emission .5, specular .3, shininess157 are applied with candidate face-normal/view-alpha shading. This is one alternate actor, not the original model or six-actor scene.
+- Source head preprocessing, Sobel/HSV172/224, head overlay, threshold/outside, background text minimum/Level5/gamma2.02, Cross .824, radial foreground and final Level1.03/gamma1.1 are connected. Blur, edge, alpha and lighting differences remain.
+- Velocity is still the approved frozen source field at tz0. Dynamic noise is not generated; source decoration noise is unconnected and no new native noise payload is included in this package.
+- Pause, Reset, toggles, Stop, Resume and End release owned resources. Final scene is a private comparison; it is not a faithful reproduction pass.
