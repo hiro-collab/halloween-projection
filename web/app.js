@@ -74,28 +74,36 @@ function makeSkull3D(){
  return {kind:'skull3d',resourceCount:()=>disposed?0:1,
   advance(dt){headTime+=dt*settings.headRate;jawTime+=dt*settings.jawRate;},
   invalidate(){lastClock=-1;lastWall=-1;lastKey='';},
-  probe:()=>({ready:!disposed,vertices:nv,triangles:nt,headTriangles:2656,jawTriangles:1892,headTime,jawTime,headYaw:headTime*.8,jawAngle:angle(),pivot:[0,settings.pivotY,settings.pivotZ],bounds,performance:performanceSummary(),model:'CDmir-CC0-alternate',textures:false}),
+  probe:()=>({ready:!disposed,vertices:nv,triangles:nt,headTriangles:2656,jawTriangles:1892,headTime,jawTime,headYaw:headTime*.8,jawAngle:angle(),pivot:[0,settings.pivotY,settings.pivotZ],rigMode:settings.rigMode,rig:settings.rigMode?{...HalloweenSkullRig.pose(settings,headTime,angle()),registration:HalloweenSkullRig.registration}:null,bounds,performance:performanceSummary(),model:'CDmir-CC0-alternate',textures:false}),
   shouldRender(){
    if(disposed)return false;
-   const clock=headTime+jawTime,key=[width,height,settings.size,settings.headRate,settings.jawRate,settings.jawOpen,settings.pivotY,settings.pivotZ,settings.jawTint].join(',');
+   const clock=headTime+jawTime,key=[width,height,settings.size,settings.headRate,settings.jawRate,settings.jawOpen,settings.pivotY,settings.pivotZ,settings.jawTint,settings.rigMode,settings.headX,settings.headY,settings.headZ].join(',');
    // Limit expensive geometry to 30Hz; paused controls/resize still redraw immediately.
    if(lastKey===key&&lastClock>=0&&(clock===lastClock||performance.now()-lastWall<1000/30)){skipped++;return false;}
    return true;
   },
   draw(){
    if(disposed)return;
-   const clock=headTime+jawTime,key=[width,height,settings.size,settings.headRate,settings.jawRate,settings.jawOpen,settings.pivotY,settings.pivotZ,settings.jawTint].join(',');
+   const clock=headTime+jawTime,key=[width,height,settings.size,settings.headRate,settings.jawRate,settings.jawOpen,settings.pivotY,settings.pivotZ,settings.jawTint,settings.rigMode,settings.headX,settings.headY,settings.headZ].join(',');
    const started=performance.now();lastClock=clock;lastWall=started;lastKey=key;
    const yaw=headTime*.8,cy=Math.cos(yaw),sy=Math.sin(yaw),jaw=angle()*Math.PI/180,cj=Math.cos(jaw),sj=Math.sin(jaw);
    const scale=Math.min(width/6,height/6.6)*settings.size,centerX=width/2,centerY=height*.44;
+   const rig=settings.rigMode?HalloweenSkullRig.pose(settings,headTime,angle()):null;
+   const focal=width*settings.size/(2*Math.tan(6.4*Math.PI/360));
    let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
    for(let i=0;i<nv;i++){
     const a=i*3;let x=vertices[a],y=vertices[a+1],z=vertices[a+2];
-    if(jawVertices[i]){const dy=y-settings.pivotY,dz=z-settings.pivotZ;y=settings.pivotY+dy*cj-dz*sj;z=settings.pivotZ+dy*sj+dz*cj;}
-    y+=.4;z+=.1;
-    const wx=x*cy+z*sy,wz=-x*sy+z*cy;
-    world[a]=wx;world[a+1]=y;world[a+2]=wz;
-    const px=centerX+wx*scale,py=centerY-y*scale;screen[i*2]=px;screen[i*2+1]=py;
+    let px,py;
+    if(rig){
+     HalloweenSkullRig.point(jawVertices[i]?rig.jawWorld:rig.headWorld,x,y,z,world,a);
+     const distance=90-world[a+2];px=centerX+world[a]*focal/distance;py=height/2-world[a+1]*focal/distance;
+    }else{
+     if(jawVertices[i]){const dy=y-settings.pivotY,dz=z-settings.pivotZ;y=settings.pivotY+dy*cj-dz*sj;z=settings.pivotZ+dy*sj+dz*cj;}
+     y+=.4;z+=.1;
+     const wx=x*cy+z*sy,wz=-x*sy+z*cy;
+     world[a]=wx;world[a+1]=y;world[a+2]=wz;px=centerX+wx*scale;py=centerY-y*scale;
+    }
+    screen[i*2]=px;screen[i*2+1]=py;
     minX=Math.min(minX,px);minY=Math.min(minY,py);maxX=Math.max(maxX,px);maxY=Math.max(maxY,py);
    }
    bounds={left:minX,top:minY,right:maxX,bottom:maxY};
@@ -222,7 +230,7 @@ function publish(){
  $('speed-label').textContent=settings.effect==='bats'?'比較再生の速さ':'動く速さ';
  $('skull-options').hidden=settings.effect!=='skull3d';$('text-options').hidden=settings.effect==='skull3d';
  $('speed').hidden=settings.effect==='skull3d';$('speed-label').closest('label').hidden=settings.effect==='skull3d';
- if(settings.effect==='skull3d'){for(const key of ['headRate','jawRate','jawOpen','pivotY','pivotZ']){$('skull-'+key).value=settings[key];$('skull-'+key+'-value').textContent=settings[key].toFixed(key==='jawOpen'?0:2);} $('skull-jawTint').checked=!!settings.jawTint;}
+ if(settings.effect==='skull3d'){for(const key of ['headRate','jawRate','jawOpen','pivotY','pivotZ','headX','headY','headZ']){$('skull-'+key).value=settings[key];$('skull-'+key+'-value').textContent=settings[key].toFixed(key==='jawOpen'||key.startsWith('head')&&key!=='headRate'?0:2);} $('skull-jawTint').checked=!!settings.jawTint;$('skull-rigMode').checked=!!settings.rigMode;$('skull-pose').hidden=!settings.rigMode;}
  $('bat-options').hidden=settings.effect!=='bats';$('flap').value=settings.flapRate;$('flap-value').textContent=settings.flapRate.toFixed(2)+' ×';
  for(const key of ['initialSpeed','motionMix']){$('bat-'+key).value=settings[key];$('bat-'+key+'-value').textContent=settings[key].toFixed(2);}
  $('bat-colour-note').textContent=active?.probe?.().composite?.mode==='original-atlas-fallback'?'この環境では色合成を省いた旧図案を表示しています。原作の見えとの一致は未確認です。':'紫の本体・白い輪郭の比較です。飛翔の乱数・力と最終の光/文字合成は未一致です。';
@@ -284,7 +292,8 @@ listen($('size'),'input',()=>api.set(settings.effect,'size',Number($('size').val
 listen($('flap'),'input',()=>api.set('bats','flapRate',Number($('flap').value)));
 listen($('bat-initialSpeed'),'input',()=>vj.apply({type:'set',key:'initialSpeed',value:Number($('bat-initialSpeed').value)}));
 listen($('bat-motionMix'),'input',()=>vj.apply({type:'set',key:'motionMix',value:Number($('bat-motionMix').value)}));
- for(const key of ['headRate','jawRate','jawOpen','pivotY','pivotZ'])listen($('skull-'+key),'input',()=>api.set('skull3d',key,Number($('skull-'+key).value)));
+ for(const key of ['headRate','jawRate','jawOpen','pivotY','pivotZ','headX','headY','headZ'])listen($('skull-'+key),'input',()=>api.set('skull3d',key,Number($('skull-'+key).value)));
+ listen($('skull-rigMode'),'change',()=>api.set('skull3d','rigMode',$('skull-rigMode').checked?1:0));
  listen($('skull-jawTint'),'change',()=>api.set('skull3d','jawTint',$('skull-jawTint').checked?1:0));
 listen($('pause'),'click',()=>phase==='paused'?api.resume():api.pause());listen($('stop'),'click',api.stop);listen($('resume'),'click',api.resume);listen($('reset'),'click',()=>api.reset(settings.effect));
 listen($('quit'),'click',quit);
@@ -308,7 +317,7 @@ function destroy(){if(destroyed)return;stop();HalloweenBatArt.release();Hallowee
 listen(window,'pagehide',e=>{if(e.persisted){stop();observer.disconnect();}else destroy();});
 listen(window,'pageshow',e=>{if(e.persisted&&!destroyed){observer.observe(stage);resize();}});
 const observer=new ResizeObserver(resize);observer.observe(stage);
-window.halloweenDiagnostics=()=>({version:'0.1.11-b-force-field-preview',renderer:settings.effect==='bats'&&active?.probe?.().composite?.mode==='source-circle-candidate'?'Canvas2D+WebGL2':'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,vj:vj?.values(),sprite:settings.effect==='bats'?(active?.probe?.()??null):null,skull:settings.effect==='skull3d'?(active?.probe?.()??null):null,compositeResources:HalloweenBatComposite.diagnostics(),fireResources:HalloweenBatFire.diagnostics(),motionResources:HalloweenBatMotion.diagnostics(),skullResources:{...skullResources,encodedChars:skullModelEncoded.length,pending:0},imageResources:HalloweenBatArt.diagnostics()});
+window.halloweenDiagnostics=()=>({version:'0.1.12-a-rig-registration-preview',renderer:settings.effect==='bats'&&active?.probe?.().composite?.mode==='source-circle-candidate'?'Canvas2D+WebGL2':'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,vj:vj?.values(),sprite:settings.effect==='bats'?(active?.probe?.()??null):null,skull:settings.effect==='skull3d'?(active?.probe?.()??null):null,compositeResources:HalloweenBatComposite.diagnostics(),fireResources:HalloweenBatFire.diagnostics(),motionResources:HalloweenBatMotion.diagnostics(),skullResources:{...skullResources,encodedChars:skullModelEncoded.length,pending:0},imageResources:HalloweenBatArt.diagnostics()});
 if(!ctx){$('status').textContent='Canvas 2D を開始できません。別のブラウザで確認してください。';return;}
 api.select('skeleton');
 HalloweenBatArt.preload().then(()=>{if(!destroyed)publish();});

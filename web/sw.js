@@ -1,14 +1,14 @@
 'use strict';
-const BUILD = "0.1.11-b-force-field-preview-611874969a80";
+const BUILD = "0.1.12-a-rig-registration-preview-e09ba4f58cc9";
 const HASHES = {
-  "index.html": "03d332c4f4644b3c91e9c8418d774a0a8edde4d74e0ef239985d58c7b93ee4c4",
+  "index.html": "e902c2745248e5260fed7de41387e5ff5adf86a6645c0083fcd35aeba521a957",
   "styles.css": "b947e782dd131e0bfa50764bfed104853d22d6eadf357e1b4d3c5980cb4f2e4e",
-  "app.js": "011317432389f9759e5eb9099c8f752e487f4fa22f325f5c67500818967bb04f",
+  "app.js": "ec2b08e3c554538c1314fc3f33853747aea9cc9f4b21e96cf72cddb422a232e8",
   "offline.js": "9995f7a5ff3503a8522eb8a008cb162dda6cbdf93a1ba2e4242a7279a3be6d12",
-  "README.txt": "bfa4eb466ef6b97bab6cc706dc2affa4059edf83eb42f5c940f7fc8c98c666ce",
+  "README.txt": "df5d5476adf68303137c11b53d4b41a75588e26aad48950728e06df5ee1a9e29",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
   "RIGHTS.txt": "621643c210f00d8512a76a724e986f926592829f926dc2d272b3578c2d304a34",
-  "control-api.js": "e5c2e16759d3cec4ced973c3945e22d0a6aaad014e315b7b4592f990d76f3de3",
+  "control-api.js": "0f74b4f2fbcfbeb39ce679e45378f637cb809e095a4f2b1b614b6dbfa9f285ce",
   "bat-motion.js": "4fdc3410a3c236e6bfa4d381b5f88e73cd7e4b1e38d7308bdc7fe368a397bcc8",
   "bat-art.js": "a00c271c1e50d61578b510e928927e13d0658761d4b190b706ede634e0ae1da9",
   "bat-fire.js": "ab11a863b3cd540ac444bcbabe1c796ed4ffc5ad5c74a56a0de763eace8a861a",
