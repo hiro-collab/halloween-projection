@@ -1,0 +1,31 @@
+async page=>{
+ const checks=[],errors=[],onError=e=>errors.push(e.message),check=(name,ok,detail={})=>checks.push({name,ok,detail});page.on('pageerror',onError);
+ await page.context().setOffline(false);await page.reload();await page.setViewportSize({width:1920,height:1080});await page.locator('#bats').click();
+ await page.waitForFunction(()=>halloweenDiagnostics().sprite?.composite?.mode==='source-circle-candidate');
+ await page.evaluate(()=>{document.body.classList.add('projection');window.dispatchEvent(new Event('resize'));});
+ const initial=await page.evaluate(()=>halloweenDiagnostics());
+ check('source colour GPU programs activate once',initial.renderer==='Canvas2D+WebGL2'&&initial.compositeResources.liveScopes===1&&initial.compositeResources.textures===3&&initial.compositeResources.programs===4&&initial.compositeResources.framebuffers===2);
+ check('source projection and texture interpretation are explicit',initial.sprite.projection.orthowidth===1.26&&initial.sprite.projection.rectangle===.24&&initial.sprite.projection.flipV&&initial.sprite.composite.channelInterpretation==='source-BGRA-storage');
+ await page.evaluate(()=>halloweenControl.setText('bats',''));
+ check('empty text adds no central black occlusion',await page.evaluate(()=>document.getElementById('message').hidden&&document.getElementById('message').getBoundingClientRect().height===0));
+ await page.evaluate(()=>{halloweenControl.pause();halloweenControl.reset('bats');});await page.waitForFunction(()=>halloweenDiagnostics().sprite?.ready);
+ check('Reset clears emitter without changing source rates',await page.evaluate(()=>{const s=halloweenDiagnostics().sprite;return s.particles.length===0&&s.births===0&&s.birthRate===5&&s.life===5&&s.instanceCount===40;}));
+ await page.evaluate(()=>halloweenControl.resume());await page.waitForFunction(()=>halloweenDiagnostics().sprite.flightTime>=2);await page.evaluate(()=>halloweenControl.pause());
+ const two=await page.evaluate(()=>halloweenDiagnostics());
+ check('2 seconds produce 10 births and 40 bounded instance slots',two.sprite.births===10&&two.sprite.particles.length===10&&two.sprite.instanceFrames.length===40,two.sprite.flightTime);
+ const hold=await page.evaluate(()=>document.querySelector('canvas').toDataURL());await page.waitForTimeout(150);
+ check('Pause preserves coloured pixels',await page.evaluate(p=>document.querySelector('canvas').toDataURL()===p,hold));
+ await page.evaluate(()=>halloweenControl.resume());const start=await page.evaluate(()=>halloweenDiagnostics().stats.frames);await page.waitForTimeout(2200);const end=await page.evaluate(()=>halloweenDiagnostics());
+ check('1920x1080 colour path keeps drawing and one resource scope',end.stage.join(',')==='1920,1080'&&end.stats.frames-start>=30&&end.compositeResources.liveScopes===1&&end.compositeResources.failures===0,{frames:end.stats.frames-start,seconds:2.2,stage:end.stage});
+ await page.evaluate(()=>{document.body.classList.remove('projection');window.dispatchEvent(new Event('resize'));});
+ await page.locator('#stop').click();
+ check('Stop deletes all owned GPU resources',await page.evaluate(()=>{const c=halloweenDiagnostics().compositeResources;return c.liveScopes===0&&c.textures===0&&c.programs===0&&c.framebuffers===0&&c.created===c.disposed;}));
+ await page.evaluate(()=>{for(let i=0;i<100;i++)halloweenControl.select(i%2?'bats':'skeleton');halloweenControl.stop();});await page.waitForFunction(()=>halloweenDiagnostics().imageResources.pending===0);
+ check('rapid inactive scopes allocate no leftover GPU state',await page.evaluate(()=>{const c=halloweenDiagnostics().compositeResources;return c.liveScopes===0&&c.textures===0&&c.programs===0&&c.framebuffers===0;}));
+ const fallback=await page.evaluate(()=>{const old=HTMLCanvasElement.prototype.getContext;let c;try{HTMLCanvasElement.prototype.getContext=function(t,...args){return t==='webgl2'?null:old.call(this,t,...args);};c=HalloweenBatComposite.create();return c.status().mode;}finally{c?.dispose();HTMLCanvasElement.prototype.getContext=old;}});
+ check('unavailable GPU degrades without exception',fallback==='original-atlas-fallback');
+ await page.locator('#quit').click();
+ check('End removes graphics listeners and retained source bytes',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.destroyed&&d.listeners===0&&d.imageResources.encodedBytes===0&&d.compositeResources.liveScopes===0;}));
+ check('normal rendering has no page exceptions',errors.length===0,errors);page.off('pageerror',onError);
+ return JSON.stringify({passed:checks.filter(c=>c.ok).length,failed:checks.filter(c=>!c.ok).length,checks,scope:'self-test of source-derived candidate; independent visual review and final fire_wrap match pending'});
+}

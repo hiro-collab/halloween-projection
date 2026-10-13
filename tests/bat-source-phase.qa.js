@@ -5,7 +5,7 @@ async page=>{
  await page.evaluate(()=>{halloweenControl.pause();halloweenControl.reset('bats');});
  await page.waitForFunction(()=>window.halloweenDiagnostics().sprite?.ready,{},{timeout:8000});
  const initial=await page.evaluate(()=>halloweenDiagnostics().sprite);
- const expected=[16,16,18,18,20,20,22,22,24,24,26,26,28,28,30,30,32,32,34,34,36,36,38,38];
+ const expected=Array.from({length:40},(_,i)=>(2*(128+Math.floor(i/2)))%60);
  check('saved 60fps and locked Trail x2 phase contribution',initial.replayFps===60&&initial.phaseModel==='locked-trail-reference-only'&&JSON.stringify(initial.instanceFrames)===JSON.stringify(expected),initial);
  await page.waitForTimeout(250);
  check('Pause freezes all instance frames',await page.evaluate(before=>JSON.stringify(halloweenDiagnostics().sprite.instanceFrames)===JSON.stringify(before),initial.instanceFrames));

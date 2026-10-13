@@ -90,3 +90,49 @@ window.HalloweenBatArt = (() => {
   }
   return Object.freeze({create,preload,cancelPending,release,diagnostics:()=>({...counts,pending:counts.fetchPending+counts.scopePending,encodedBytes:encoded?.byteLength||0,released})});
 })();
+
+// MIT: locally measured circle-colour candidate, without altering the source atlas.
+window.HalloweenBatComposite=(()=>{
+ const counts={created:0,disposed:0,liveScopes:0,textures:0,programs:0,framebuffers:0,draws:0,failures:0};
+ const vertex=`#version 300 es
+ out vec2 uv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.-1.,0.,1.);}`;
+ const header=`#version 300 es
+ precision highp float;uniform sampler2D image;uniform sampler2D glow;uniform vec2 size;uniform bool swapRB;in vec2 uv;out vec4 outputColor;
+ vec4 at(vec2 delta){vec4 c=texture(image,uv+delta/size);return swapRB?c.bgra:c;}float grey(vec2 d){return dot(at(d).rgb,vec3(.299,.587,.114));}`;
+ const colour=header+`void main(){vec4 s=at(vec2(0));
+ float x=-grey(vec2(-1,-1))-2.*grey(vec2(-1,0))-grey(vec2(-1,1))+grey(vec2(1,-1))+2.*grey(vec2(1,0))+grey(vec2(1,1));
+ float y=-grey(vec2(-1,-1))-2.*grey(vec2(0,-1))-grey(vec2(1,-1))+grey(vec2(-1,1))+2.*grey(vec2(0,1))+grey(vec2(1,1));
+ // Strength 1.38; half-normalised Sobel is a measured approximation to TD Edge.
+ float e=clamp(length(vec2(x,y))*.69,0.,1.);float b=.223+.777*s.b;
+ vec3 body=vec3(.53,.53,1.)*b*s.a;
+ outputColor=vec4(vec3(e)+body*(1.-e),e+s.a*s.a*(1.-e));}`;
+ const blur=header+`void main(){vec4 c=vec4(0);for(int y=-1;y<=1;y++){for(int x=-1;x<=1;x++){
+ float weight=float((x==0?2:1)*(y==0?2:1));c+=at(vec2(x,y)*4.)*weight;}}c/=16.;
+ outputColor=vec4(pow(max(c.rgb*.89,vec3(0)),vec3(1./.41)),c.a);}`;
+ const over=header+`void main(){vec4 c=at(vec2(0));vec4 g=texture(glow,uv);outputColor=c+g*(1.-c.a);}`;
+ const copy=header+`void main(){outputColor=at(vec2(0));}`;
+ function create(options={}){
+  counts.created++;counts.liveScopes++;
+  const canvas=document.createElement('canvas');let gl=null,disposed=false,error='',textures=[],programs=[],framebuffers=[],w=0,h=0;
+  function compile(source,type){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){const error=gl.getShaderInfoLog(s);gl.deleteShader(s);throw Error(error);}return s;}
+  function program(fragment){const v=compile(vertex,gl.VERTEX_SHADER),f=compile(fragment,gl.FRAGMENT_SHADER),p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS)){gl.deleteProgram(p);throw Error('Colour program link failed');}programs.push(p);counts.programs++;return p;}
+  function texture(){const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);textures.push(t);counts.textures++;return t;}
+  function release(){if(!gl)return;for(const p of programs){gl.deleteProgram(p);counts.programs--;}for(const t of textures){gl.deleteTexture(t);counts.textures--;}for(const f of framebuffers){gl.deleteFramebuffer(f);counts.framebuffers--;}programs=[];textures=[];framebuffers=[];}
+  try{gl=canvas.getContext('webgl2',{alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,antialias:false,depth:false,stencil:false});if(!gl)throw Error('WebGL2 unavailable');
+   for(const f of [colour,blur,over,copy])program(f);for(let i=0;i<3;i++)texture();for(let i=0;i<2;i++){framebuffers.push(gl.createFramebuffer());counts.framebuffers++;}
+   gl.disable(gl.BLEND);gl.disable(gl.DEPTH_TEST);
+  }catch(e){error='Colour candidate unavailable';counts.failures++;release();gl=null;}
+  function target(i,width,height){gl.bindTexture(gl.TEXTURE_2D,textures[i+1]);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,null);gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffers[i]);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,textures[i+1],0);if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('Colour framebuffer unavailable');}
+  function pass(i,framebuffer,width,height,input){gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);gl.viewport(0,0,width,height);gl.useProgram(programs[i]);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,input);gl.uniform1i(gl.getUniformLocation(programs[i],'image'),0);gl.uniform2f(gl.getUniformLocation(programs[i],'size'),w,h);gl.uniform1i(gl.getUniformLocation(programs[i],'swapRB'),i===0&&options.swapRB!==false?1:0);if(i===2){gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,textures[2]);gl.uniform1i(gl.getUniformLocation(programs[i],'glow'),1);}gl.drawArrays(gl.TRIANGLES,0,3);}
+  return {draw(source,stage='combined'){if(disposed||!gl||gl.isContextLost())return source;
+    try{if(w!==source.width||h!==source.height){w=source.width;h=source.height;canvas.width=w;canvas.height=h;target(0,w,h);target(1,Math.max(1,Math.floor(w/4)),Math.max(1,Math.floor(h/4)));}
+     gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,textures[0]);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,source);
+     pass(0,framebuffers[0],w,h,textures[0]);pass(1,framebuffers[1],Math.max(1,Math.floor(w/4)),Math.max(1,Math.floor(h/4)),textures[1]);pass(stage==='color'?3:2,null,w,h,textures[1]);counts.draws++;return canvas;
+    }catch(e){error='Colour candidate unavailable';counts.failures++;release();gl=null;return source;}},
+   status:()=>({mode:gl&&!gl.isContextLost()?'source-circle-candidate':'original-atlas-fallback',error,width:w,height:h,channelInterpretation:options.swapRB===false?'native-RGBA-input':'source-BGRA-storage',edgeStrength:1.38,saturation:.47,blueLow:.223,blur:'quarter-same-frame-candidate',finalFireWrapMatched:false}),
+   readPixels(){if(!gl)return null;const pixels=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);return pixels;},
+   dispose(){if(disposed)return;disposed=true;release();gl?.getExtension('WEBGL_lose_context')?.loseContext();gl=null;canvas.width=1;canvas.height=1;counts.liveScopes--;counts.disposed++;}
+  };
+ }
+ return Object.freeze({create,diagnostics:()=>({...counts})});
+})();

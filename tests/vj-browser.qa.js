@@ -18,7 +18,7 @@ async page=>{
  await page.evaluate(()=>halloweenVJ.apply({type:'set',key:'initialSpeed',value:2.6}));
  check('Initialspeed edit does not rescale existing particle velocities',await page.evaluate(p=>JSON.stringify(halloweenDiagnostics().sprite.particles)===JSON.stringify(p),frozen.d.sprite.particles));
  await page.keyboard.press('r');await page.waitForFunction(()=>halloweenDiagnostics().sprite?.ready);
- check('R resets births while retaining Pause and source settings',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.phase==='paused'&&d.vj.paused&&d.sprite.flightTime===0&&d.sprite.particles.every(p=>p.spawnSpeed===2.6)&&d.settings.motionMix===1;}));
+ check('R clears particles and births while retaining Pause and source settings',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.phase==='paused'&&d.vj.paused&&d.sprite.flightTime===0&&d.sprite.particles.length===0&&d.sprite.births===0&&d.settings.motionMix===1&&d.settings.initialSpeed===2.6;}));
  const before=await page.evaluate(()=>halloweenVJ.values());await page.locator('#text').focus();
  await page.keyboard.press('ArrowLeft');await page.keyboard.press('ArrowDown');await page.keyboard.press('r');
  check('text focus leaves VJ commands untouched',await page.evaluate(v=>JSON.stringify(halloweenVJ.values())===JSON.stringify(v),before));
@@ -37,7 +37,7 @@ async page=>{
  await page.waitForTimeout(5200);await page.keyboard.press('Space');
  const born=await page.evaluate(()=>halloweenDiagnostics());
  check('new births sample changed Initialspeed without changing playback speed',born.sprite.births>24&&born.sprite.particles.every(p=>p.spawnSpeed===2.6)&&born.settings.speed===1&&born.sprite.steps>250,{births:born.sprite.births,steps:born.sprite.steps});
- check('particle state stays finite and bounded',born.sprite.particles.length===24&&born.sprite.particles.every(p=>[p.x,p.y,p.vx,p.vy,p.age,p.angle].every(Number.isFinite)&&Math.abs(p.x)<2&&Math.abs(p.y)<2));
+ check('Birth5 Life5 keep finite bounded particle state',born.sprite.particles.length>=24&&born.sprite.particles.length<=25&&born.sprite.instanceCount===40&&born.sprite.particles.every(p=>[p.x,p.y,p.vx,p.vy,p.age,p.angle].every(Number.isFinite)&&Math.abs(p.x)<2&&Math.abs(p.y)<2&&p.age<=5.02));
  await page.locator('#skeleton').click();const requests=await page.evaluate(()=>halloweenDiagnostics().imageResources.requested);
  await page.evaluate(()=>{halloweenVJ.apply({type:'set',key:'motionMix',value:.2});halloweenVJ.apply({type:'set',key:'initialSpeed',value:1.3});});
  check('inactive settings retain without graphics allocation',await page.evaluate(n=>halloweenVJ.values().scene==='inactive'&&halloweenDiagnostics().imageResources.open===0&&halloweenDiagnostics().imageResources.requested===n,requests));
@@ -47,10 +47,11 @@ async page=>{
  check('Stop releases particles and bitmap and marks inactive',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.phase==='stopped'&&d.vj.scene==='inactive'&&d.vj.paused&&d.liveEffects===0&&d.imageResources.open===0&&d.pendingRAF===0;}));
  await page.locator('#stage').click({position:{x:100,y:100}});await page.keyboard.press('Space');await page.waitForFunction(()=>halloweenDiagnostics().sprite?.ready);
  check('Space resumes after Stop with retained source settings',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.phase==='running'&&d.vj.scene==='bats'&&!d.vj.paused&&d.settings.motionMix===.2&&d.settings.initialSpeed===1.3;}));
+ await page.waitForFunction(()=>halloweenDiagnostics().sprite.particles.length>0);
  await page.evaluate(()=>halloweenVJ.apply({type:'set',key:'motionMix',value:1}));await page.waitForTimeout(150);await page.evaluate(()=>halloweenControl.pause());
- const noRotation=await page.evaluate(()=>halloweenDiagnostics().sprite.particles.every(p=>p.angle===0));
+ const noiseRotation=await page.evaluate(()=>halloweenDiagnostics().sprite.particles.length>0&&halloweenDiagnostics().sprite.particles.every(p=>Math.abs(p.angle+p.noiseAngle)<1e-9));
  await page.evaluate(()=>{halloweenVJ.apply({type:'set',key:'motionMix',value:0});halloweenControl.resume();});await page.waitForTimeout(150);await page.evaluate(()=>halloweenControl.pause());
- check('Cross changes actual particle rotation through the solver',noRotation&&await page.evaluate(()=>halloweenDiagnostics().sprite.particles.some(p=>Math.abs(p.angle)>.1)));
+ check('Cross blends noise with velocity direction minus 90 degrees',noiseRotation&&await page.evaluate(()=>halloweenDiagnostics().sprite.particles.length>0&&halloweenDiagnostics().sprite.particles.every(p=>Math.abs(p.angle+p.noiseAngle*.23+p.directionAngle*.77)<1e-9)));
  await page.evaluate(()=>{for(let i=0;i<120;i++){halloweenControl.select(i%2?'bats':'skull3d');halloweenVJ.apply({type:'set',key:'motionMix',value:(i%21)/20});}halloweenControl.stop();});
  await page.waitForFunction(()=>halloweenDiagnostics().imageResources.pending===0);
  check('mixed scene and input burst settles with balanced resources',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.liveEffects===0&&d.pendingRAF===0&&d.imageResources.open===0&&d.imageResources.created===d.imageResources.closed&&d.skullResources.liveScopes===0&&d.skullResources.modelBytes===0;}));

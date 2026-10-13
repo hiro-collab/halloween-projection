@@ -16,7 +16,7 @@ function schedule(){if(raf||!active||phase!=='running'||document.hidden||destroy
 function tick(now){raf=0;if(!active||phase!=='running'||document.hidden)return;const dt=previous?Math.min(.05,Math.max(0,(now-previous)/1000)):0;previous=now;time+=dt*settings.speed;active.advance?.(dt);render();stats.frames++;schedule();}
 function fitText(){
  messageText.textContent=settings.text;
- if(settings.effect!=='bats'||!active){message.hidden=true;fitFont=0;return;}
+ if(settings.effect!=='bats'||!active||!settings.text.trim()){message.hidden=true;fitFont=0;return;}
  message.hidden=false;
  const maxHeight=height*.48,maxWidth=width*.82;
  messageText.style.width=maxWidth+'px';
@@ -138,47 +138,63 @@ function makeBats(){
  // TD's emission/noise/solver and final composite still require matching.
  const replayFps=60;
  const lockedTrail=Array.from({length:40},(_,i)=>128+Math.floor(i/2));
- let births=0,steps=0,flightTime=0,accumulator=0;
+ let births=0,steps=0,flightTime=0,accumulator=0,nextBirth=.2;
  const birth=(i,age=0)=>{
   const angle=i*2.39996+births*.17,speed=settings.initialSpeed;
   births++;
-  return {i,age,x:Math.cos(angle)*.72,y:Math.sin(angle)*.72,
-   vx:-Math.sin(angle)*speed*.22,vy:Math.cos(angle)*speed*.22,spawnSpeed:speed,
-   angle,scale:.7+(i%5)*.1,frameOffset:(2*lockedTrail[i])%60};
+  const nz=1-2*((i*.61803398875+.5)%1),r=Math.sqrt(1-nz*nz),nx=Math.cos(angle)*r,ny=Math.sin(angle)*r;
+  const directionAngle=Math.atan2(ny,nx)-Math.PI/2,noiseAngle=Math.sin(i*.31)*Math.PI*2,mix=.77*(1-settings.motionMix);
+  return {i,age,x:nx*.06,y:ny*.06,
+   vx:nx*speed,vy:ny*speed,spawnSpeed:speed,
+   angle:-(noiseAngle*(1-mix)+directionAngle*mix),directionAngle,noiseAngle};
  };
- let flock=Array.from({length:24},(_,i)=>birth(i,i*5/24));
+ let flock=[];
  let disposed=false,flapTime=0;
  const sourceParameters=()=>({Initialspeed:settings.initialSpeed,Cross:settings.motionMix,Vortex:5-4*settings.motionMix,Spiral:-1.7+.8*settings.motionMix,rotationCross:.77*(1-settings.motionMix)});
  function step(dt){
   const p=sourceParameters();flightTime+=dt;steps++;
+  flock=flock.filter(b=>b.age<5-1e-8);
+  while(flightTime+1e-8>=nextBirth){flock.push(birth(births));nextBirth+=.2;}
   for(let i=0;i<flock.length;i++){
-   let b=flock[i];b.age+=dt;if(b.age>=5)b=flock[i]=birth(i);
+   const b=flock[i];b.age+=dt;
    const noiseX=Math.sin(flightTime*2.3+i*1.9)*.2,noiseY=Math.cos(flightTime*1.7+i*2.7)*.2;
    const ax=-b.y*p.Vortex*.14+b.x*p.Spiral*.1+noiseX+.1;
    const ay=b.x*p.Vortex*.14+b.y*p.Spiral*.1+noiseY+.1;
    const drag=Math.exp(-5*dt);
    b.vx=(b.vx+ax*dt)*drag;b.vy=(b.vy+ay*dt)*drag;
    b.x+=b.vx*dt;b.y+=b.vy*dt;
-   b.angle=Math.atan2(b.vy,b.vx)*p.rotationCross;
+   b.directionAngle=Math.atan2(b.vy,b.vx)-Math.PI/2;
+   b.noiseAngle=Math.sin(flightTime*.21+i*.31)*Math.PI*2;
+   b.angle=-(b.noiseAngle*(1-p.rotationCross)+b.directionAngle*p.rotationCross);
   }
  }
  const art=HalloweenBatArt.create(()=>{if(!disposed&&active===owner){if(art.status().state==='error'){stop();phase='error';assetError=HalloweenBatArt.diagnostics().encodedBytes?'図案データは取得済みですが描画できません。再開を試すか、対応するブラウザーで確認してください。':'原図案は未取得です。接続中に再開するか、投影前にこの端末へ保存してください。';publish();}else{render();publish();}}});
  const frame=()=>settings.frameLock??Math.floor(flapTime*replayFps)%60;
  const instanceFrame=b=>settings.frameLock??(frame()+b.frameOffset)%60;
- const owner={kind:'bats',resourceCount:()=>flock?24+(art.ready?1:0):0,
+ const rawCanvas=document.createElement('canvas'),rawContext=rawCanvas.getContext('2d',{alpha:true});let composite=null;
+ const slots=Array.from({length:40},(_,i)=>({frameOffset:(2*lockedTrail[i])%60}));
+ const owner={kind:'bats',resourceCount:()=>flock?slots.length+(art.ready?1:0):0,
   advance(dt){if(!art.ready)return;if(settings.frameLock===null)flapTime+=dt*settings.flapRate;
    accumulator+=dt*settings.speed;while(accumulator>=1/60){step(1/60);accumulator-=1/60;}},
-  probe:()=>({...art.status(),frameIndex:frame(),flapTime,replayFps,phaseModel:'locked-trail-reference-only',instanceFrames:flock?.map(instanceFrame)||[],
+  probe:()=>({...art.status(),frameIndex:frame(),flapTime,replayFps,phaseModel:'locked-trail-reference-only',instanceFrames:flock?slots.map(instanceFrame):[],
    motionModel:'source-controls-candidate-solver',parameters:sourceParameters(),flightTime,steps,births,
-   particles:flock?.map(b=>({x:b.x,y:b.y,vx:b.vx,vy:b.vy,age:b.age,spawnSpeed:b.spawnSpeed,angle:b.angle}))||[]}),
+   projection:{orthowidth:1.26,yGain:height/width,rectangle:.24,flipV:true},birthRate:5,life:5,instanceCount:40,composite:composite?.status()??{mode:'pending'},
+   particles:flock?.map(b=>({x:b.x,y:b.y,vx:b.vx,vy:b.vy,age:b.age,spawnSpeed:b.spawnSpeed,angle:b.angle,directionAngle:b.directionAngle??0,noiseAngle:b.noiseAngle??0}))||[]}),
   draw(t){if(!flock||!art.ready)return;
-   for(const b of flock){
-    const x=width/2+b.x*width*.45,y=height/2+b.y*height*.45;
-    const scale=Math.min(width,height)*.0017*settings.size*b.scale;
-    ctx.save();ctx.translate(x,y);ctx.rotate(b.angle);
-    art.drawFrame(ctx,instanceFrame(b),-48*scale,-27*scale,96*scale,54*scale);ctx.restore();
+   const renderScale=Math.min(1,1920/width,1080/height),world=width/1.26;
+   const rw=Math.max(1,Math.round(width*renderScale)),rh=Math.max(1,Math.round(height*renderScale));
+   if(rawCanvas.width!==rw||rawCanvas.height!==rh){rawCanvas.width=rw;rawCanvas.height=rh;}
+   rawContext.setTransform(renderScale,0,0,renderScale,0,0);rawContext.clearRect(0,0,width,height);
+   for(let i=0;flock.length&&i<slots.length;i++){
+    const b=flock[Math.min(i,flock.length-1)];
+    const x=width/2+b.x*world,y=height/2-b.y*height/1.26;
+    const edge=.24*world*settings.size;
+    const angle=-(Math.sin(flightTime*.21+i*.31)*Math.PI*2*(1-.77*(1-settings.motionMix))+b.directionAngle*.77*(1-settings.motionMix));
+    rawContext.save();rawContext.translate(x,y);rawContext.rotate(angle);rawContext.scale(1,-1);
+    art.drawFrame(rawContext,instanceFrame(slots[i]),-edge/2,-edge/2,edge,edge);rawContext.restore();
    }
-  },dispose(){disposed=true;art.dispose();flock=null;}
+   composite??=HalloweenBatComposite.create();ctx.drawImage(composite.draw(rawCanvas),0,0,width,height);
+  },dispose(){disposed=true;art.dispose();composite?.dispose();composite=null;rawCanvas.width=1;rawCanvas.height=1;flock=null;}
  };
  return owner;
 }
@@ -198,6 +214,7 @@ function publish(){
  if(settings.effect==='skull3d'){for(const key of ['headRate','jawRate','jawOpen','pivotY','pivotZ']){$('skull-'+key).value=settings[key];$('skull-'+key+'-value').textContent=settings[key].toFixed(key==='jawOpen'?0:2);} $('skull-jawTint').checked=!!settings.jawTint;}
  $('bat-options').hidden=settings.effect!=='bats';$('flap').value=settings.flapRate;$('flap-value').textContent=settings.flapRate.toFixed(2)+' ×';
  for(const key of ['initialSpeed','motionMix']){$('bat-'+key).value=settings[key];$('bat-'+key+'-value').textContent=settings[key].toFixed(2);}
+ $('bat-colour-note').textContent=active?.probe?.().composite?.mode==='original-atlas-fallback'?'この環境では色合成を省いた旧図案を表示しています。原作の見えとの一致は未確認です。':'紫の本体・白い輪郭の比較です。飛翔の乱数・力と最終の光/文字合成は未一致です。';
  $('bat-readiness').textContent=HalloweenBatArt.diagnostics().encodedBytes?'図案取得済み。このページ内では接続なしでも切り替えられます。':'図案未取得のofflineでは表示できません。接続中に取得するか、先に端末へ保存してください。';
  if(active?.probe&&active.probe().state==='loading')$('status').textContent+=' · 原図案を準備中';
  if(active?.probe&&active.probe().state==='error')$('status').textContent+=' · 図案を読めません。接続・保存を確認して再開してください。';
@@ -242,7 +259,7 @@ api=HalloweenControlAPI.create($('text').value,{
 window.halloweenControl=api;
 vj=HalloweenControlAPI.createVJ({apply(command,next){
  if(destroyed)throw Error('Projection ended');
- if(command.type==='set'){settings[command.key]=next[command.key];render();publish();}
+ if(command.type==='set'){settings[command.key]=next[command.key];publish();}
  else if(command.type==='select'){if(next.scene==='bats')api.select('bats');else if(settings.effect==='bats')api.stop();}
  else if(command.type==='pause'){if(settings.effect==='bats')api.pause();}
  else if(command.type==='resume'){if(settings.effect!=='bats')api.select('bats');else api.resume();}
@@ -280,7 +297,7 @@ function destroy(){if(destroyed)return;stop();HalloweenBatArt.release();skullMod
 listen(window,'pagehide',e=>{if(e.persisted){stop();observer.disconnect();}else destroy();});
 listen(window,'pageshow',e=>{if(e.persisted&&!destroyed){observer.observe(stage);resize();}});
 const observer=new ResizeObserver(resize);observer.observe(stage);
-window.halloweenDiagnostics=()=>({version:'0.1.6-vj-input-preview',renderer:'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,vj:vj?.values(),sprite:settings.effect==='bats'?(active?.probe?.()??null):null,skull:settings.effect==='skull3d'?(active?.probe?.()??null):null,skullResources:{...skullResources,encodedChars:skullModelEncoded.length,pending:0},imageResources:HalloweenBatArt.diagnostics()});
+window.halloweenDiagnostics=()=>({version:'0.1.7-b-circle-preview',renderer:settings.effect==='bats'&&active?.probe?.().composite?.mode==='source-circle-candidate'?'Canvas2D+WebGL2':'Canvas2D',phase,selected:settings.effect,time,revision,settings:{...settings},pendingRAF:raf?1:0,liveEffects:active?1:0,liveObjects:active?.resourceCount()||0,stats:{...stats},backing:[canvas.width,canvas.height],stage:[width,height],text:{fontSize:fitFont,chars:settings.text.length,visible:!message.hidden},projection:document.body.classList.contains('projection'),fullscreen:!!document.fullscreenElement,hiddenSuspension,destroyed,listeners:listeners.length,fullscreenError,quitting,localHost:false,heartbeat:0,assetError,vj:vj?.values(),sprite:settings.effect==='bats'?(active?.probe?.()??null):null,skull:settings.effect==='skull3d'?(active?.probe?.()??null):null,compositeResources:HalloweenBatComposite.diagnostics(),skullResources:{...skullResources,encodedChars:skullModelEncoded.length,pending:0},imageResources:HalloweenBatArt.diagnostics()});
 if(!ctx){$('status').textContent='Canvas 2D を開始できません。別のブラウザで確認してください。';return;}
 api.select('skeleton');
 HalloweenBatArt.preload().then(()=>{if(!destroyed)publish();});

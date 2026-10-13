@@ -23,3 +23,7 @@ preview.qa.js/startup.qa.jsは旧Windows試作の履歴検証。現在の一般�
 - QA serverを--stdin-controlで正常終了する場合、PTYでstdinを保持する。ユーザーや他担当のprocessを終了しない。
 
 検証範囲と未一致はdocs/VJ-INPUT-TIMING-VALIDATION.mdを参照。
+
+0.1.7 B circle比較ではb-composite.qa.js（12）で実1920×1080・発生/寿命・原投影・空文字・GPU色合成・Pause・解放/fallbackを確認。
+bat-source-phase.qa.jsは原locked Trail40sample全枠へ期待値を拡張。旧第一24枠の期待値も保持。
+独立外観レビューは別担当がdocs/B-CIRCLE-VALIDATION.mdの確定commit/静的比較画像を読み取る。自己テストの合格を原作一致判定へ流用しない。
