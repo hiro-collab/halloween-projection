@@ -6,8 +6,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / 'web'
-APP_VERSION = '0.1.13-a-original-pivot-preview'
-ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt', 'LICENSE.txt', 'RIGHTS.txt', 'control-api.js', 'bat-motion.js', 'bat-art.js', 'bat-fire.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt']
+APP_VERSION = '0.1.14-a-fluid-core-preview'
+ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt', 'LICENSE.txt', 'RIGHTS.txt', 'control-api.js', 'bat-motion.js', 'bat-art.js', 'bat-fire.js', 'a-fluid.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt']
 for name in ASSETS:
     if name.endswith('.png'):
         continue
@@ -96,7 +96,7 @@ worker = worker_template.replace('__BUILD__', json.dumps(build)).replace('__HASH
 (WEB / 'sw.js').write_text(worker, encoding='utf-8', newline='\n')
 out = ROOT / 'dist'
 out.mkdir(exist_ok=True)
-dest = out / 'halloween-projection-web-v0.1.13-a-original-pivot-preview.zip'
+dest = out / 'halloween-projection-web-v0.1.14-a-fluid-core-preview.zip'
 names = ASSETS + ['sw.js']
 with zipfile.ZipFile(dest, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
     for name in names:

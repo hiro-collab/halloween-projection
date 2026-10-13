@@ -78,3 +78,9 @@ SparseをXYZ空間で評価し、40枠方向のLag、生存数別Random/rolling/
 
 閉姿勢の上下54pxずれをbbox中心の位置合わせで補正し、顎支点を別に変換する比較モードを追加しました。
 [原との座標関係・共通API・4姿勢の結果](docs/A-RIG-REGISTRATION-VALIDATION.md)。同じCC0候補のnative/Web行列差は最大4.4e-8、前景範囲差は最大1px。旧比較が既定で、UIから新モードを選べます。原モデルの形状・顎支点・照明、原A流体/文字とB残件は未完です。
+
+
+## 0.1.13 原支点と0.1.14 流体core
+
+[原顎支点0の選択・対照](docs/A-ORIGINAL-PIVOT-VALIDATION.md)を追加。
+[原A流体coreの一段階と残差](docs/A-FLUID-CORE-VALIDATION.md)。原の色格子を可視化する診断モードで、最終色/光/背景文字・動的noise・60Hzの実時間一致は未完です。
