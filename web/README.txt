@@ -138,3 +138,10 @@ TDの力・最終合成の再現は未完です。入力と制御のAPIを分離
 - Source head preprocessing, Sobel/HSV172/224, head overlay, threshold/outside, background text minimum/Level5/gamma2.02, Cross .824, radial foreground and final Level1.03/gamma1.1 are connected. Blur, edge, alpha and lighting differences remain.
 - Velocity is still the approved frozen source field at tz0. Dynamic noise is not generated; source decoration noise is unconnected and no new native noise payload is included in this package.
 - Pause, Reset, toggles, Stop, Resume and End release owned resources. Final scene is a private comparison; it is not a faithful reproduction pass.
+
+
+0.1.17 source A display fixes:
+- Level applies brightness, then gamma, then contrast. Edge derives white RGB and alpha from luminance. Head glow output follows the source sixteenth resolution. Gaussian Blur and derivative normalization remain comparison candidates.
+- GUI passes measured active elapsed seconds to advection/vorticity instead of one fixed 1/60 step per draw. Default direct step() is still 1/60 for existing fixed-step comparisons. Injection/diffusion remain per cook; frozen velocity is unchanged.
+- Arial background masks shrink to fit all eight lines within 82% width and 48% height. Native fixed-size typography remains a separate fidelity limitation. Text stays literal and is not stored.
+- One alternate actor, no dynamic decoration noise. Earlier packages and original sources are preserved.

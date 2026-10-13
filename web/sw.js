@@ -1,19 +1,19 @@
 'use strict';
-const BUILD = "0.1.16-a-integrated-preview-b44e3615c262";
+const BUILD = "0.1.17-a-display-fixes-ff34f57d9cb3";
 const HASHES = {
-  "index.html": "72ee9447d0aaaa0b17fe4fafb3ec45d810ff59439d63f25364f360797563dc60",
+  "index.html": "9b5c115b8e0824c2f5a7caa0b83eff8cb073a71fb443e794faf35bef6bff7fa3",
   "styles.css": "b947e782dd131e0bfa50764bfed104853d22d6eadf357e1b4d3c5980cb4f2e4e",
-  "app.js": "e5f86992728c46d5bb2dad615d8b3f12e3f1e314cba2eb508158b6a8a7e8d918",
+  "app.js": "87b21f1f5c54cc8287608030c87e0068cd66ec31d8c8f26b47483f9fed1115bd",
   "offline.js": "da2e4fc3eb2b7785d63128f3b8dabba86ea09bdd8091502e06bcc25ccd0e28b4",
-  "README.txt": "30a1a0f965fb9cf0be839f56eaec94869f379c5c8106b3de703bd26ccb2b0cc7",
+  "README.txt": "7dd4d0e9a34669daca65d4b42025458ef57182451df23e339869811c7d5fd832",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
   "RIGHTS.txt": "87b231f4912c9fdd1d7e3edf02b52874ef869a8484dc92cce5e608a4dade0392",
   "control-api.js": "78a246331cd12b4eae8c6b963db4b0dba7b7d94e1be82e66c82873afd987dfcb",
   "bat-motion.js": "4fdc3410a3c236e6bfa4d381b5f88e73cd7e4b1e38d7308bdc7fe368a397bcc8",
   "bat-art.js": "a00c271c1e50d61578b510e928927e13d0658761d4b190b706ede634e0ae1da9",
   "bat-fire.js": "ab11a863b3cd540ac444bcbabe1c796ed4ffc5ad5c74a56a0de763eace8a861a",
-  "a-fluid.js": "adfd53b80ab9bab8e15c5de9dc3455777878b87291147eafc923aaf91635868c",
-  "a-composite.js": "f2047335fa94ea24b7ad8d8459ff3e393f49bfe6cf0cc180a3e4d71c83395220",
+  "a-fluid.js": "c0cc0f8cab2bcd4b0ddef222f3d213e9c88faa4119956ed77c23b526c4a7ceea",
+  "a-composite.js": "fc4a0031e46fb10b70e91456ae9e7d5a2300da865559fd720cf1ed561def8723",
   "assets/owner-bat-atlas.png": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",
   "assets/OWNER-BAT-ASSET.txt": "1c87dd8e950d7070b54608917fb4e9aae44abcbdb070e92d60b3bb784c6b9379"
 };

@@ -1,6 +1,12 @@
 /* MIT implementation of source A operator order. Native decoration noise is deliberately not packaged. */
 'use strict';
 window.HalloweenAComposite=(()=>{
+ function fitText(ctx,text,width,height){
+  const lines=text.split('\n'),maxWidth=width*.82,maxHeight=height*.48,base=width*.15625;
+  const measure=size=>{ctx.font=size+'px Arial';let widest=0,ascent=0,descent=0;for(const line of lines){const m=ctx.measureText(line||'M');widest=Math.max(widest,line?m.width:0);ascent=Math.max(ascent,m.actualBoundingBoxAscent||size*.8);descent=Math.max(descent,m.actualBoundingBoxDescent||size*.2);}const lineHeight=size,total=(lines.length-1)*lineHeight+ascent+descent;return {fontSize:size,lineHeight,width:widest,height:total,ascent,descent};};
+  let lo=.1,hi=base;for(let i=0;i<16;i++){const mid=(lo+hi)/2,m=measure(mid);if(m.width<=maxWidth&&m.height<=maxHeight)lo=mid;else hi=mid;}
+  const m=measure(Math.floor(lo*100)/100),top=(height-m.height)/2;return {...m,firstBaseline:top+m.ascent,bounds:{left:(width-m.width)/2,right:(width+m.width)/2,top,bottom:top+m.height},lines:lines.length,maxWidth,maxHeight};
+ }
   const counts={created:0,disposed:0,liveScopes:0,programs:0,textures:0,framebuffers:0,gpuBytes:0,bufferBytes:0,draws:0,maxLive:0,failures:0};
  const vertex=`#version 300 es
  out vec2 uv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.-1.,0.,1.);}`;
@@ -8,17 +14,17 @@ window.HalloweenAComposite=(()=>{
  precision highp float;uniform sampler2D t0,t1,t2,t3,t4;uniform vec2 resolution,axis;uniform int stage;uniform float brightness,gammaValue,contrastValue,gain,strength,hueValue;uniform vec2 center;in vec2 uv;out vec4 outputColor;
  float lum(vec3 c){return dot(c,vec3(.2126,.7152,.0722));}
  vec4 over(vec4 a,vec4 b){return a+b*(1.-a.a);}
- vec4 level(vec4 a,float b,float g,float c){a.rgb=pow(max((a.rgb*b-.5)*c+.5,vec3(0)),vec3(1./g));return a;}
+ vec4 level(vec4 a,float b,float g,float c){a.rgb=(pow(max(a.rgb*b,vec3(0)),vec3(1./g))-.5)*c+.5;return a;}
  vec3 hue(vec3 c,float angle,float saturation,float value){float hi=max(c.r,max(c.g,c.b)),lo=min(c.r,min(c.g,c.b)),d=hi-lo;if(d<1.e-7)return c*value;float h=hi==c.r?(c.g-c.b)/d:hi==c.g?2.+(c.b-c.r)/d:4.+(c.r-c.g)/d;h=fract(h/6.+angle/360.);float s=clamp(d/hi*saturation,0.,1.);vec3 rgb=clamp(abs(fract(h+vec3(0.,2./3.,1./3.))*6.-3.)-1.,0.,1.);return hi*value*mix(vec3(1),rgb,s);}
  vec4 sample0(vec2 p){return any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1)))?vec4(0):texture(t0,p);}
- vec4 sobel(float scale,float black){vec2 p=1./vec2(textureSize(t0,0));vec4 a=sample0(uv+vec2(-p.x,-p.y)),b=sample0(uv+vec2(0,-p.y)),c=sample0(uv+vec2(p.x,-p.y)),d=sample0(uv+vec2(-p.x,0)),e=sample0(uv+vec2(p.x,0)),f=sample0(uv+vec2(-p.x,p.y)),g=sample0(uv+vec2(0,p.y)),h=sample0(uv+p);vec4 x=-a-2.*d-f+c+2.*e+h,y=-a-2.*b-c+f+2.*g+h;return max(sqrt(x*x+y*y)*scale-black,vec4(0));}
+ vec4 edge(float scale,float black){vec2 p=1./vec2(textureSize(t0,0));float a=lum(sample0(uv+vec2(-p.x,-p.y)).rgb),b=lum(sample0(uv+vec2(0,-p.y)).rgb),c=lum(sample0(uv+vec2(p.x,-p.y)).rgb),d=lum(sample0(uv+vec2(-p.x,0)).rgb),e=lum(sample0(uv+vec2(p.x,0)).rgb),f=lum(sample0(uv+vec2(-p.x,p.y)).rgb),g=lum(sample0(uv+vec2(0,p.y)).rgb),h=lum(sample0(uv+p).rgb);float x=-a-2.*d-f+c+2.*e+h,y=-a-2.*b-c+f+2.*g+h;float value=clamp(sqrt(x*x+y*y)*scale-black,0.,1.);return vec4(value);}
  void main(){vec4 a=texture(t0,uv),b=texture(t1,uv);vec4 c=a;
   if(stage==0)c=a*gain;
   else if(stage==1)c=level(a,brightness,gammaValue,contrastValue);
   else if(stage==2){c=vec4(0);float total=0.;for(int i=-12;i<=12;i++){float x=float(i),weight=exp(-.5*x*x/(strength*strength));c+=sample0(uv+x*axis/resolution)*weight;total+=weight;}c/=total;}
-  else if(stage==3)c=sobel(strength,brightness);
+  else if(stage==3)c=edge(strength,brightness);
   else if(stage==4){a.a=lum(a.rgb);c=over(over(a,b),texture(t2,uv));}
-  else if(stage==5){float r=round(clamp(texture(t0,uv).r*.96,0.,1.)*255.)/255.;vec4 edge=sobel(5.31,0.);float er=round(clamp(lum(edge.rgb),0.,1.)*255.)/255.;vec4 body=vec4(hue(vec3(r,0,0),224.,1.,1.),round(clamp(.2126*r,0.,1.)*255.)/255.);vec4 rim=vec4(hue(vec3(er,0,0),172.,1.66,9.),er);c=clamp(body,0.,1.)+clamp(rim,0.,1.);}
+  else if(stage==5){float r=round(clamp(texture(t0,uv).r*.96,0.,1.)*255.)/255.;float er=round(edge(5.31,0.).r*255.)/255.;vec4 body=vec4(hue(vec3(r,0,0),224.,1.,1.),round(clamp(.2126*r,0.,1.)*255.)/255.);vec4 rim=vec4(hue(vec3(er,0,0),172.,1.66,9.),er);c=clamp(body,0.,1.)+clamp(rim,0.,1.);}
   else if(stage==6){a.rgb=hue(a.rgb,hueValue,brightness,gain);c=a;}
   else if(stage==7)c=over(a,b);
   else if(stage==8){float mask=lum((a*b).rgb)>=.544?1.:0.;c=b*(1.-mask);}
@@ -46,7 +52,7 @@ window.HalloweenAComposite=(()=>{
   try{gl=canvas.getContext('webgl2',{alpha:false,preserveDrawingBuffer:true,antialias:false,depth:false,stencil:false});if(!gl||!gl.getExtension('OES_texture_float_linear'))throw Error('A requires WebGL2 float sampling');const v=compile(vertex,gl.VERTEX_SHADER),f=compile(fragment,gl.FRAGMENT_SHADER);program=gl.createProgram();counts.programs++;gl.attachShader(program,v);gl.attachShader(program,f);gl.linkProgram(program);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));fbo=gl.createFramebuffer();counts.framebuffers++;gl.disable(gl.BLEND);gl.disable(gl.DEPTH_TEST);allocate('empty',1,1);
   }catch(e){error=String(e.message||e);counts.failures++;}
   function prepare(head){if(disposed||error)return head;const start=performance.now();try{
-   if(w!==head.width||h!==head.height){w=head.width;h=head.height;canvas.width=w;canvas.height=h;for(const name of ['headGain','headStrong','headGlow','headEdge','headInput','flowColor','flowHue','headGamma','headHSV','headBlur','headOverlay','headBright','outside','decor','textBlur','textComposite','behind','frontLevel','radial','final'])allocate(name);allocate('flowColor',640,360);allocate('frontLevel',Math.max(1,Math.round(w/4)),Math.max(1,Math.round(h/4)));allocate('radial',Math.max(1,Math.round(w/4)),Math.max(1,Math.round(h/4)));}
+   if(w!==head.width||h!==head.height){w=head.width;h=head.height;canvas.width=w;canvas.height=h;for(const name of ['headGain','headStrong','headGlow','headEdge','headInput','flowColor','flowHue','headGamma','headHSV','headBlur','headOverlay','headBright','outside','decor','textBlur','textComposite','behind','frontLevel','radial','final'])allocate(name);allocate('headGlow',Math.max(1,Math.round(w/16)),Math.max(1,Math.round(h/16)));allocate('flowColor',640,360);allocate('frontLevel',Math.max(1,Math.round(w/4)),Math.max(1,Math.round(h/4)));allocate('radial',Math.max(1,Math.round(w/4)),Math.max(1,Math.round(h/4)));}
    upload('head',head);pass('headGain',0,['head'],{gain:.36});pass('headStrong',1,['headGain'],{brightness:1.36,gammaValue:1,contrastValue:2.18});blur('headGain','headGlow',24,10/6);pass('headGlow',1,['headGlow'],{brightness:2});pass('headEdge',3,['head'],{strength:1.65,brightness:.17});pass('headInput',4,['headGlow','headStrong','headEdge']);
    gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,w,h);gl.useProgram(program);gl.uniform1i(gl.getUniformLocation(program,'stage'),0);gl.uniform1f(gl.getUniformLocation(program,'gain'),1);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,textures.get('headInput'));gl.drawArrays(gl.TRIANGLES,0,3);const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('A prepare GL error '+code);lastMs=performance.now()-start;return canvas;
   }catch(e){error=String(e.message||e);counts.failures++;return head;}}
@@ -60,5 +66,5 @@ window.HalloweenAComposite=(()=>{
   }catch(e){error=String(e.message||e);counts.failures++;return head;}}
   return {prepare,draw,read(name='final'){if(disposed||error||!sizes.has(name))return null;const s=sizes.get(name),data=new Uint8Array(s.width*s.height*4);gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,textures.get(name),0);gl.readPixels(0,0,s.width,s.height,gl.RGBA,gl.UNSIGNED_BYTE,data);return {width:s.width,height:s.height,data};},status:()=>({ready:!disposed&&!error,error,draws,resolution:[w,h],gpuBytes,bufferBytes:disposed?0:dyeBuffer.byteLength,averageMs:draws?totalMs/draws:0,maxMs,frozenVelocity:true,noiseGenerator:false,decorationNoise:'unconnected; no source noise payload packaged',blur:'source sizes and preshrink; Gaussian sampling candidate',mode:'source-A-integrated-comparison'}),dispose(){if(disposed)return;disposed=true;if(gl){for(const t of textures.values()){gl.deleteTexture(t);counts.textures--;}if(program){gl.deleteProgram(program);counts.programs--;}if(fbo){gl.deleteFramebuffer(fbo);counts.framebuffers--;}}textures.clear();sizes.clear();counts.gpuBytes-=gpuBytes;gpuBytes=0;counts.bufferBytes-=dyeBuffer.byteLength;dyeBuffer=null;canvas.width=canvas.height=1;gl?.getExtension('WEBGL_lose_context')?.loseContext();counts.disposed++;counts.liveScopes--;}};
  }
- return Object.freeze({create,diagnostics:()=>({...counts}),release(){}});
+ return Object.freeze({create,fitText,diagnostics:()=>({...counts}),release(){}});
 })();
