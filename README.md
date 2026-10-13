@@ -61,3 +61,9 @@ SparseをXYZ空間で評価し、40枠方向のLag、生存数別Random/rolling/
 原240stepの20出生と同じ位相に修正。部分ageの乱数は未一致です。
 [出生/Force入力の有限切り分け](docs/B-BIRTH-PHASE-FORCE-SPLIT.md)・[原Aの確認順](docs/A-LOCAL-REPRODUCTION-OUTLOOK.md)。
 同じ新生状態で大きい配置差がForce SOP入力から増えることを確認。力場は今回変更していません。
+
+## 0.1.11 B原Force場比較
+
+原の正規化方向・Wyvill weight・Vortex/Spiralの成分解釈から力場を最小修正しました。
+[原値/式/同条件検証/残差](docs/B-FORCE-FIELD-VALIDATION.md)。
+同じ原新生状態のForce-only位置差は約.529→4e-7、全力場は約.548→.0508。乱流/部分age/最終外観と原Aは未完です。

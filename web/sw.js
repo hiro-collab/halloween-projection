@@ -1,15 +1,15 @@
 'use strict';
-const BUILD = "0.1.10-b-birth-phase-preview-7b05ad9f5215";
+const BUILD = "0.1.11-b-force-field-preview-611874969a80";
 const HASHES = {
-  "index.html": "32f6b109c77d3503daca154858fff0a809df10244e13add86db888b4c95775cd",
+  "index.html": "03d332c4f4644b3c91e9c8418d774a0a8edde4d74e0ef239985d58c7b93ee4c4",
   "styles.css": "b947e782dd131e0bfa50764bfed104853d22d6eadf357e1b4d3c5980cb4f2e4e",
-  "app.js": "89b6cae0661940cd846e127f7ae002190b2bcc6453244ece3f523216e202537d",
+  "app.js": "011317432389f9759e5eb9099c8f752e487f4fa22f325f5c67500818967bb04f",
   "offline.js": "9995f7a5ff3503a8522eb8a008cb162dda6cbdf93a1ba2e4242a7279a3be6d12",
-  "README.txt": "53be45bcb4e04e1b1ad9f78474fa49bf8344da5114df8dc0be1a52eba3776478",
+  "README.txt": "bfa4eb466ef6b97bab6cc706dc2affa4059edf83eb42f5c940f7fc8c98c666ce",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
   "RIGHTS.txt": "621643c210f00d8512a76a724e986f926592829f926dc2d272b3578c2d304a34",
   "control-api.js": "e5c2e16759d3cec4ced973c3945e22d0a6aaad014e315b7b4592f990d76f3de3",
-  "bat-motion.js": "6a58f7c5adacbe6a2e06f76c2ecb523058e97846366c58fe05edddff74f81ded",
+  "bat-motion.js": "4fdc3410a3c236e6bfa4d381b5f88e73cd7e4b1e38d7308bdc7fe368a397bcc8",
   "bat-art.js": "a00c271c1e50d61578b510e928927e13d0658761d4b190b706ede634e0ae1da9",
   "bat-fire.js": "ab11a863b3cd540ac444bcbabe1c796ed4ffc5ad5c74a56a0de763eace8a861a",
   "assets/owner-bat-atlas.png": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",

@@ -35,3 +35,5 @@ offline-security.qa.jsは13静的assetの完全一覧のみ許可。ZIPはsw.js�
 同じ原画像の合成比較と未一致はdocs/B-SIGNALS-FIRE-VALIDATION.md。
 
 0.1.10: b-birth-phase.qa.cjs / b-birth-browser.qa.jsは原20出生/240stepの出生数とReset位相だけを検証。部分age RNG/Force SOP一致を示さない。原4入力対照はdocs/B-BIRTH-PHASE-FORCE-SPLIT.md。
+
+0.1.11: b-force-field.qa.cjsは原4固定Vortex/Spiral条件の12goldenと2edge契約（14）。Wyvill/方向/成分の実生産関数を原1stepへ照合。軸/外側guardはNative直接採取ではない。詳細docs/B-FORCE-FIELD-VALIDATION.md。

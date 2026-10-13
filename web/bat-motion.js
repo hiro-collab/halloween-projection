@@ -31,5 +31,8 @@ window.HalloweenBatParticle=(()=>{
  function integrate(p,ax,ay,az,dt,drag=5){const keep=Math.max(0,1-drag*dt);p.vx=p.vx*keep+ax*dt;p.vy=p.vy*keep+ay*dt;p.vz=p.vz*keep+az*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;return p;}
  function createBirthClock(){const increment=Math.fround(5/60);let residual=increment;
   return {step(){residual=Math.fround(residual+increment);if(residual<=.5)return 0;const count=Math.ceil(residual-.5);residual=Math.fround(residual-count);return count;}};}
- return Object.freeze({birth,integrate,createBirthClock,emitterCount:42});
+ function force(p,vortex,spiral){const x=p.x,y=p.y,z=p.z-.03,r=Math.hypot(x,y),u=(x*x+y*y+z*z)/9;
+  if(r===0||u>=1)return [0,0,0];const weight=2*(1+(-22*u+17*u*u-4*u*u*u)/9),radial=-(vortex+spiral);
+  return [weight*(-vortex*y+radial*x)/r,weight*(vortex*x+radial*y)/r,0];}
+ return Object.freeze({birth,integrate,createBirthClock,force,emitterCount:42});
 })();

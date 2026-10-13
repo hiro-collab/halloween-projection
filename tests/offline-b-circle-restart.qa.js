@@ -3,7 +3,7 @@ async page=>{
  await page.context().setOffline(true);
  const response=await page.goto('http://127.0.0.1:8766/web-preview/');
  await page.waitForFunction(()=>halloweenDiagnostics?.().phase==='running');
- check('normal browser restart loads the packaged version offline',response.fromServiceWorker()&&await page.evaluate(()=>halloweenDiagnostics().version==='0.1.10-b-birth-phase-preview'));
+ check('normal browser restart loads the packaged version offline',response.fromServiceWorker()&&await page.evaluate(()=>halloweenDiagnostics().version==='0.1.11-b-force-field-preview'));
  check('source control input remains memory only',await page.evaluate(()=>{const v=halloweenVJ.values();return v.initialSpeed===1.3&&v.motionMix===.5&&localStorage.length===0&&sessionStorage.length===0;}));
  await page.locator('#bats').click();await page.waitForFunction(()=>halloweenDiagnostics().sprite?.ready);
  check('offline restart decodes all 60 bat frames',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.sprite.frames===60&&d.imageResources.open===1&&d.imageResources.encodedBytes===61130;}));
