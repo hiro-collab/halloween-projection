@@ -1,14 +1,14 @@
 'use strict';
-const BUILD = "0.1.12-a-rig-registration-preview-e09ba4f58cc9";
+const BUILD = "0.1.13-a-original-pivot-preview-75af0f8c61ec";
 const HASHES = {
-  "index.html": "e902c2745248e5260fed7de41387e5ff5adf86a6645c0083fcd35aeba521a957",
+  "index.html": "055c7a293208778cdedbc7dcbce81bf145da6de20264f330b536543d6c2c3c3f",
   "styles.css": "b947e782dd131e0bfa50764bfed104853d22d6eadf357e1b4d3c5980cb4f2e4e",
-  "app.js": "ec2b08e3c554538c1314fc3f33853747aea9cc9f4b21e96cf72cddb422a232e8",
+  "app.js": "e21e55fe4ec6f311b10e67d640ad8c851ebeb58fe5299274c5e149cdf12377bd",
   "offline.js": "9995f7a5ff3503a8522eb8a008cb162dda6cbdf93a1ba2e4242a7279a3be6d12",
   "README.txt": "df5d5476adf68303137c11b53d4b41a75588e26aad48950728e06df5ee1a9e29",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
   "RIGHTS.txt": "621643c210f00d8512a76a724e986f926592829f926dc2d272b3578c2d304a34",
-  "control-api.js": "0f74b4f2fbcfbeb39ce679e45378f637cb809e095a4f2b1b614b6dbfa9f285ce",
+  "control-api.js": "1d375282d96f8a155a716603ab73706e6fc9d9e87e0be898b54ec3e0173f8d79",
   "bat-motion.js": "4fdc3410a3c236e6bfa4d381b5f88e73cd7e4b1e38d7308bdc7fe368a397bcc8",
   "bat-art.js": "a00c271c1e50d61578b510e928927e13d0658761d4b190b706ede634e0ae1da9",
   "bat-fire.js": "ab11a863b3cd540ac444bcbabe1c796ed4ffc5ad5c74a56a0de763eace8a861a",

@@ -50,18 +50,18 @@ window.HalloweenControlAPI = Object.freeze({
     const values = {
       skeleton:{speed:1,size:1,text:initialText},
       bats:{speed:1,size:1,text:initialText,flapRate:1,frameLock:null},
-      skull3d:{size:1,text:initialText,headRate:1,jawRate:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0}
+      skull3d:{size:1,text:initialText,headRate:1,jawRate:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0}
     };
     const assertScene = id => { if(!Object.hasOwn(values,id)) throw new RangeError('Unknown scene'); };
     const copy = id => { assertScene(id);return {...values[id]}; };
-    const ranges = {speed:[.2,2],size:[.5,1.5],flapRate:[.25,2],headRate:[0,2],jawRate:[0,2],jawOpen:[0,45],pivotY:[-1.15,-.65],pivotZ:[-.3,.2],jawTint:[0,1],rigMode:[0,1],headX:[-180,180],headY:[-180,180],headZ:[-180,180]};
+    const ranges = {speed:[.2,2],size:[.5,1.5],flapRate:[.25,2],headRate:[0,2],jawRate:[0,2],jawOpen:[0,45],pivotY:[-1.15,.2],pivotZ:[-.3,.2],jawTint:[0,1],rigMode:[0,1],headX:[-180,180],headY:[-180,180],headZ:[-180,180],jawPivotMode:[0,1]};
     const api = {
       values:copy,
       select(id){assertScene(id);hooks.select(id);return api.status();},
       set(id,key,value){
         assertScene(id);
         if(!Object.hasOwn(values[id],key)||key==='text')throw new RangeError('Unknown numeric key');
-        if(key==='jawTint'||key==='rigMode'){
+        if(key==='jawTint'||key==='rigMode'||key==='jawPivotMode'){
           if(value!==0&&value!==1)throw new RangeError('Tint must be 0 or 1');
         }else if(key==='frameLock'){
           if(value!==null&&(!Number.isInteger(value)||value<0||value>59))throw new RangeError('Frame must be null or 0..59');
@@ -106,7 +106,7 @@ window.HalloweenSkullRig=(()=>{
     // Native XYZ order: Rz * Ry * Rx, about the common parent pivot.
     const head=[cz*cy,cz*sy*sx-sz*cx,cz*sy*cx+sz*sx,0,sz*cy,sz*sy*sx+cz*cx,sz*sy*cx-cz*sx,0,-sy,cy*sx,cy*cx,0,0,0,0,1];
     for(let i=0;i<3;i++)head[i*4+3]=parentPivot[i]-head[i*4]*parentPivot[0]-head[i*4+1]*parentPivot[1]-head[i*4+2]*parentPivot[2];
-    const jawPivot=[translation[0],scale*values.pivotY+translation[1],scale*values.pivotZ+translation[2]];
+    const jawPivot=values.jawPivotMode===1?[0,0,0]:[translation[0],scale*values.pivotY+translation[1],scale*values.pivotZ+translation[2]];
     return {angles,headWorld:head,jawWorld:multiply(head,rotateX(jawAngle*Math.PI/180,jawPivot)),jawPivot,parentPivot:[...parentPivot]};
   }
   function point(matrix,x,y,z,target,offset){
