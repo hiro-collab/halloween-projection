@@ -2,12 +2,12 @@
 <html lang="ja">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; font-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Halloween Projection — 非公開Web技術試作 0.1.7</title>
+<title>Halloween Projection — 非公開Web技術試作 0.1.8</title>
 <link rel="stylesheet" href="./styles.css"></head>
 <body>
 <aside id="controls" aria-label="操作パネル">
 <div class="brand">HALLOWEEN / PROJECTION</div><h1>壁が、ハロウィンの<br>ステージになる。</h1>
-<p class="lead">ブラウザで開いて、そのまま投影。<br>初回無料 · 非公開Web技術試作 0.1.7</p>
+<p class="lead">ブラウザで開いて、そのまま投影。<br>初回無料 · 非公開Web技術試作 0.1.8</p>
 <div class="label">エフェクト</div><div class="effects">
 <button id="skeleton" data-effect="skeleton" aria-pressed="true">くるくる骸骨<small>簡易 2D ベクター</small></button>
 <button id="bats" data-effect="bats" aria-pressed="false">コウモリと文字<small>本人の原図案60フレーム</small></button><button id="skull3d" data-effect="skull3d" aria-pressed="false">3Dドクロ<small>CC0別候補・私的比較</small></button></div>
@@ -16,7 +16,7 @@ HALLOWEEN</textarea>
 <p class="help">コウモリで表示。最大240字・8行。長文は自動で縮小。</p>
 </section><label class="range-label" for="speed"><span id="speed-label">動く速さ</span><output id="speed-value">1.0 ×</output></label><input id="speed" type="range" min="0.2" max="2" step="0.1" value="1">
 <label class="range-label" for="size"><span>エフェクトの大きさ</span><output id="size-value">100 %</output></label><input id="size" type="range" min="50" max="150" step="5" value="100">
-<section id="bat-options" hidden><label class="range-label" for="bat-initialSpeed"><span>初速（新しく生まれる個体）</span><output id="bat-initialSpeed-value">1.30</output></label><input id="bat-initialSpeed" type="range" min="0" max="2.6" step="0.05" value="1.3"><label class="range-label" for="bat-motionMix"><span>動きの混合（Cross）</span><output id="bat-motionMix-value">0.50</output></label><input id="bat-motionMix" type="range" min="0" max="1" step="0.05" value="0.5"><p class="help">↑↓で初速、←→で動きの混合。初速は誕生時に反映します。入力中はキー操作しません。</p><label class="range-label" for="flap"><span>図案・羽ばたきの再生</span><output id="flap-value">1.00 ×</output></label><input id="flap" type="range" min="0.25" max="2" step="0.25" value="1"><p class="help">保存図案を個体ごとにずらして再生する比較版です。初速・渦・収縮・回転を操作できる飛翔候補です。原設定の発生5/秒・寿命5秒・40描画枠、図案の色/上下解釈と紫の色処理を反映しました。原粒子計算・最終合成との一致は未完です。</p><p class="help" id="bat-colour-note"></p><p class="help" id="bat-readiness"></p><p class="help">停止は描画bitmapを解放します。検証済みPNG約61KBはページ内に保持し、表示終了で破棄します。</p></section>
+<section id="bat-options" hidden><label class="range-label" for="bat-initialSpeed"><span>初速（新しく生まれる個体）</span><output id="bat-initialSpeed-value">1.30</output></label><input id="bat-initialSpeed" type="range" min="0" max="2.6" step="0.05" value="1.3"><label class="range-label" for="bat-motionMix"><span>動きの混合（Cross）</span><output id="bat-motionMix-value">0.50</output></label><input id="bat-motionMix" type="range" min="0" max="1" step="0.05" value="0.5"><p class="help">↑↓で初速、←→で動きの混合。初速は誕生時に反映します。入力中はキー操作しません。</p><label class="range-label" for="flap"><span>図案・羽ばたきの再生</span><output id="flap-value">1.00 ×</output></label><input id="flap" type="range" min="0.25" max="2" step="0.25" value="1"><p class="help">原セットに沿った飛翔・光・文字合成の比較版です。初速と動きの混合を操作できます。粒子の計算、光と文字の外観は調整中です。</p><p class="help" id="bat-colour-note"></p><p class="help" id="bat-readiness"></p><p class="help">停止は描画bitmapを解放します。検証済みPNG約61KBはページ内に保持し、表示終了で破棄します。</p></section>
 <section id="skull-options" hidden><p class="help">頭と顎を別々に動かせるCC0別モデルです。無textureの比較用。原Aの流体・背景文字は未実装です。</p><label class="range-label" for="skull-headRate"><span>頭の回転速度（0で停止）</span><output id="skull-headRate-value">1</output></label><input id="skull-headRate" type="range" min="0" max="2" step="0.1" value="1"><label class="range-label" for="skull-jawRate"><span>顎開閉の速さ（0で開きを固定）</span><output id="skull-jawRate-value">1</output></label><input id="skull-jawRate" type="range" min="0" max="2" step="0.1" value="1"><label class="range-label" for="skull-jawOpen"><span>顎の開き（最大角度）</span><output id="skull-jawOpen-value">28</output></label><input id="skull-jawOpen" type="range" min="0" max="45" step="1" value="28"><label class="range-label" for="skull-pivotY"><span>顎の支点 · 上下</span><output id="skull-pivotY-value">-0.75</output></label><input id="skull-pivotY" type="range" min="-1.15" max="-0.65" step="0.01" value="-0.75"><label class="range-label" for="skull-pivotZ"><span>顎の支点 · 前後</span><output id="skull-pivotZ-value">-0.12</output></label><input id="skull-pivotZ" type="range" min="-0.3" max="0.2" step="0.01" value="-0.12"><label><input id="skull-jawTint" type="checkbox"> 顎を色分けして確認</label><p class="help">支点は検査用の初期値です。実機で大きさと開口を確認してください。</p></section><div class="transport"><button id="pause">一時停止</button><button id="reset">リセット</button><button id="stop">停止・解放</button><button id="resume">再開</button></div>
 <button id="project" class="primary">投影開始 · 全画面</button><button id="hide">操作パネルを隠す（H）</button>
 <button id="quit">表示を終了</button>
@@ -37,4 +37,4 @@ HALLOWEEN</textarea>
 <li><b>Esc</b>で操作へ戻ります。Hでパネルを切り替えられます。</li>
 <li><b>表示を終了</b>を押し、終了表示を確認したらタブを閉じます。もう一度使うときはページを開き直してください。</li>
 </ol><p>黒もプロジェクターの明るさとして残ります。文字の読みやすさ・パネルが映らないこと・ブラウザー枠の消失は実機で確認してください。原VJの3D再現・流体・実機投影の検収は未完です。</p><button id="close-guide">閉じる</button></dialog>
-<script defer src="./control-api.js"></script><script defer src="./bat-art.js"></script><script defer src="./app.js"></script><script defer src="./offline.js"></script></body></html>
+<script defer src="./control-api.js"></script><script defer src="./bat-motion.js"></script><script defer src="./bat-art.js"></script><script defer src="./bat-fire.js"></script><script defer src="./app.js"></script><script defer src="./offline.js"></script></body></html>

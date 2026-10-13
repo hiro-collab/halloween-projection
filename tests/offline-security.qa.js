@@ -4,6 +4,7 @@ async (page) => {
   if(!/^http:\/\/127\.0\.0\.1:\d+\/web-preview\/$/.test(url))throw Error('Private loopback only');
   await page.setViewportSize({width:1366,height:900});
   await page.context().setOffline(false);
+  await page.reload();
   await page.waitForFunction(()=>window.halloweenOfflineDiagnostics&&!window.halloweenOfflineDiagnostics().busy);
   const requests=[];page.context().on('request',r=>requests.push({url:r.url(),method:r.method()}));
   check('offline cache is opt in',!(await page.evaluate(()=>window.halloweenOfflineDiagnostics().saved)));
@@ -26,7 +27,7 @@ async (page) => {
     const bodies=await Promise.all(keys.map(async r=>(await c.match(r)).text()));
     return {count:names.length,files:keys.map(r=>r.url.replace(new URL('./',location.href).href,'')).sort(),hasInput:bodies.some(b=>b.includes(t))};
   },text);
-  check('cache holds only eleven approved static files',cache.count===1&&cache.files.join(',')==='LICENSE.txt,README.txt,RIGHTS.txt,app.js,assets/OWNER-BAT-ASSET.txt,assets/owner-bat-atlas.png,bat-art.js,control-api.js,index.html,offline.js,styles.css',cache);
+  check('cache holds only thirteen approved static files',cache.count===1&&cache.files.join(',')==='LICENSE.txt,README.txt,RIGHTS.txt,app.js,assets/OWNER-BAT-ASSET.txt,assets/owner-bat-atlas.png,bat-art.js,bat-fire.js,bat-motion.js,control-api.js,index.html,offline.js,styles.css',cache);
   check('typed text is absent from offline cache',!cache.hasInput);
   await page.context().setOffline(true);
   const response=await page.reload();await page.waitForFunction(()=>window.halloweenDiagnostics?.().phase==='running');

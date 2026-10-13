@@ -39,3 +39,7 @@ CC0は改変・商用・再配布を含む条件ですが、今回の試作全�
 source archive SHA256: 067899af520649177c0dd5de1a4b18bd4f46daf667df04a405dc9a27d206011b
 source OBJ SHA256: f24014fa02de4b3e3be2926df887114f42cb49361592b103a47d7cac8d8225af
 converted model SHA256: bb38451e202e30ce2d84cdc224433ac27aafd43539ed362e6127a980b3538706
+
+0.1.8: bat-motion.jsの格子・Lag・Random応答は本人原セットの私的比較測定値です。
+独自の補間/描画コードと区別し、測定データの一般再配布条件は未確定として扱います。
+この版は非公開比較用です。元atlasも引き続きMIT外です。

@@ -1,15 +1,17 @@
 'use strict';
-const BUILD = "0.1.7-b-circle-preview-2d2dd0e79b55";
+const BUILD = "0.1.8-b-signals-fire-preview-dc3467160c4f";
 const HASHES = {
-  "index.html": "c1dd5c6c772fe6bbd47f4660d02ed46aec8f5d2a3073bfe4091c12917e9dc13c",
-  "styles.css": "36dd33bc831811dcdc7a799854eab6664530e9c2eefcc0f43bf04612c9b22710",
-  "app.js": "d207270b8413ac6f3578f806706f6b345ad5263ddca5512638e6dd38abfb7a08",
-  "offline.js": "1f5391450d8e1ee86a1260151bfded3694ccb6b42c39e4644283dba12c9c068c",
-  "README.txt": "6428465fefd7fbddc0b3198692f572619b128ce6c9fe0f7714677e322f0e0183",
+  "index.html": "85b230f687fc1ef093878f86f65b93b54793669bc0e5d14877e05e9487b9d512",
+  "styles.css": "b947e782dd131e0bfa50764bfed104853d22d6eadf357e1b4d3c5980cb4f2e4e",
+  "app.js": "4098b6e74697d07a5495dfcf54b70f9c3f33376c5bd8b75b2f3f547914b480dc",
+  "offline.js": "9995f7a5ff3503a8522eb8a008cb162dda6cbdf93a1ba2e4242a7279a3be6d12",
+  "README.txt": "36a0f282462d89631e00a1c04af1252b0218bcdd312d982fca83fb0974fff923",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
-  "RIGHTS.txt": "b25022ec29ba67166c0f03308368e5cb5edf6d1467d15b14c7df8803bfdce9a5",
+  "RIGHTS.txt": "4b8a4ec12c8cb73add5a92bce3aa738153e14e7d11b1c8cc2f7c64658830e2b9",
   "control-api.js": "e5c2e16759d3cec4ced973c3945e22d0a6aaad014e315b7b4592f990d76f3de3",
-  "bat-art.js": "a7017ff54c5a294d5ab7992060b073b2f562530a70d8c70c2795be505bfa4d16",
+  "bat-motion.js": "7c56c5e8a3a5e1c49596a7250bcfd2af123ffadafda5a19337c8deffaa18dd35",
+  "bat-art.js": "a00c271c1e50d61578b510e928927e13d0658761d4b190b706ede634e0ae1da9",
+  "bat-fire.js": "ab11a863b3cd540ac444bcbabe1c796ed4ffc5ad5c74a56a0de763eace8a861a",
   "assets/owner-bat-atlas.png": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",
   "assets/OWNER-BAT-ASSET.txt": "1c87dd8e950d7070b54608917fb4e9aae44abcbdb070e92d60b3bb784c6b9379"
 };

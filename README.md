@@ -41,3 +41,11 @@ app/とSTART.cmdは以前の技術試作の履歴です。本人のSAC保護環�
 
 ## CC0別ドクロの私的比較
 0.1.5では頭/顎を独立操作できるCC0別模型を第三の比較シーンへ追加しました。[模型・検証](docs/CC0-SKULL-TRIAL.md)。元Aの完全再現とはしません。[原B自己採取の実際の停止点](docs/TD-REFERENCE-ATTEMPT.md)。既存版へ戻せるprivate branchを維持します。
+
+## 0.1.8 B信号・光・文字合成比較
+
+SparseをXYZ空間で評価し、40枠方向のLag、生存数別Random/rolling/locked画像位相を反映しました。
+文字の黒い矩形を除き、光と文字をCanvas内へ合成する非公開比較版です。
+[測定・修正・未一致](docs/B-SIGNALS-FIRE-VALIDATION.md)と[原VJ/Webの技法対応](docs/VJ-TECHNIQUE-MAP.md)。
+原粒子計算、最終Noise/Blur/文字マスク、10秒境界、原A流体/背景文字は未完です。
+0.1.7の独立レビュー不合格を保持し、自己テスト合格を原再現合格として扱いません。

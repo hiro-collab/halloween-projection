@@ -63,6 +63,17 @@ window.HalloweenBatArt = (() => {
         const frame=Math.max(0,Math.min(59,Math.floor(index)));
         ctx.drawImage(bitmap,(frame%10)*160,Math.floor(frame/10)*90,160,90,x,y,w,h);
       },
+      // World-space pose contract: final Rz in degrees, integer texture layer.
+      // Motion/Noise, image index generation and later composition stay outside.
+      drawInstances(ctx,poses,{width,height,orthowidth=1.26,rectangle=.24,size=1}){
+        if(!scope.ready)return;
+        const world=width/orthowidth,edge=rectangle*world*size;
+        for(const p of poses){
+          ctx.save();ctx.translate(width/2+p.tx*world,height/2-p.ty*world);
+          ctx.rotate(-p.rz*Math.PI/180);ctx.scale(1,-1);
+          scope.drawFrame(ctx,p.index,-edge/2,-edge/2,edge,edge);ctx.restore();
+        }
+      },
       dispose(){
         if(disposed)return;disposed=true;state='disposed';abort.abort();
         if(bitmap){bitmap.close();bitmap=null;counts.closed++;counts.open--;}

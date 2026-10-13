@@ -67,3 +67,6 @@ ZIP halloween-projection-web-v0.1.3-bat-source-preview.zip、79,628bytes、12フ
 SHA256 abef1f6b7092efff2cb05709d28f1eac7fb69943e1b6766c47949c77e803a362。
 ZIPは静的web/だけ。Git blob・ZIP・11asset cache manifestの全bytes/hashを照合済み。
 実画面例とraw集計は私的QAへ保持し、公開資料へ追加しません。動画カットは[収録予定](VIDEO-SHOTS.md)、まだ未収録です。
+
+
+2026-10-13追記: このページの旧版記録は履歴です。最新0.1.8の測定、修正、未一致は[B-SIGNALS-FIRE-VALIDATION.md](B-SIGNALS-FIRE-VALIDATION.md)。13静的asset/14 ZIP file。原B全体の再現は未合格です。

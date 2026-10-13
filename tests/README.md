@@ -27,3 +27,9 @@ preview.qa.js/startup.qa.jsは旧Windows試作の履歴検証。現在の一般�
 0.1.7 B circle比較ではb-composite.qa.js（12）で実1920×1080・発生/寿命・原投影・空文字・GPU色合成・Pause・解放/fallbackを確認。
 bat-source-phase.qa.jsは原locked Trail40sample全枠へ期待値を拡張。旧第一24枠の期待値も保持。
 独立外観レビューは別担当がdocs/B-CIRCLE-VALIDATION.mdの確定commit/静的比較画像を読み取る。自己テストの合格を原作一致判定へ流用しない。
+
+0.1.8: b-signals.qa.js（6）は格子に含まれない原座標・原Lag応答・同じframeの40indexと資源解放を検証。
+b-fire.qa.js（12）はGPU/文字mask/静止/停止/終了/fallback。原映像一致の試験ではない。
+bat-source-phase.qa.js（6）はRandom/rolling/locked位相候補とframeLock/時計/Resetを検証。
+offline-security.qa.jsは13静的assetの完全一覧のみ許可。ZIPはsw.jsを加えた14file。
+同じ原画像の合成比較と未一致はdocs/B-SIGNALS-FIRE-VALIDATION.md。

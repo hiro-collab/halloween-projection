@@ -69,3 +69,6 @@ model/検査図/生JSONをGit/配布ZIP/Libraryへ入れず、素材の外部配
 SHA256 ddf6fddff664e0c8f0aa8f2c951bf5ffd1bc8667091731f35347096939b01455。
 戻り先: web-private-preview1673a06、bat-offline-fix e67a7e7（runtime b210371）。旧0.1.3 ZIP/Library保存は不変。
 新候補をmainや安定版へmergeしていません。完成版/公開版/一般配布可とは称しません。
+
+
+2026-10-13追記: このページの旧版記録は履歴です。最新0.1.8の測定、修正、未一致は[B-SIGNALS-FIRE-VALIDATION.md](B-SIGNALS-FIRE-VALIDATION.md)。13静的asset/14 ZIP file。原B全体の再現は未合格です。

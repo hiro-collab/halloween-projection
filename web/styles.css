@@ -20,7 +20,7 @@ input[type=range]{width:100%;accent-color:var(--orange);height:22px;margin:0}
 .footer{margin-top:20px;padding-top:16px;border-top:1px solid #302c39;font-size:11px;color:var(--muted);line-height:1.7}.footer button{padding:0;background:none;border:none;min-height:30px;text-decoration:underline;text-underline-offset:3px;font-size:12px;color:#ded8e9}
 #stage{position:relative;min-width:0;min-height:0;background:#000;overflow:hidden}canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-#message[hidden]{display:none}#message-text{color:#fff;text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.3;font-weight:750;padding:16px 20px;background:#000;border-radius:20px;max-width:82%;text-shadow:0 2px 4px #000}
+#message[hidden]{display:none}#message{opacity:0}#message-text{color:#fff;text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.3;font-weight:750;padding:16px 20px;max-width:82%}
 body.projection{grid-template-columns:minmax(0,1fr);cursor:none}body.projection #controls{display:none}
 dialog{color:#eee;background:#1b1822;border:1px solid #524751;border-radius:16px;padding:24px;max-width:600px;width:calc(100% - 32px);max-height:85vh;line-height:1.75;font-size:14px}
 dialog::backdrop{background:#000b}dialog h2{font-size:21px;margin-top:0}dialog button{float:right}dialog li{margin-bottom:8px}
