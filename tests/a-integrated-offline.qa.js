@@ -3,7 +3,7 @@ async page=>{
  if(!/^http:\/\/127\.0\.0\.1:\d+\/web-preview\/$/.test(page.url()))throw Error('Owned loopback only');
  check('saved cache prerequisite',await page.evaluate(()=>halloweenOfflineDiagnostics().saved));
  await page.context().setOffline(true);const response=await page.reload();await page.waitForFunction(()=>halloweenDiagnostics?.().phase==='running');
- check('offline reload uses current saved build',response.fromServiceWorker()&&await page.evaluate(()=>halloweenDiagnostics().version==='0.1.17-a-display-fixes'));
+ check('offline reload uses current saved build',response.fromServiceWorker()&&await page.evaluate(()=>halloweenDiagnostics().version==='0.1.18-six-scene-fixed-step'));
  await page.locator('#skull3d').click();await page.locator('#skull-aCompositeMode').check();await page.waitForFunction(()=>halloweenDiagnostics().skull?.flow?.steps>=2&&halloweenDiagnostics().skull?.composite?.ready,{},{timeout:10000});
  check('integrated A starts without network',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.aCompositeResources.liveScopes===1&&d.skull.composite.error===''&&d.aFluidResources.liveScopes===1;}));
  await page.evaluate(()=>halloweenControl.pause());const state=await page.evaluate(()=>halloweenDiagnostics());

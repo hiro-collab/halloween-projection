@@ -1,0 +1,9 @@
+async page=>{
+ const checks=[],check=(name,ok,detail={})=>checks.push({name,ok,detail});
+ if(!/^http:\/\/127\.0\.0\.1:\d+\/web-preview\/$/.test(page.url()))throw Error('Owned loopback only');await page.context().setOffline(false);await page.reload();await page.waitForFunction(()=>halloweenOfflineDiagnostics().saved,{},{timeout:6000});check('saved build prerequisite',await page.evaluate(()=>halloweenOfflineDiagnostics().saved));
+ await page.context().setOffline(true);const response=await page.reload();check('six-scene package reloads from saved worker',response.fromServiceWorker()&&await page.evaluate(()=>halloweenDiagnostics().version==='0.1.18-six-scene-fixed-step'));
+ await page.locator('#skull3d').click();await page.locator('#skull-aSceneMode').check();await page.waitForFunction(()=>halloweenDiagnostics().skull?.flow?.steps>=2,{},{timeout:12000});
+ check('offline six pairs and bounded float solver start without new assets',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.skull.scene.count===6&&d.skull.scene.geometryNodes===12&&d.skull.flow.backend==='WebGL2-float'&&d.skull.flow.timing.maxSubsteps===8&&d.skull.flow.lastDeltaSeconds===1/60&&d.skull.composite.foregroundBranches===3&&!d.skull.composite.noiseGenerator;}));
+ await page.locator('#quit').click();check('offline End releases mesh and both GPU contexts',await page.evaluate(()=>{const d=halloweenDiagnostics();return d.destroyed&&d.pendingRAF===0&&d.listeners===0&&d.skullResources.modelBytes===0&&d.aFluidResources.gpuBytes===0&&d.aFluidResources.bufferBytes===0&&d.aFluidResources.programs===0&&d.aFluidResources.textures===0&&d.aCompositeResources.gpuBytes===0;}));await page.context().setOffline(false);
+ return JSON.stringify({passed:checks.filter(c=>c.ok).length,failed:checks.filter(c=>!c.ok).length,checks,physicalDisconnect:'not tested'});
+}

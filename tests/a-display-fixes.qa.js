@@ -12,7 +12,7 @@ async page=>{
   await page.waitForTimeout(3000);
   const end=await page.evaluate(()=>{halloweenControl.pause();const d=halloweenDiagnostics();return {wall:performance.now(),sim:d.skull.flow.simulationSeconds,clock:d.skull.flowTime,steps:d.skull.flow.steps,averageMs:d.skull.performance.averageMs};});
   const wall=(end.wall-start.wall)/1000,sim=end.sim-start.sim,ratio=sim/wall,rate={width,height,wallSeconds:wall,simulationSeconds:sim,ratio,stepsPerSecond:(end.steps-start.steps)/wall,averageMs:end.averageMs};rates.push(rate);
-  check(`fluid Delta follows wall time at ${width}x${height}`,ratio>.93&&ratio<1.07&&Math.abs(end.clock-end.sim)<1e-6,rate);
+  check(`fixed fluid ticks follow active wall time at ${width}x${height}`,ratio>.93&&ratio<1.07&&end.clock-end.sim>=-1e-6&&end.clock-end.sim<1/60+.03,rate);
   const held=await page.evaluate(()=>halloweenDiagnostics().skull.flow.simulationSeconds);await page.waitForTimeout(160);
   check(`Pause freezes solver time at ${width}x${height}`,held===await page.evaluate(()=>halloweenDiagnostics().skull.flow.simulationSeconds));
  }

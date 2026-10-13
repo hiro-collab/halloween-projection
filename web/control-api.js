@@ -50,10 +50,10 @@ window.HalloweenControlAPI = Object.freeze({
     const values = {
       skeleton:{speed:1,size:1,text:initialText},
       bats:{speed:1,size:1,text:initialText,flapRate:1,frameLock:null},
-      skull3d:{size:1,text:initialText,headRate:1,jawRate:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0}
+      skull3d:{size:1,text:initialText,headRate:1,jawRate:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0,aSceneMode:0,actorPoses:null,actorRevision:0}
     };
     const assertScene = id => { if(!Object.hasOwn(values,id)) throw new RangeError('Unknown scene'); };
-    const copy = id => { assertScene(id);return {...values[id]}; };
+    const copy = id => { assertScene(id);const result={...values[id]};if(id==='skull3d'&&result.actorPoses)result.actorPoses=result.actorPoses.map(p=>({position:[...p.position],rotation:[...p.rotation],jaw:p.jaw}));return result; };
     const ranges = {speed:[.2,2],size:[.5,1.5],flapRate:[.25,2],headRate:[0,2],jawRate:[0,2],jawOpen:[0,45],pivotY:[-1.15,.2],pivotZ:[-.3,.2],jawTint:[0,1],rigMode:[0,1],headX:[-180,180],headY:[-180,180],headZ:[-180,180],jawPivotMode:[0,1]};
     const api = {
       values:copy,
@@ -61,7 +61,7 @@ window.HalloweenControlAPI = Object.freeze({
       set(id,key,value){
         assertScene(id);
         if(!Object.hasOwn(values[id],key)||key==='text')throw new RangeError('Unknown numeric key');
-        if(key==='jawTint'||key==='rigMode'||key==='jawPivotMode'||key==='fluidMode'||key==='fluidColor'||key==='aCompositeMode'){
+        if(key==='jawTint'||key==='rigMode'||key==='jawPivotMode'||key==='fluidMode'||key==='fluidColor'||key==='aCompositeMode'||key==='aSceneMode'){
           if(value!==0&&value!==1)throw new RangeError('Tint must be 0 or 1');
         }else if(key==='frameLock'){
           if(value!==null&&(!Number.isInteger(value)||value<0||value>59))throw new RangeError('Frame must be null or 0..59');
@@ -69,8 +69,9 @@ window.HalloweenControlAPI = Object.freeze({
           const r=ranges[key];
           if(typeof value!=='number'||!Number.isFinite(value)||!r||value<r[0]||value>r[1])throw new RangeError('Value outside range');
         }
-        values[id][key]=value;if(id==='skull3d'&&key==='aCompositeMode'&&value===1){values[id].fluidMode=values[id].rigMode=values[id].jawPivotMode=1;}if(id==='skull3d'&&key==='fluidMode'&&value===0)values[id].aCompositeMode=0;hooks.changed(id);return api.status();
+        values[id][key]=value;if(id==='skull3d'&&(key==='aCompositeMode'||key==='aSceneMode')&&value===1){values[id].aCompositeMode=values[id].fluidMode=values[id].rigMode=values[id].jawPivotMode=1;}if(id==='skull3d'&&key==='fluidMode'&&value===0)values[id].aCompositeMode=0;if(id==='skull3d'&&['fluidMode','aCompositeMode','rigMode'].includes(key)&&value===0)values[id].aSceneMode=0;hooks.changed(id);return api.status();
       },
+      setActors(id,poses){assertScene(id);if(id!=='skull3d')throw new RangeError('Actor input belongs to A');const next=poses===null?null:window.HalloweenSkullScene.validate(poses);values[id].actorPoses=next;values[id].actorRevision++;hooks.changed(id);return api.status();},
       setText(id,text){
         assertScene(id);if(typeof text!=='string')throw new TypeError('Text must be a string');
         let value=text.slice(0,240),lines=value.split('\n');
@@ -100,12 +101,12 @@ window.HalloweenSkullRig=(()=>{
     for(let r=0;r<4;r++)for(let c=0;c<4;c++)for(let k=0;k<4;k++)out[r*4+c]+=a[r*4+k]*b[k*4+c];
     return out;
   }
-  function pose(values,headTime,jawAngle){
+  function pose(values,headTime,jawAngle,position=[0,0,0]){
     const angles=[values.headX,values.headY+headTime*.8*180/Math.PI,values.headZ],r=angles.map(v=>v*Math.PI/180);
     const [sx,sy,sz]=r.map(Math.sin),[cx,cy,cz]=r.map(Math.cos);
     // Native XYZ order: Rz * Ry * Rx, about the common parent pivot.
     const head=[cz*cy,cz*sy*sx-sz*cx,cz*sy*cx+sz*sx,0,sz*cy,sz*sy*sx+cz*cx,sz*sy*cx-cz*sx,0,-sy,cy*sx,cy*cx,0,0,0,0,1];
-    for(let i=0;i<3;i++)head[i*4+3]=parentPivot[i]-head[i*4]*parentPivot[0]-head[i*4+1]*parentPivot[1]-head[i*4+2]*parentPivot[2];
+    for(let i=0;i<3;i++)head[i*4+3]=position[i]+parentPivot[i]-head[i*4]*parentPivot[0]-head[i*4+1]*parentPivot[1]-head[i*4+2]*parentPivot[2];
     const jawPivot=values.jawPivotMode===1?[0,0,0]:[translation[0],scale*values.pivotY+translation[1],scale*values.pivotZ+translation[2]];
     return {angles,headWorld:head,jawWorld:multiply(head,rotateX(jawAngle*Math.PI/180,jawPivot)),jawPivot,parentPivot:[...parentPivot]};
   }
@@ -117,3 +118,17 @@ window.HalloweenSkullRig=(()=>{
   }
   return Object.freeze({pose,point,registration:Object.freeze({scale,translation,parentPivot,cameraZ:90,fov:6.4,projection:'perspective-horizontal',basis:'closed whole-body height and bbox center; separate candidate jaw pivot'})});
 })();
+
+// Own periodic candidate. No sampled source noise/pose payload is included.
+window.HalloweenSkullScene=Object.freeze({
+ validate(poses){
+  if(!Array.isArray(poses)||poses.length!==6)throw new RangeError('Expected six A actors');
+  return poses.map(p=>{if(!p||typeof p!=='object'||Array.isArray(p))throw new TypeError('Expected actor pose');for(const [key,bound] of [['position',5],['rotation',360]])if(!Array.isArray(p[key])||p[key].length!==3||p[key].some(v=>typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>bound))throw new RangeError('Actor transform outside comparison range');if(typeof p.jaw!=='number'||!Number.isFinite(p.jaw)||p.jaw<0||p.jaw>90)throw new RangeError('Actor jaw outside 0..90');return {position:[...p.position],rotation:[...p.rotation],jaw:p.jaw};});
+ },
+ poses(values,headTime,jawTime){
+  if(values.actorPoses)return values.actorPoses;
+  return Array.from({length:6},(_,i)=>{const phase=i*2.399963229728653,move=headTime/.05,turn=headTime;
+   return {position:[.2*3.31*Math.sin(phase+move),.2*3.31*Math.sin(phase*1.7+move*.73),.2*3.31*Math.sin(phase*.6+move*.41)],rotation:[values.headX+50.4*Math.sin(phase+turn),values.headY+50.4*Math.sin(phase*1.3+turn*.83),values.headZ+50.4*Math.sin(phase*.7+turn*.61)],jaw:values.jawRate===0?values.jawOpen:Math.min(90,60*values.jawOpen/28*Math.pow(Math.max(0,Math.sin(phase+jawTime/.12)),4))};});
+ },
+ foreground(poses){return [0,1,2].map(i=>({circleActor:[0,2,4][i],radialActor:i,circle:[.5+poses[[0,2,4][i]].position[0]/10,.5+poses[[0,2,4][i]].position[1]/10],radial:[.5+poses[i].position[0]/10,.5+poses[i].position[1]/10]}));}
+});

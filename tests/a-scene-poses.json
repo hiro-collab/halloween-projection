@@ -1,0 +1,8 @@
+[
+  {"position":[-2,1,0],"rotation":[0,0,0],"jaw":0},
+  {"position":[0,1,-1],"rotation":[0,70,0],"jaw":15},
+  {"position":[2,1,1],"rotation":[15,35,0],"jaw":30},
+  {"position":[-2,-1,1],"rotation":[0,180,0],"jaw":45},
+  {"position":[0,-1,-1],"rotation":[30,60,20],"jaw":60},
+  {"position":[2,-1,0],"rotation":[0,-60,0],"jaw":90}
+]

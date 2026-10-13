@@ -1,6 +1,6 @@
 # Halloween Projection — private Web preview
 
-最新ローカル比較版は0.1.17。固定入力のLevel・輝度Edge・頭Glow出力解像度、流体の実時間Delta、8行文字の自動縮小を修正しました。[修正と検証・残差](docs/A-DISPLAY-FIX-VALIDATION.md)。1組のCC0別モデル、速度場固定、装飾noise未接続で、原全体の再現合格ではありません。[0.1.16の一体表示](docs/A-INTEGRATED-DISPLAY-VALIDATION.md)と旧版は保持しています。旧比較の入力接続誤りは最新の検証文書で訂正しています。
+最新ローカル比較版は0.1.18。原の6組/12geometryと前景3枝の比較を追加し、流体を固定1/60刻み・上限付きGPU計算へ移しました。[六組・固定刻み・残件の優先順](docs/A-SIX-SCENE-AND-FIXED-TIMING.md)。動きは自作候補、速度場tz0、装飾noiseゼロで、原全体の再現合格ではありません。[0.1.17の色/文字修正](docs/A-DISPLAY-FIX-VALIDATION.md)と旧版を保持しています。
 
 利用者はWebページをブラウザーで開き、改変する人はソースを使う構成です。
 **現在はGitHub private・本人確認用。一般公開のWeb URLやGitHub Pagesは作成していません。**

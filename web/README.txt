@@ -145,3 +145,10 @@ TDの力・最終合成の再現は未完です。入力と制御のAPIを分離
 - GUI passes measured active elapsed seconds to advection/vorticity instead of one fixed 1/60 step per draw. Default direct step() is still 1/60 for existing fixed-step comparisons. Injection/diffusion remain per cook; frozen velocity is unchanged.
 - Arial background masks shrink to fit all eight lines within 82% width and 48% height. Native fixed-size typography remains a separate fidelity limitation. Text stays literal and is not stored.
 - One alternate actor, no dynamic decoration noise. Earlier packages and original sources are preserved.
+
+
+0.1.18 six-scene / fixed-step comparison:
+- Optional six-scene checkbox: six shared CC0 head/jaw pairs and three foreground mask/radial branches. One-actor comparison remains default. The periodic motion is our candidate; original motionMat/fader is not matched. setActors accepts six finite position/rotation/jaw inputs without saving them.
+- Runtime uses float WebGL2 fluid with fixed 1/60-second ticks, maximum eight ticks per draw and .25-second input cap. Excess elapsed is explicitly discarded/reported. CPU fallback is limited to two ticks. Pause/visibility suspension excludes inactive elapsed; Reset clears clock and retains two cold release cooks. Direct CPU step() remains a comparison API.
+- Identical fixed inputs produce identical one-second scalar states at 60/30/10 draws. Moving geometry input is still sampled per draw. Dynamic velocity/decorative noise is not generated; no new sampled noise payload was added.
+- Background text can be hidden by skulls or dark flow after source-order composition. The eight-line glyph fit does not guarantee all final letters are readable.
