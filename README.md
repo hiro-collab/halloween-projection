@@ -67,3 +67,9 @@ SparseをXYZ空間で評価し、40枠方向のLag、生存数別Random/rolling/
 原の正規化方向・Wyvill weight・Vortex/Spiralの成分解釈から力場を最小修正しました。
 [原値/式/同条件検証/残差](docs/B-FORCE-FIELD-VALIDATION.md)。
 同じ原新生状態のForce-only位置差は約.529→4e-7、全力場は約.548→.0508。乱流/部分age/最終外観と原Aは未完です。
+
+## 原Aの配線・頭/顎比較
+
+原Aの共通親/顎支点、absTime入力、2D流体と文字枝を確認しました。
+[同じnativeリグで原/CC0別候補の4姿勢を比較](docs/A-SOURCE-RIG-VALIDATION.md)。
+候補の仮配置には約54pxのずれがあり、採用前に位置合わせと顎支点を分離します。Web/0.1.11は保持し、原A全体は未完です。
