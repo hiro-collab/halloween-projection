@@ -4,7 +4,7 @@
   const workerURL = new URL('sw.js', scope).href;
   const prefix = 'halloween-projection:' + scope + ':';
   const supported = !!navigator.serviceWorker && isSecureContext && /^https?:$/.test(location.protocol) && !!globalThis.caches;
-  const assetURLs = ['index.html','styles.css','app.js','offline.js','README.txt','LICENSE.txt','RIGHTS.txt','control-api.js','bat-motion.js','bat-art.js','bat-fire.js','a-fluid.js', 'a-composite.js','assets/owner-bat-atlas.png','assets/OWNER-BAT-ASSET.txt'].map(n => new URL(n,scope).href);
+  const assetURLs = ['index.html','styles.css','app.js','offline.js','README.txt','console.html','console.css','console.js','stage-role.js','stage-receiver.js','performance-api.js','keyboard-performance.js','window-safety.js','START-HERE.html','GUIDE.html','PERFORMANCE-PLAN.html','guide.css','LICENSE.txt','RIGHTS.txt','motion-clock.js','control-response.js','a-source-blur.js','a-motion-lag.js','a-motion.js','a-skull-raster.js','control-api.js','text-operators.js','app-control-api.js','control-adapters.js','bat-motion.js','bat-phase.js','b-motion-runtime.js','bat-art.js','bat-atlas-data.js','bat-fire.js','text-sequence.js','output-uv.js','output-operators.js','a-source-noise.js','a-fluid.js', 'a-composite.js','assets/owner-bat-atlas.png','assets/OWNER-BAT-ASSET.txt'].map(n => new URL(n,scope).href);
   const status = document.getElementById('offline-status');
   const save = document.getElementById('offline-save');
   const check = document.getElementById('offline-check');
@@ -125,7 +125,7 @@
   (async () => {
     if (!supported) {
       save.disabled = check.disabled = clear.disabled = true;
-      setStatus('この開き方ではオフライン保存に対応していません。接続中にブラウザーで使ってください。');
+      setStatus(location.protocol==='file:'?'展開済みZIPから動作中。接続不要です。再度使うときもindex.htmlを開いてください。':'この開き方ではオフライン保存に対応していません。接続中にブラウザーで使ってください。');
       return;
     }
     try {

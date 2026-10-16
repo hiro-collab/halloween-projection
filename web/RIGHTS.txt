@@ -47,3 +47,9 @@ converted model SHA256: bb38451e202e30ce2d84cdc224433ac27aafd43539ed362e6127a980
 0.1.9: 原seed順の球面42発生点/法線も本人セットの私的測定データとして扱います。一般再配布条件を確定したものではありません。
 
 A流体の時刻0評価fieldは原sceneから採取した私的比較用数値です。MIT対象外で、動的noiseの再現/再配布条件の確認は未完です。原shader/原modelは追加していません。
+
+Local ZIP startup: bat-atlas-data.js embeds the identical owner-bat-atlas.png bytes. This duplicate image payload has the same private-owner restriction as the PNG and is not MIT licensed.
+
+v31のa-source-noise.jsは独立seedのsimplex演算実装です。元のNoise画像列・録画・元モデルを追加同梱していません。
+
+v32のoutput-uv.jsには、元の投影補正に使われる数値UV座標のみを含みます。歌詞・項目名・BPMデータ・元画像/映像・操作画面の画像は含みません。従来同様、本人確認用の限定配布です。

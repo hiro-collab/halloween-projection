@@ -33,3 +33,14 @@ dialog::backdrop{background:#000b}dialog h2{font-size:21px;margin-top:0}dialog b
 .offline-buttons button{font-size:11px;padding:8px}#offline-apply{grid-column:1/-1}#offline-apply[hidden]{display:none}
 
 [hidden]{display:none!important}
+
+select{font:inherit;width:100%;padding:9px;background:#24222d;color:#fff;border:1px solid #46434f;border-radius:7px;margin:5px 0 12px}select:disabled{opacity:.45}select:focus-visible{outline:3px solid var(--orange)}
+
+#text-preview{position:static;inset:auto;display:block;width:100%;height:auto;border:1px solid #3a3c46;max-width:512px;margin:10px 0;pointer-events:none}.button-row{display:flex;gap:6px;flex-wrap:wrap}.button-row button{flex:1;min-width:74px}
+
+/* Help/readability only: layout and all rendering/controls remain unchanged. */
+.help-links{display:grid;gap:9px;margin:14px 0 24px}.help-links a{color:#ffd59d;font-size:15px;line-height:1.6;text-underline-offset:3px}.help-links button{font-size:16px;min-height:48px;text-align:left}
+.lead,.help,#fit-note,.footer,#offline-status{font-size:14px;line-height:1.75}label,.label{font-size:16px}.effects button{font-size:15px}.effects small{font-size:13px}.transport button,#hide,#quit,#status{font-size:15px}.offline-buttons button{font-size:14px}dialog{font-size:18px;max-width:760px}dialog h2{font-size:26px}dialog a{color:#ffd59d;text-underline-offset:3px}dialog li{margin-bottom:14px}
+
+/* Separate projection role: operator UI never becomes visible after preparation. */
+#stage-start{display:none}html[data-stage=remote] body{display:block}html[data-stage=remote] #controls,html[data-stage=remote] #guide-dialog{display:none!important}html[data-stage=remote] #stage{position:absolute;inset:0;width:100%;height:100%}html[data-stage=remote] #stage-start{display:flex;position:fixed;z-index:20;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:18px;background:#111e;color:#fff;padding:30px;font-size:20px}html[data-stage=remote] #stage-start[hidden]{display:none!important}

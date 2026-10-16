@@ -4,7 +4,8 @@ window.HalloweenBatArt = (() => {
   const URL_PATH='./assets/owner-bat-atlas.png';
   const EXPECTED_SHA='9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a';
   const counts={requested:0,fetchPending:0,maxFetchPending:0,scopePending:0,created:0,closed:0,open:0,maxOpen:0,aborted:0,errors:0,fetchErrors:0};
-  let encoded=null,job=null,warmup=null,released=false;
+  let encoded=null,job=null,warmup=null,released=false,lastError='';
+  const transport=location.protocol==='file:'?'packaged-script':'same-origin-fetch';
   const owners=new Set();
   function startFetch() {
     const current={abort:new AbortController(),cancelled:false,promise:null};
@@ -13,18 +14,25 @@ window.HalloweenBatArt = (() => {
     current.promise=(async()=>{
       const timer=setTimeout(()=>current.abort.abort(),10000);
       try{
+        let bytes;
+        if(transport==='packaged-script'){
+          if(!window.HalloweenBatAtlasData)throw Error('Packaged image data unavailable');
+          bytes=window.HalloweenBatAtlasData.read();
+          if(bytes.byteLength>131072)throw Error('Image too large');
+        }else{
         const response=await fetch(URL_PATH,{signal:current.abort.signal,credentials:'same-origin',redirect:'error'});
         if(!response.ok||response.status!==200)throw Error('Image unavailable');
         const reader=response.body.getReader(),chunks=[];let size=0;
         while(true){const part=await reader.read();if(part.done)break;size+=part.value.byteLength;if(size>131072){await reader.cancel();throw Error('Image too large');}chunks.push(part.value);}
-        const bytes=new Uint8Array(size);let offset=0;for(const part of chunks){bytes.set(part,offset);offset+=part.byteLength;}
+        bytes=new Uint8Array(size);let offset=0;for(const part of chunks){bytes.set(part,offset);offset+=part.byteLength;}
+        }
         const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(b=>b.toString(16).padStart(2,'0')).join('');
         if(hash!==EXPECTED_SHA)throw Error('Image integrity mismatch');
         if(current.cancelled||released)return null;
-        encoded=bytes;return bytes;
+        encoded=bytes;lastError='';return bytes;
       }catch(error){
         if(current.cancelled)return null;
-        counts.fetchErrors++;throw error;
+        lastError=String(error?.message||error);counts.fetchErrors++;throw error;
       }finally{clearTimeout(timer);counts.fetchPending--;if(job===current)job=null;}
     })();
     return current;
@@ -51,7 +59,7 @@ window.HalloweenBatArt = (() => {
     try{return !!(await readBytes(own.signal));}catch(_){return false;}
     finally{if(warmup===own)warmup=null;}
   }
-  function release() {for(const owner of [...owners])owner.dispose();cancelPending();encoded=null;released=true;}
+  function release() {for(const owner of [...owners])owner.dispose();cancelPending();encoded=null;window.HalloweenBatAtlasData?.release();released=true;}
   function create(notify) {
     let bitmap=null,disposed=false,state='loading';
     const abort=new AbortController();
@@ -94,12 +102,12 @@ window.HalloweenBatArt = (() => {
         bitmap=candidate;counts.open++;counts.maxOpen=Math.max(counts.maxOpen,counts.open);state='ready';notify?.();return true;
       }catch(error){
         if(disposed||abort.signal.aborted){counts.aborted++;return false;}
-        state='error';counts.errors++;notify?.();return false;
+        state='error';lastError=String(error?.message||error);counts.errors++;notify?.();return false;
       }finally{counts.scopePending--;}
     });
     return scope;
   }
-  return Object.freeze({create,preload,cancelPending,release,diagnostics:()=>({...counts,pending:counts.fetchPending+counts.scopePending,encodedBytes:encoded?.byteLength||0,released})});
+  return Object.freeze({create,preload,cancelPending,release,diagnostics:()=>({...counts,pending:counts.fetchPending+counts.scopePending,encodedBytes:encoded?.byteLength||0,released,transport,lastError})});
 })();
 
 // MIT: locally measured circle-colour candidate, without altering the source atlas.

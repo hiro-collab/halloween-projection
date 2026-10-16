@@ -22,3 +22,10 @@ auth.json
 *.zip
 .playwright-cli/
 .playwright/
+
+# Developer-only validation output
+*.webm
+*.npy
+*.npz
+*.log
+coverage/

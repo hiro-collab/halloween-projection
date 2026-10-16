@@ -6,8 +6,15 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / 'web'
-APP_VERSION = '0.1.18-six-scene-fixed-step'
-ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt', 'LICENSE.txt', 'RIGHTS.txt', 'control-api.js', 'bat-motion.js', 'bat-art.js', 'bat-fire.js', 'a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt']
+APP_VERSION = '0.1.39-spatial-turbulence-preview'
+ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt','console.html','console.css','console.js','stage-role.js','stage-receiver.js','performance-api.js','keyboard-performance.js','window-safety.js', 'START-HERE.html', 'GUIDE.html', 'PERFORMANCE-PLAN.html', 'guide.css', 'LICENSE.txt', 'RIGHTS.txt', 'motion-clock.js','control-response.js','a-source-blur.js','a-motion-lag.js','a-motion.js','a-skull-raster.js','control-api.js','text-operators.js', 'app-control-api.js', 'control-adapters.js', 'bat-motion.js','bat-phase.js','b-motion-runtime.js', 'bat-art.js', 'bat-atlas-data.js', 'bat-fire.js', 'text-sequence.js','output-uv.js','output-operators.js','a-source-noise.js','a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt']
+# The local-file route uses the same private image bytes, without file fetch/CORS.
+import base64
+atlas = (WEB / 'assets/owner-bat-atlas.png').read_bytes()
+if hashlib.sha256(atlas).hexdigest() != '9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a':
+    raise ValueError('Owner atlas integrity mismatch')
+local_data = "/* Generated private owner PNG payload; same restrictions as assets/owner-bat-atlas.png. */\n'use strict';\n(() => {\n  if(location.protocol!=='file:')return;\n  let data='" + base64.b64encode(atlas).decode('ascii') + "';\n  window.HalloweenBatAtlasData=Object.freeze({read(){if(!data)throw Error('Packaged image data released');const raw=atob(data),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return bytes;},release(){data='';},diagnostics:()=>({encodedChars:data.length})});\n})();\n"
+(WEB / 'bat-atlas-data.js').write_text(local_data, encoding='utf-8', newline='\n')
 for name in ASSETS:
     if name.endswith('.png'):
         continue
@@ -96,7 +103,7 @@ worker = worker_template.replace('__BUILD__', json.dumps(build)).replace('__HASH
 (WEB / 'sw.js').write_text(worker, encoding='utf-8', newline='\n')
 out = ROOT / 'dist'
 out.mkdir(exist_ok=True)
-dest = out / 'halloween-projection-web-v0.1.18-six-scene-fixed-step.zip'
+dest = out / 'halloween-projection-web-v0.1.39-spatial-turbulence-preview.zip'
 names = ASSETS + ['sw.js']
 with zipfile.ZipFile(dest, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
     for name in names:

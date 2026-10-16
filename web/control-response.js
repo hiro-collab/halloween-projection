@@ -1,0 +1,11 @@
+/* Native operator coefficients; finite filters, not stored motion. MIT. */
+'use strict';
+window.HalloweenControlResponse=(()=>{
+ const f=Math.fround,coef=[1.6256469849381872, -0.6812920545530383, 0.05564506928769192],weights=[0.0, 1.7589242284898887e-09, 0.004488027758309143, 0.012733333744108677, 0.02617478184401989, 0.04547206312417984, 0.06956354528665543, 0.09510518610477448, 0.11690890789031982, 0.12955421209335327, 0.12955421209335327, 0.11690890789031982, 0.09510517120361328, 0.06956350803375244, 0.045472025871276855, 0.02617478370666504, 0.0127333402633667, 0.0044879913330078125];
+ function lag(initial){let y1=f(initial),y2=f(initial);return {step(x){const y=f(coef[2]*x+coef[0]*y1+coef[1]*y2);y2=y1;y1=y;return y;},value:()=>y1};}
+ function filter(initial){const ring=Array(weights.length).fill(f(initial));let y=f(initial);return {step(x){ring.unshift(f(x));ring.pop();y=f(weights.reduce((v,w,i)=>v+w*ring[i],0));return y;},value:()=>y};}
+ function create({glow=0,hue=138/360,text=.625,foreground=0}={}){const states={glow:lag(glow),hue:lag(hue),text:filter(text),foreground:lag(foreground)};let pending=0,ticks=0;
+  return Object.freeze({setTextImmediate(value){if(typeof value!=='number'||!Number.isFinite(value)||value<0||value>1)throw new RangeError('Text size0..1 required');states.text=filter(value);return value;},advance(seconds,target){if(!Number.isFinite(seconds)||seconds<0)throw new RangeError('Nonnegative control time required');pending+=seconds;const n=Math.floor((pending+1e-9)*60);pending-=n/60;for(let i=0;i<n;i++){states.glow.step(target.headGlowMix??0);states.hue.step(target.backgroundHue??138/360);states.foreground.step(target.foregroundBurst?1:0);if(target.textSizeNormalized!==null&&target.textSizeNormalized!==undefined)states.text.step(target.textSizeNormalized);}ticks+=n;return n;},values:()=>Object.fromEntries(Object.entries(states).map(([k,s])=>[k,s.value()])),status:()=>({ticks,pendingSeconds:pending,sampleRate:60,lagSeconds:.2,overshootSeconds:.1,textFilterSeconds:.3,textFilterType:'gauss',textFilterTaps:weights.length,values:Object.fromEntries(Object.entries(states).map(([k,s])=>[k,s.value()])),clock:'wall time; shared transport Pause; retained across Scene Reset'}),});
+ }
+ return Object.freeze({create,lag,filter,coefficients:Object.freeze([...coef]),textKernel:Object.freeze([...weights])});
+})();
