@@ -1,22 +1,22 @@
 'use strict';
-const BUILD = "0.1.41-motion-display-preview-9d1620fec3cc";
+const BUILD = "0.1.42-a-performance-preview-531ed1ad9e06";
 const HASHES = {
   "index.html": "68875feb0d7ab472989e9ec5ab77a3cf4c39503ccff55d285107790d52b4f515",
   "styles.css": "d4e5def090e660ac384b9abad6551e8d317e6d62749af9fd551c639bac364fee",
-  "app.js": "ee6bee214b62a903553e8e8b8dccb1abfffeff732823af86c6cd7bb675f69baf",
+  "app.js": "aea3c2f189a161992fb5d18fe57281b29f4ecc2f18d0e44ed9b605884f58e056",
   "offline.js": "2b41b9ffa882dad76ca179f8dea1118fff1ae451800563547e88e1de1def13aa",
-  "README.txt": "b4c308445fb0757fbc97f00000683731798d35e7ea23f9c96f27d6747895626c",
-  "console.html": "1d77cbfcf3c41fd29b4a03fd3beff3a937a90459fb868996ed691906effc50ba",
+  "README.txt": "5389aecb5ca1bf0e348c75cf24a6cb654ecdaaead23377fc523afd3f325d01b6",
+  "console.html": "fe4191f11155874f1bf4cb9be9fdf5e650b68da7e2c158a57acb6cbd58ca0e09",
   "console.css": "4375eb0e6dcc4ce858d5de1c8e349c980fc1814d0954ad40ce0260b7013b80ec",
-  "console.js": "271c1090e26ac7cd7f7410f14cc6a5274a0d5ecbca09377574d4d8fe3c5f2ad3",
+  "console.js": "ec5d3bc478ff681d26491caf86e4f1cfcec5a195f20bd5e2f3cf856019484433",
   "stage-role.js": "2324a1b5784ac08a949953760c70bf07bfe2d17eb1be3656fbfdd98f5a5f8f67",
   "stage-receiver.js": "ef75b23b243617ab5e9284ec546b0d1283d00be4b90da1d296b6c5420afcbfff",
   "performance-api.js": "c9ee5a512e3da15e8d9a27e982a55c8712daf19d7f56c291a6b6463f26923e03",
   "keyboard-performance.js": "8e90912efaacf89857ac6268a5bd373f56bd2b2876e34447194cb240c6ea22c7",
   "window-safety.js": "08e04346e0bed71048ca73b23a06d7b1f92fa09faf7e3f9204b4427e117b1d83",
-  "START-HERE.html": "f0d76ef60aeb6d3a5e6adc481cfcdb28f0d499917e1aa2922227614a60dfa55c",
-  "GUIDE.html": "00eaa6a19290371420e49f6e658447bf3fd5fb3232524197fd2dd64595021262",
-  "PERFORMANCE-PLAN.html": "ed972be810ac1d66b70f90fd20dd0e2d980b4d3b5feba0c20d6c335f65d0b97b",
+  "START-HERE.html": "2b1ec6f49b3e4048dc8125c3f3f799dae90edd5570b02ce2b9140dc51522d5f2",
+  "GUIDE.html": "bdca00ab49cc92373b7d4b1d1990c49677c8ff10f4b2003d9553c7afe06b268e",
+  "PERFORMANCE-PLAN.html": "82e271ef7474c866123b16c614e6d3e500d544a4f920e6fa65aa7b408f7a7764",
   "guide.css": "9eb7ca9b0e43321b519b6b29363e5a626a621dcf6619ff70f1d5cbab5dd21c83",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
   "RIGHTS.txt": "9310f91a30532b614b9a3cc492f041e3b1dc3b55fe77f19511ba1509d111b7c9",
@@ -41,8 +41,8 @@ const HASHES = {
   "output-uv.js": "3f8eb08c52142de86626e9b558c835644a046611897122fc59fd547caa1871f7",
   "output-operators.js": "948b2d2d40c996c67eb949b60d270d1e47ad4b5874cde5eca6b03a054e187dde",
   "a-source-noise.js": "6555f43b09f21d11ebcb821c2170fc987e2a9ae615cc7c1bd389952c45a9bbeb",
-  "a-fluid.js": "3b55a7d2d5516b35ebf2eb743914cd7be1a742f3b400f7b203052aa796937b44",
-  "a-composite.js": "0725f3c2bc94141d8bf08f16abb1626847531a29fef07257189332756b13def0",
+  "a-fluid.js": "4d620536e1c550a49634e5ea21f64ef1a908a9374be6336fdfb8f16b1af9105f",
+  "a-composite.js": "20d6839197bb59d4d5da763b81269a31210fef68b2f7b2c94d0e628ed3283bb7",
   "assets/owner-bat-atlas.png": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",
   "assets/OWNER-BAT-ASSET.txt": "1c87dd8e950d7070b54608917fb4e9aae44abcbdb070e92d60b3bb784c6b9379"
 };

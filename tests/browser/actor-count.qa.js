@@ -9,7 +9,7 @@ async page=>{
  await stage.setViewportSize({width:1280,height:720});await page.waitForFunction(()=>halloweenConsole.status().connected);
  await stage.locator('#stage-windowed').click();await stage.waitForTimeout(1200);
  const snap=()=>stage.evaluate(()=>{const d=halloweenDiagnostics();return {version:d.version,phase:d.phase,selected:d.selected,settings:d.settings,scene:d.skull?.scene,actors:d.skull?.actors,draws:d.skullRasterResources.draws,created:d.skullResources.created,scratchBytes:d.skullResources.scratchBytes,text:d.skull?.textMask,stage:d.stage,source:d.skull?.scene.motionState,flow:d.skull?.flow};});
- test('v40 deployed from final ZIP',(await snap()).version==='0.1.41-motion-display-preview');
+ test('v40 deployed from final ZIP',(await snap()).version==='0.1.42-a-performance-preview');
  const validation=await stage.evaluate(()=>[0,7,1.5,NaN,Infinity,'3',null,true].map(value=>halloweenControls.validate({type:'set',key:'a.actorCount',value})));
  test('common API rejects all invalid counts',validation.every(x=>!x.valid),validation);
  test('common API schema declares integer1..6',await stage.evaluate(()=>{const d=halloweenControls.schema().settings['a.actorCount'];return d.type==='integer'&&d.min===1&&d.max===6&&d.default===6;}));
@@ -49,12 +49,12 @@ async page=>{
  test('E adds one through shared API',(await snap()).scene.count===5);
  await page.keyboard.press('q');await stage.waitForFunction(()=>halloweenControls.get('a.actorCount')===4);test('Q removes one through shared API',(await snap()).scene.count===4);
  await page.locator('#main-text').focus();await page.keyboard.type('qe');test('typing q/e does not change actor count',(await snap()).scene.count===4);test('text editing disarms keys',!(await page.evaluate(()=>halloweenConsole.status().keyboard.armed)));
- await page.locator('#arm').click();await page.waitForFunction(()=>halloweenConsole.status().keyboard.armed);await page.keyboard.press('2');await stage.waitForFunction(()=>halloweenDiagnostics().selected==='bats');await page.keyboard.press('1');await stage.waitForFunction(()=>halloweenDiagnostics().selected==='skull3d');test('1/2 scene keys remain functional',(await snap()).scene.count===4);
+ await page.locator('#arm').click();await page.waitForFunction(()=>halloweenConsole.status().keyboard.armed);await page.keyboard.press('2');await stage.waitForFunction(()=>halloweenDiagnostics().selected==='bats');await page.keyboard.press('1');await stage.waitForFunction(()=>halloweenDiagnostics().selected==='skull3d');const immediateKeyScene=await snap();await stage.waitForFunction(()=>halloweenDiagnostics().skull?.scene.count>0);const renderedKeyScene=await snap(),keyCountValue=await stage.evaluate(()=>halloweenControls.get('a.actorCount'));test('1/2 scene keys remain functional',renderedKeyScene.scene.count===4&&keyCountValue===4,{immediateCount:immediateKeyScene.scene.count,renderedCount:renderedKeyScene.scene.count,canonicalCount:keyCountValue,immediateMotion:immediateKeyScene.source});
  await page.keyboard.press('Escape');
  const ui=await page.evaluate(()=>{const e=document.getElementById('actor-count'),r=e.getBoundingClientRect();return {rect:{x:r.x,y:r.y,width:r.width,height:r.height},clipped:e.scrollWidth>e.clientWidth+3,documentWidth:document.documentElement.scrollWidth,viewport:innerWidth};});
  test('operator selector fits at1366x768',!ui.clipped&&ui.documentWidth<=ui.viewport,ui);await page.locator('#actor-count').scrollIntoViewIfNeeded();await page.screenshot({path:shots+'/operator.png'});
  test('no page errors',errors.length===0,errors);await stage.evaluate(()=>halloweenControls.dispatch({type:'command',name:'application.end'}));
- const passed=rows.filter(x=>x.ok).length;return {passed,failed:rows.length-passed,rows,counts,errors,scope:'real v40 ZIP; DPR1; 720p moving samples per count; common API, UI, key input, Pause/Reset/B roundtrip'};
+ const passed=rows.filter(x=>x.ok).length;return {passed,failed:rows.length-passed,rows,counts,errors,scope:'real current application; DPR1; 720p moving samples per count; common API, UI, key input, Pause/Reset/B roundtrip'};
 
  }catch(e){return {passed:rows.filter(x=>x.ok).length,failed:1,error:String(e),rows,errors,console:await page.evaluate(()=>({status:window.halloweenConsole?.status(),body:document.body.innerText.slice(-1000)})),stage:stage?await stage.evaluate(()=>({diagnostics:window.halloweenDiagnostics?.(),body:document.body.innerText.slice(-1000)})):null};}
 }
