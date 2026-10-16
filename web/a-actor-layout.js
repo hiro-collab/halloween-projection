@@ -10,7 +10,7 @@ window.HalloweenActorLayout=(()=>{
   5:[[.22,top],[.34,bottom],[.5,top],[.66,bottom],[.78,top]],
   6:[[.22,top],[.22,bottom],[.5,top],[.5,bottom],[.78,top],[.78,bottom]]
  });
- const duration=.28,travel=[.022,.014];
+ const duration=.28,travel=[.007,.007];
  function create(){
   let count=0,elapsed=duration,from=[],current=[],target=[];
   function sample(n,dt,paused=false){
@@ -20,16 +20,33 @@ window.HalloweenActorLayout=(()=>{
    const f=elapsed/duration,e=f*f*(3-2*f);current=target.map((p,i)=>p.map((v,k)=>from[i][k]+(v-from[i][k])*e));
    return current.slice(0,n).map(p=>[...p]);
   }
-  return Object.freeze({sample,status:()=>({count,elapsed,duration,transitioning:elapsed<duration,anchors:current.slice(0,count).map(p=>[...p]),travel:[...travel],policy:'symmetric rows around central text; layout-only smoothstep; Pause applies immediately'})});
+  return Object.freeze({sample,status:()=>({count,elapsed,duration,transitioning:elapsed<duration,anchors:current.slice(0,count).map(p=>[...p]),travel:[...travel],translationUnits:'screen height per source world unit at Z0',policy:'symmetric rows; linear isotropic XY; layout-only smoothstep; Pause immediate'})});
  }
- function place(pose,anchor,bounds,width,height,size,index){
-  // Uniform screen fit keeps every selected mesh inside its row, at every rotation.
-  // MotionMat translation remains a smooth bounded displacement around the slot.
-  const n=size,countScale=[0,.76,.72,.68,.66,.62,.60][n];
-  const rowHeight=n===1?.21:n===3?(index%2===0?.1485:.21):n===5?(index%2===0?.1633:.20):.20;
-  const scale=Math.min(countScale,width*(n>4?.23:.32)/Math.max(1,bounds.right-bounds.left),height*rowHeight/Math.max(1,bounds.bottom-bounds.top));
-  const x=anchor[0]+travel[0]*Math.tanh(pose.position[0]/2),y=anchor[1]-travel[1]*Math.tanh(pose.position[1]/2);
-  return {scale,center:[x*width,y*height],sourceCenter:[(bounds.left+bounds.right)/2,(bounds.top+bounds.bottom)/2],normalized:[x,y]};
+ function envelope(vertices,jawVertices,registration,jawPivot){
+  const origin=registration.parentPivot;let radius2=0;
+  for(let i=0;i<jawVertices.length;i++){
+   const p=[0,1,2].map(k=>vertices[i*3+k]*registration.scale+registration.translation[k]);let r2;
+   if(jawVertices[i]){const q=jawPivot.map((v,k)=>v-origin[k]),v=p.map((v,k)=>v-jawPivot[k]),A=q[1]*v[1]+q[2]*v[2],B=-q[1]*v[2]+q[2]*v[1],peak=Math.max(A,B,A>=0&&B>=0?Math.hypot(A,B):-Infinity);r2=(q[0]+v[0])**2+q[1]**2+q[2]**2+v[1]**2+v[2]**2+2*peak;}
+   else r2=p.reduce((s,v,k)=>s+(v-origin[k])**2,0);
+   radius2=Math.max(radius2,r2);
+  }
+  return Math.sqrt(radius2);
  }
- return Object.freeze({create,place,slots,duration,travel});
+ function place(pose,anchor,frame,count,index){
+  // A fixed rig envelope, not the current silhouette, sets the view scale.
+  // The original parent pivot, rotations, jaw transform and cameraZ stay intact.
+  const {width,height,focal,radius,pivot,positionNoiseAmplitude=1,provided=false}=frame,cameraZ=90;
+  const amp=Math.max(0,positionNoiseAmplitude),limits=provided?[5,5,5]:[.8,.4,0].map(v=>Math.max(2.4,3.31*(v+amp*1.1)));
+  const near=cameraZ-limits[2],depthMargin=cameraZ/near,gain=[height*travel[0],height*travel[1]],move=[gain[0]*limits[0]*depthMargin,gain[1]*limits[1]*depthMargin];
+  const rowHalf=Math.min(anchor[1]-.01,.99-anchor[1],anchor[1]<.5?.25-anchor[1]:anchor[1]-.75)*height;
+  const horizontal=(count>=5?.14:count>=3?.20:.48)*width;
+  const available=Math.max(1,Math.min(rowHalf-move[1],horizontal-move[0]));
+  const projectedRadius=focal*radius/(near-radius)*(1+Math.max(limits[0]+Math.abs(pivot[0]),limits[1]+Math.abs(pivot[1]))/near);
+  const weight=count===3?(index%2===0?Math.SQRT1_2:1):count===5?(index%2===0?Math.sqrt(2/3):1):1;
+  const scale=Math.min([0,.76,.72,.68,.66,.62,.60][count],available/projectedRadius)*weight;
+  const d=cameraZ-pose.position[2],sourceCenter=[width/2+(pose.position[0]+pivot[0])*focal/d,height/2-(pose.position[1]+pivot[1])*focal/d];
+  const center=[anchor[0]*width+gain[0]*pose.position[0]*cameraZ/d,anchor[1]*height-gain[1]*pose.position[1]*cameraZ/d];
+  return {scale,center,sourceCenter,normalized:[center[0]/width,center[1]/height],limits,radius,policy:'fixed full-rotation/jaw envelope; linear XY; original perspective Z; no silhouette recenter/resize'};
+ }
+ return Object.freeze({create,place,envelope,slots,duration,travel});
 })();
