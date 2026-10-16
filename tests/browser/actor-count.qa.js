@@ -7,9 +7,9 @@ async page=>{
  const popup=page.waitForEvent('popup');await page.locator('#open-stage').click();stage=await popup;
  for(const p of [page,stage])p.on('pageerror',e=>errors.push(e.message));
  await stage.setViewportSize({width:1280,height:720});await page.waitForFunction(()=>halloweenConsole.status().connected);
- await stage.locator('#stage-windowed').click();await stage.waitForTimeout(1200);
+ await stage.locator('#stage-windowed').click();await stage.evaluate(()=>halloweenControls.set('a.actorLayout','rows'));await stage.waitForTimeout(1200);
  const snap=()=>stage.evaluate(()=>{const d=halloweenDiagnostics();return {version:d.version,phase:d.phase,selected:d.selected,settings:d.settings,scene:d.skull?.scene,actors:d.skull?.actors,draws:d.skullRasterResources.draws,created:d.skullResources.created,scratchBytes:d.skullResources.scratchBytes,text:d.skull?.textMask,stage:d.stage,source:d.skull?.scene.motionState,flow:d.skull?.flow};});
- test('v40 deployed from final ZIP',(await snap()).version==='0.1.42-a-performance-preview');
+ test('v40 deployed from final ZIP',(await snap()).version==='0.1.43-skull-orbit-preview');
  const validation=await stage.evaluate(()=>[0,7,1.5,NaN,Infinity,'3',null,true].map(value=>halloweenControls.validate({type:'set',key:'a.actorCount',value})));
  test('common API rejects all invalid counts',validation.every(x=>!x.valid),validation);
  test('common API schema declares integer1..6',await stage.evaluate(()=>{const d=halloweenControls.schema().settings['a.actorCount'];return d.type==='integer'&&d.min===1&&d.max===6&&d.default===6;}));

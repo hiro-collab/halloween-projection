@@ -1,7 +1,7 @@
 async page=>{
  const rows=[],counts=[],errors=[],shots='__QA_OUT__',test=(name,ok,data)=>rows.push({name,ok:!!ok,data});let stage;
  try{
- await page.goto('__WEB_URI__/console.html');const popup=page.waitForEvent('popup');await page.locator('#open-stage').click();stage=await popup;stage.on('pageerror',e=>errors.push(e.message));await stage.setViewportSize({width:1920,height:1080});await page.waitForFunction(()=>halloweenConsole.status().connected);await stage.locator('#stage-windowed').click();
+ await page.goto('__WEB_URI__/console.html');const popup=page.waitForEvent('popup');await page.locator('#open-stage').click();stage=await popup;stage.on('pageerror',e=>errors.push(e.message));await stage.setViewportSize({width:1920,height:1080});await page.waitForFunction(()=>halloweenConsole.status().connected);await stage.locator('#stage-windowed').click();await stage.evaluate(()=>halloweenControls.set('a.actorLayout','rows'));
  await stage.evaluate(()=>{for(const [k,v] of [['a.positionNoiseAmplitude',1],['a.rotationNoiseAmplitude',1],['a.jawNoiseAmplitude',3],['a.headCycleRate',2],['a.jawCycleRate',2],['a.jawMaxAngle',45],['a.scale',1.5]])halloweenControls.set(k,v);});
  const snap=()=>stage.evaluate(()=>{const d=halloweenDiagnostics();return {version:d.version,phase:d.phase,stage:d.stage,backing:d.backing,settings:d.settings,scene:d.skull.scene,actors:d.skull.actors,raster:d.skull.raster.active,post:d.skull.composite,text:d.skull.textMask,draws:d.skullRasterResources.draws,flow:d.skull.flow,resources:d.aCompositeResources};});
  for(let n=1;n<=6;n++){

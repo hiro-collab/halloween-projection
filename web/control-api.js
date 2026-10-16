@@ -50,7 +50,7 @@ window.HalloweenControlAPI = Object.freeze({
     const values = {
       skeleton:{speed:1,size:1,text:initialText},
       bats:{speed:1,size:1,text:initialText,flapRate:1,frameLock:null,emitterX:0,emitterY:0},
-      skull3d:{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1,size:1,text:initialText,backgroundHue:138/360,headGlowMix:0,foregroundBurst:0,headRate:1,jawRate:1,motionCross:.5,jawPeriod:.12,jawExponent:4,jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0,aSceneMode:0,aNativeResolution:0,actorCount:6,actorPoses:null,actorRevision:0}
+      skull3d:{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1,size:1,text:initialText,backgroundHue:138/360,headGlowMix:0,foregroundBurst:0,headRate:1,jawRate:1,motionCross:.5,jawPeriod:.12,jawExponent:4,jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0,aSceneMode:0,aNativeResolution:0,actorCount:6,actorLayout:'source',actorPoses:null,actorRevision:0}
     };
     const shared={textSizeNormalized:null,textWidth:1,textHeight:1};
     const assertScene = id => { if(!Object.hasOwn(values,id)) throw new RangeError('Unknown scene'); };
@@ -64,7 +64,8 @@ window.HalloweenControlAPI = Object.freeze({
       set(id,key,value){
         assertScene(id);
         if(!Object.hasOwn(values[id],key)||key==='text')throw new RangeError('Unknown numeric key');
-        if(key==='actorCount'){if(!Number.isInteger(value)||value<1||value>6)throw new RangeError('Actor count must be integer1..6');}
+        if(key==='actorLayout'){if(!['source','rows'].includes(value))throw new RangeError('Actor layout source/rows required');}
+        else if(key==='actorCount'){if(!Number.isInteger(value)||value<1||value>6)throw new RangeError('Actor count must be integer1..6');}
         else if(key==='jawMode'){if(!['noise','closed','open'].includes(value))throw new RangeError('Unknown jaw mode');}
         else if(key==='jawActivity'){if(!['flapping','violent','occasional','stopped','custom'].includes(value))throw new RangeError('Unknown activity');}
         else if(key==='dynamicFlow'||key==='decorationNoise'||key==='foregroundBurst'||key==='jawTint'||key==='rigMode'||key==='jawPivotMode'||key==='fluidMode'||key==='fluidColor'||key==='aCompositeMode'||key==='aSceneMode'||key==='aNativeResolution'){
