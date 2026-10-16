@@ -1,8 +1,8 @@
 'use strict';
 (()=>{
  const $=id=>document.getElementById(id);let token;
- if(/^halloween-console-v43:[a-f0-9]{32}$/.test(window.name))token=window.name.split(':')[1];else{token=[...crypto.getRandomValues(new Uint32Array(4))].map(n=>n.toString(16).padStart(8,'0')).join('');window.name='halloween-console-v43:'+token;}
- const stageURL=new URL('index.html',location.href).href+'#stage='+token,targetName='halloween-stage-v43-'+token;
+ if(/^halloween-console-v44:[a-f0-9]{32}$/.test(window.name))token=window.name.split(':')[1];else{token=[...crypto.getRandomValues(new Uint32Array(4))].map(n=>n.toString(16).padStart(8,'0')).join('');window.name='halloween-console-v44:'+token;}
+ const stageURL=new URL('index.html',location.href).href+'#stage='+token,targetName='halloween-stage-v44-'+token;
  let armGeneration=0;let popup=null,port=null,snapshot=null,connected=false,seq=0,lastState=0,attempt=0,connectTimer=0,destroyed=false;const pending=new Map();
  function render(){const s=snapshot,p=s?.performance,playing=keyboard?.status().armed;document.body.classList.toggle('playing',!!playing);$('arm').disabled=!connected||!s?.started||!s?.visible||!s?.safety?.ready||s?.ended;
   if(!s)return;const sc=s.app.scene,v=s.app.settings;$('actor-count').value=v['a.actorCount'];$('actor-count').disabled=sc!=='a';$('actor-layout').value=v['a.actorLayout'];$('actor-layout').disabled=sc!=='a';$('connection').textContent=s.ended?'投影終了。新しく開くと再初期化します。':!connected?'切断。再接続を押してください。':!s.visible?'投影窓の表示と大きさを確認してください。戻して演奏開始を押してください。':!s.started?'接続済み。投影窓の開始ボタンを押してください。':'接続済み · '+(s.fullscreen?'投影は全画面':'投影はウィンドウ表示')+' · '+(sc==='a'?'ドクロ':'コウモリ')+' · '+s.app.transport.phase;
@@ -41,5 +41,5 @@
  $('end').addEventListener('click',async()=>{keyboard.disarm('投影終了');try{await request({api:{type:'command',name:'application.end'}});popup?.close();lost('投影を終了しました。');}catch(e){$('error').textContent=e.message;}});
  const timer=setInterval(()=>{if(popup?.closed){if(connected)lost('投影窓を閉じました。開き直すと動きは再初期化します。');return;}if(connected&&performance.now()-lastState>2600)lost('通信を確認できません。演奏停止。再接続を押してください。');if(port)ping();},500);
  window.addEventListener('pagehide',()=>{if(destroyed)return;keyboard.dispose();ping();destroyed=true;clearInterval(timer);if(connectTimer)clearInterval(connectTimer);port?.close();port=null;for(const p of pending.values()){clearTimeout(p.timer);p.reject(Error('操作窓を終了'));}pending.clear();},{once:true});
- window.halloweenConsole=Object.freeze({status:()=>({connected,snapshot,keyboard:keyboard.status(),pending:pending.size,rendererOwners:0,version:'0.1.43-skull-orbit-preview'}),intent:sendIntent,request,disarm:()=>keyboard.disarm(),session:token});render();
+ window.halloweenConsole=Object.freeze({status:()=>({connected,snapshot,keyboard:keyboard.status(),pending:pending.size,rendererOwners:0,version:'0.1.44-three-skulls-preview'}),intent:sendIntent,request,disarm:()=>keyboard.disarm(),session:token});render();
 })();

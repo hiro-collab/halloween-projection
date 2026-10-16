@@ -10,6 +10,8 @@ window.HalloweenActorLayout=(()=>{
   5:[[.22,top],[.34,bottom],[.5,top],[.66,bottom],[.78,top]],
   6:[[.22,top],[.22,bottom],[.5,top],[.5,bottom],[.78,top],[.78,bottom]]
  });
+ const sourceSlots=Object.freeze({1:[0],2:[0,3],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,4,5],6:[0,1,2,3,4,5]});
+ function sourceIndices(count){if(!Number.isInteger(count)||count<1||count>6)throw RangeError('Actor count1..6 required');return [...sourceSlots[count]];}
  const duration=.28,travel=[.007,.007];
  function create(){
   let count=0,elapsed=duration,from=[],current=[],target=[];
@@ -48,5 +50,5 @@ window.HalloweenActorLayout=(()=>{
   const center=[anchor[0]*width+gain[0]*pose.position[0]*cameraZ/d,anchor[1]*height-gain[1]*pose.position[1]*cameraZ/d];
   return {scale,center,sourceCenter,normalized:[center[0]/width,center[1]/height],limits,radius,policy:'fixed full-rotation/jaw envelope; linear XY; original perspective Z; no silhouette recenter/resize'};
  }
- return Object.freeze({create,place,envelope,slots,duration,travel});
+ return Object.freeze({create,place,envelope,slots,duration,travel,sourceIndices});
 })();
