@@ -2,7 +2,7 @@
 'use strict';
 window.HalloweenPerformance=(()=>{
  const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),copy=x=>JSON.parse(JSON.stringify(x));
- const bindings=Object.freeze({motion:'A / D',look:'J / L',text:' , / .',mode:'K',accent:'Z',baseline:'M (0.6秒)',scene:'1 / 2',pause:'Space',reset:'R',disarm:'Esc'});
+ const bindings=Object.freeze({count:'Q / E',motion:'A / D',look:'J / L',text:' , / .',mode:'K',accent:'Z',baseline:'M (0.6秒)',scene:'1 / 2',pause:'Space',reset:'R',disarm:'Esc'});
  function create(api,{batch=fn=>fn()}={}){
   let scene='a',size=.625,accent=false,ended=false,revision=0;
   let profiles={a:{motion:.5,look:138/360,mode:0},b:{motion:.5,look:.5,mode:1}},baseline={profiles:copy(profiles),size};
@@ -17,7 +17,8 @@ window.HalloweenPerformance=(()=>{
   function state(){return {scene,size,accent,profiles:copy(profiles),baseline:copy(baseline),revision,ended,bindings,labels:scene==='a'?{motion:'頭・顎の動き',look:'背景の色＋骨の光',mode:'顎の入力3状態',accent:'前景の光'}:{motion:'新個体の速さ＋羽ばたき',look:'回転・渦・螺旋の混合',mode:'回り方3段階',accent:'新個体の速さ＋回り方'},scope:'Existing visual parameters; no new force/physics model'};}
   function dispatch(c){if(ended)throw Error('Performance ended');if(!c||typeof c!=='object'||Array.isArray(c))throw TypeError('Intent object required');
    if(c.action==='scene')return select(c.value);
-   if(c.action==='adjust'){if(!['motion','look','text'].includes(c.axis)||typeof c.delta!=='number'||!Number.isFinite(c.delta)||Math.abs(c.delta)>.12)throw RangeError('Bounded relative axis required');if(c.axis==='text')size=clamp(size+c.delta,.02,1);else profiles[scene][c.axis]=clamp(profiles[scene][c.axis]+c.delta);apply();}
+   if(c.action==='actorCountStep'){if(c.delta!==-1&&c.delta!==1)throw RangeError('One count step required');if(scene==='a')set('a.actorCount',clamp(api.get('a.actorCount')+c.delta,1,6));}
+   else if(c.action==='adjust'){if(!['motion','look','text'].includes(c.axis)||typeof c.delta!=='number'||!Number.isFinite(c.delta)||Math.abs(c.delta)>.12)throw RangeError('Bounded relative axis required');if(c.axis==='text')size=clamp(size+c.delta,.02,1);else profiles[scene][c.axis]=clamp(profiles[scene][c.axis]+c.delta);apply();}
    else if(c.action==='setAxis'){if(!['motion','look','text'].includes(c.axis)||typeof c.value!=='number'||!Number.isFinite(c.value)||c.value<0||c.value>1)throw RangeError('Normalized axis required');if(c.axis==='text')size=clamp(c.value,.02,1);else profiles[scene][c.axis]=c.value;apply();}
    else if(c.action==='accent'){if(typeof c.value!=='boolean')throw TypeError('Boolean accent required');if(accent!==c.value){accent=c.value;apply();}}
    else if(c.action==='mode'){const p=profiles[scene];p.mode=(p.mode+1)%3;if(scene==='b')p.look=[.15,.5,.85][p.mode];apply();}
@@ -27,7 +28,7 @@ window.HalloweenPerformance=(()=>{
    else if(c.action==='reset')api.dispatch({type:'command',name:'scene.reset',scene},{source:'performance'});
    else throw RangeError('Unknown performance intent');return state();
   }
-  select('a');return Object.freeze({dispatch,state,release(){if(!ended&&accent){accent=false;if(!api.getState().view.ended)apply();}},dispose(){if(!ended){this.release();ended=true;}},schema:Object.freeze({version:1,actions:['scene','adjust','setAxis','accent','mode','capture','baseline','pause','reset']})});
+  select('a');return Object.freeze({dispatch,state,release(){if(!ended&&accent){accent=false;if(!api.getState().view.ended)apply();}},dispose(){if(!ended){this.release();ended=true;}},schema:Object.freeze({version:1,actions:['scene','actorCountStep','adjust','setAxis','accent','mode','capture','baseline','pause','reset']})});
  }
  return Object.freeze({create,bindings});
 })();

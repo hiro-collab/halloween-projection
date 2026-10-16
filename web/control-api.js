@@ -50,7 +50,7 @@ window.HalloweenControlAPI = Object.freeze({
     const values = {
       skeleton:{speed:1,size:1,text:initialText},
       bats:{speed:1,size:1,text:initialText,flapRate:1,frameLock:null,emitterX:0,emitterY:0},
-      skull3d:{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1,size:1,text:initialText,backgroundHue:138/360,headGlowMix:0,foregroundBurst:0,headRate:1,jawRate:1,motionCross:.5,jawPeriod:.12,jawExponent:4,jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0,aSceneMode:0,aNativeResolution:0,actorPoses:null,actorRevision:0}
+      skull3d:{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1,size:1,text:initialText,backgroundHue:138/360,headGlowMix:0,foregroundBurst:0,headRate:1,jawRate:1,motionCross:.5,jawPeriod:.12,jawExponent:4,jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0,aSceneMode:0,aNativeResolution:0,actorCount:6,actorPoses:null,actorRevision:0}
     };
     const shared={textSizeNormalized:null,textWidth:1,textHeight:1};
     const assertScene = id => { if(!Object.hasOwn(values,id)) throw new RangeError('Unknown scene'); };
@@ -64,7 +64,8 @@ window.HalloweenControlAPI = Object.freeze({
       set(id,key,value){
         assertScene(id);
         if(!Object.hasOwn(values[id],key)||key==='text')throw new RangeError('Unknown numeric key');
-        if(key==='jawMode'){if(!['noise','closed','open'].includes(value))throw new RangeError('Unknown jaw mode');}
+        if(key==='actorCount'){if(!Number.isInteger(value)||value<1||value>6)throw new RangeError('Actor count must be integer1..6');}
+        else if(key==='jawMode'){if(!['noise','closed','open'].includes(value))throw new RangeError('Unknown jaw mode');}
         else if(key==='jawActivity'){if(!['flapping','violent','occasional','stopped','custom'].includes(value))throw new RangeError('Unknown activity');}
         else if(key==='dynamicFlow'||key==='decorationNoise'||key==='foregroundBurst'||key==='jawTint'||key==='rigMode'||key==='jawPivotMode'||key==='fluidMode'||key==='fluidColor'||key==='aCompositeMode'||key==='aSceneMode'||key==='aNativeResolution'){
           if(value!==0&&value!==1)throw new RangeError('Tint must be 0 or 1');
@@ -74,7 +75,7 @@ window.HalloweenControlAPI = Object.freeze({
           const r=ranges[key];
           if(typeof value!=='number'||!Number.isFinite(value)||!r||value<r[0]||value>r[1])throw new RangeError('Value outside range');
         }
-        values[id][key]=value;if(id==='skull3d'&&key==='jawActivity'&&value!=='custom'){const preset={flapping:['noise',.3,1,1.2],violent:['noise',.05,1,2],occasional:['noise',.8,4,1.3],stopped:['closed',values[id].jawPeriod,values[id].jawExponent,values[id].jawNoiseAmplitude]}[value];[values[id].jawMode,values[id].jawPeriod,values[id].jawExponent,values[id].jawNoiseAmplitude]=preset;}else if(id==='skull3d'&&['jawMode','jawPeriod','jawExponent','jawNoiseAmplitude'].includes(key))values[id].jawActivity='custom';if(id==='skull3d'&&(key==='aCompositeMode'||key==='aSceneMode')&&value===1){values[id].aCompositeMode=values[id].fluidMode=values[id].rigMode=values[id].jawPivotMode=1;}if(id==='skull3d'&&key==='fluidMode'&&value===0)values[id].aCompositeMode=0;if(id==='skull3d'&&['fluidMode','aCompositeMode','rigMode'].includes(key)&&value===0)values[id].aSceneMode=0;hooks.changed(id);return api.status();
+        values[id][key]=value;if(id==='skull3d'&&key==='actorCount')values[id].aSceneMode=values[id].aCompositeMode=values[id].fluidMode=values[id].rigMode=values[id].jawPivotMode=1;if(id==='skull3d'&&key==='jawActivity'&&value!=='custom'){const preset={flapping:['noise',.3,1,1.2],violent:['noise',.05,1,2],occasional:['noise',.8,4,1.3],stopped:['closed',values[id].jawPeriod,values[id].jawExponent,values[id].jawNoiseAmplitude]}[value];[values[id].jawMode,values[id].jawPeriod,values[id].jawExponent,values[id].jawNoiseAmplitude]=preset;}else if(id==='skull3d'&&['jawMode','jawPeriod','jawExponent','jawNoiseAmplitude'].includes(key))values[id].jawActivity='custom';if(id==='skull3d'&&(key==='aCompositeMode'||key==='aSceneMode')&&value===1){values[id].aCompositeMode=values[id].fluidMode=values[id].rigMode=values[id].jawPivotMode=1;}if(id==='skull3d'&&key==='fluidMode'&&value===0)values[id].aCompositeMode=0;if(id==='skull3d'&&['fluidMode','aCompositeMode','rigMode'].includes(key)&&value===0)values[id].aSceneMode=0;hooks.changed(id);return api.status();
       },
       setActors(id,poses){assertScene(id);if(id!=='skull3d')throw new RangeError('Actor input belongs to A');const next=poses===null?null:window.HalloweenSkullScene.validate(poses);values[id].actorPoses=next;values[id].actorRevision++;hooks.changed(id);return api.status();},
       setText(id,text){
@@ -128,5 +129,5 @@ window.HalloweenSkullRig=(()=>{
 window.HalloweenSkullScene=Object.freeze({
  validate(poses){if(!Array.isArray(poses)||poses.length!==6)throw new RangeError('Expected six A actors');return poses.map(p=>{if(!p||typeof p!=='object'||Array.isArray(p))throw new TypeError('Expected actor pose');for(const [key,bound] of [['position',5],['rotation',360]])if(!Array.isArray(p[key])||p[key].length!==3||p[key].some(v=>typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>bound))throw new RangeError('Actor transform outside comparison range');if(typeof p.jaw!=='number'||!Number.isFinite(p.jaw)||p.jaw<0||p.jaw>90)throw new RangeError('Actor jaw outside0..90');return {position:[...p.position],rotation:[...p.rotation],jaw:p.jaw};});},
  poses(values,headTime,jawTime,motionPoses){if(values.actorPoses)return values.actorPoses;if(!motionPoses||motionPoses.length!==6)throw new Error('Continuous six-actor motion state required');return motionPoses.map(p=>({position:[...p.position],rotation:p.rotation.map((v,i)=>v+[values.headX,values.headY,values.headZ][i]),jaw:Math.min(90,p.jaw*values.jawOpen/28)}));},
- foreground(poses){return [0,1,2].map(i=>({circleActor:[0,2,4][i],radialActor:i,circle:[.5+poses[[0,2,4][i]].position[0]/10,.5+poses[[0,2,4][i]].position[1]/10],radial:[.5+poses[i].position[0]/10,.5+poses[i].position[1]/10]}));}
+ foreground(poses){const center=i=>poses[i].displayNormalized??[.5+poses[i].position[0]/10,.5-poses[i].position[1]/10];return Array.from({length:Math.ceil(poses.length/2)},(_,i)=>{const a=[0,2,4][i]%poses.length,b=i%poses.length,c=center(a),r=center(b);return {circleActor:a,radialActor:b,circle:[c[0],1-c[1]],radial:[r[0],1-r[1]]};});}
 });

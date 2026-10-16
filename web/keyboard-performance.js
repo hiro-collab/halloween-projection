@@ -11,9 +11,10 @@ window.HalloweenPerformanceKeyboard=(()=>{
   const keyTimes={};
   function arm(){if(disposed||!canArm()||doc.hidden||edit(doc.activeElement)){reason='投影接続と入力欄を確認してください';publish();return false;}pressed.clear();baselineDone=false;armed=true;reason='演奏中';last=performance.now();lastWall=Date.now();if(timer)win.clearInterval(timer);timer=win.setInterval(tick,33);publish();return true;}
   function down(e){const k=e.key?.toLowerCase();if(k==='escape'){off('Escで演奏停止');return;}if(e.ctrlKey||e.metaKey||e.altKey||e.shiftKey||e.isComposing||e.keyCode===229){if(armed)off('修飾キー/IMEで演奏停止');return;}if(!armed||disposed||doc.hidden||edit(e.target))return;if(k===' '&&e.target?.closest?.('button,a[href]'))return;
-   if(!axes[k]&&!['1','2','k','z','m',' ','r'].includes(k))return;e.preventDefault();if(e.repeat||pressed.has(k))return;if(!pressed.size){gesture++;holdStart=Date.now();}pressed.add(k);if(k==='z')keyTimes.zWall=Date.now();keyTimes[k]=performance.now();
+   if(!axes[k]&&!['1','2','q','e','k','z','m',' ','r'].includes(k))return;e.preventDefault();if(e.repeat||pressed.has(k))return;if(!pressed.size){gesture++;holdStart=Date.now();}pressed.add(k);if(k==='z')keyTimes.zWall=Date.now();keyTimes[k]=performance.now();
    if(axes[k])send({action:'adjust',axis:axes[k][0],delta:axes[k][1]*(axes[k][0]==='text'?.015:.025)});
    else if(k==='1'||k==='2')send({action:'scene',value:k==='1'?'a':'b'});
+   else if(k==='q'||k==='e')send({action:'actorCountStep',delta:k==='e'?1:-1});
    else if(k==='z')send({action:'accent',value:true});
    else if(k==='k'&&performance.now()-lastMode>=200){lastMode=performance.now();send({action:'mode'});}
    else if(k==='m')baselineDone=false;
