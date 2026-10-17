@@ -1,4 +1,6 @@
-# Halloween Projection — private preview v44
+# Halloween Projection — private preview v45
+
+Count changes trigger a0→1 appearance multiplier and1→0 exit over about0.2s. Default3, live1–6, accepted orbit and standard size remain. [Lifecycle and verification](docs/COUNT-SCALE-V45.md).
 
 The adopted v43 source orbit now starts with3 visible skulls. The live1–6 selector and Q/E keys remain. Three-body source rendering selects histories0,2,4 (even120-degree source phases), without changing or resetting the original six histories. [Scope and verification](docs/THREE-SKULLS-V44.md).
 
@@ -8,7 +10,7 @@ v42 preserves the v41 motion display fix and restores the intended30Hz A cadence
 
 Open web/START-HERE.html for the operator and projection windows. This is a preview; real-projector and longer-duration acceptance remain pending. Code licensing does not relicense private owner assets. No public site or push is part of this local recovery.
 
-Build: python tools/build-web-package.py . Exact saved ZIP reproduction: python tools/reproduce-saved-release.py releases/v44.json . Python is a maintainer tool; end users use the static ZIP. dist/ and output/ are ignored.
+Build: python tools/build-web-package.py . Exact saved ZIP reproduction: python tools/reproduce-saved-release.py releases/v45.json . Python is a maintainer tool; end users use the static ZIP. dist/ and output/ are ignored.
 
 Validation: node tests/app-control-api.qa.cjs . Set PLAYWRIGHT_CLI to an installed CLI JS entry point and run python tests/run-browser-qa.py common-api resources keyboard-lifecycle realtime-controls offline-unpacked natural-motion . v40 additionally has actor-count and count-fhd tests. Browser test output/captures are ignored.
 

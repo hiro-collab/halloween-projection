@@ -24,6 +24,32 @@ window.HalloweenActorLayout=(()=>{
   }
   return Object.freeze({sample,status:()=>({count,elapsed,duration,transitioning:elapsed<duration,anchors:current.slice(0,count).map(p=>[...p]),travel:[...travel],translationUnits:'screen height per source world unit at Z0',policy:'symmetric rows; linear isotropic XY; layout-only smoothstep; Pause immediate'})});
  }
+ // Lifecycle triggers own the target; the value channel owns elapsed interpolation.
+ // Fixed slot identities keep surviving actors and all six source histories intact.
+ const presenceDuration=.2,presenceSources=Object.freeze([0,2,4,1,3,5]);
+ function createPresence(initialCount=3){
+  const validCount=n=>{if(!Number.isInteger(n)||n<1||n>6)throw RangeError('Actor count1..6 required');};
+  validCount(initialCount);let requestedCount=initialCount,revision=0,disposed=false;
+  let records=Array.from({length:6},(_,id)=>({id,sourceIndex:presenceSources[id],scale:id<initialCount?1:0,from:id<initialCount?1:0,target:id<initialCount?1:0,elapsed:0,duration:0,state:id<initialCount?'visible':'hidden',entries:id<initialCount?1:0}));
+  function trigger(record,show){
+   const target=show?1:0;if(record.target===target)return;
+   if(show&&record.state==='hidden'){record.scale=0;record.entries++;}
+   record.from=record.scale;record.target=target;record.elapsed=0;
+   record.duration=presenceDuration*Math.abs(target-record.scale);
+   record.state=show?'entering':'exiting';revision++;
+   if(!record.duration)settle(record);
+  }
+  function settle(record){record.scale=record.from=record.target;record.elapsed=record.duration=0;record.state=record.target?'visible':'hidden';}
+  function requestCount(n){validCount(n);if(disposed)return;requestedCount=n;for(const record of records)trigger(record,record.id<n);}
+  function advance(seconds){
+   if(!Number.isFinite(seconds)||seconds<0)throw RangeError('Finite nonnegative seconds required');
+   if(disposed||!seconds)return;
+   for(const record of records){if(!record.duration)continue;record.elapsed=Math.min(record.duration,record.elapsed+seconds);const t=record.elapsed/record.duration,e=t*t*(3-2*t);record.scale=record.from+(record.target-record.from)*e;revision++;if(record.elapsed>=record.duration)settle(record);}
+  }
+  const pending=()=>records.some(record=>record.duration>0);
+  const visible=()=>records.filter(record=>record.scale>0||record.target===1).map(record=>({...record}));
+  return Object.freeze({requestCount,advance,pending,visible,revision:()=>revision,status:()=>({requestedCount,revision,transitioning:pending(),duration:presenceDuration,disposed,slots:records.map(record=>({...record})),pausePolicy:'presentation continues; source motion and solver freeze',identityPolicy:'fixed slots/source phases 0,2,4,1,3,5; continuing actors never retrigger'}),dispose(){if(disposed)return;disposed=true;records=[];revision++;}});
+ }
  function envelope(vertices,jawVertices,registration,jawPivot){
   const origin=registration.parentPivot;let radius2=0;
   for(let i=0;i<jawVertices.length;i++){
@@ -50,5 +76,5 @@ window.HalloweenActorLayout=(()=>{
   const center=[anchor[0]*width+gain[0]*pose.position[0]*cameraZ/d,anchor[1]*height-gain[1]*pose.position[1]*cameraZ/d];
   return {scale,center,sourceCenter,normalized:[center[0]/width,center[1]/height],limits,radius,policy:'fixed full-rotation/jaw envelope; linear XY; original perspective Z; no silhouette recenter/resize'};
  }
- return Object.freeze({create,place,envelope,slots,duration,travel,sourceIndices});
+ return Object.freeze({create,place,envelope,slots,duration,travel,sourceIndices,createPresence,presenceDuration});
 })();
