@@ -3,10 +3,10 @@
   "baseline": "092a987c9fa6b93669b88af716e760151c35f132",
   "package": {
     "version": "0.1.55-jaw-edge-preview",
-    "sha256": "0b11409ce4dfe87c49b3ff7414452c8627ad8167dcffea7a2eb07fc9bcee0b6a",
-    "bytes": 542169,
+    "sha256": "0c53e712fc73a9879d1f84fbf6477b77a8e88efa19314a3b32185e607696b433",
+    "bytes": 543264,
     "entries": 50,
-    "build": "0.1.55-jaw-edge-preview-b835b1dc65dc",
+    "build": "0.1.55-jaw-edge-preview-e7dc7ac2c1f3",
     "layout": {
       "entry": "\u306f\u3058\u3081\u306b_START-HERE.html",
       "application": "\u30a2\u30d7\u30ea\u672c\u4f53/",
@@ -102,8 +102,39 @@
     "Native source motion/art/model unchanged, but no claim of exact TouchDesigner output equivalence.",
     "Runtime 2x atlas adds approximately 10.37MB decoded RGBA estimate; short paired benchmark is 10seconds per version.",
     "Only modern entry/operator/guide and remote startup/status are bilingual; old developer single-window diagnostics may retain Japanese labels.",
-    "Owner-created bat and sampled-data public permissions remain separate from own-code MIT.",
-    "Finite reachable-history and ZIP scan; no complete patent or zero-PII guarantee."
+    "Finite reachable-history and ZIP scan; no complete patent or zero-PII guarantee.",
+    "Owner bat and owner-scene sampled/validation data are MIT by explicit owner approval. Public repository visibility and Release execution remain unperformed."
   ],
-  "publicRelease": false
+  "publicRelease": false,
+  "previousPackageBeforeMITScopeUpdate": {
+    "version": "0.1.55-jaw-edge-preview",
+    "sha256": "0b11409ce4dfe87c49b3ff7414452c8627ad8167dcffea7a2eb07fc9bcee0b6a",
+    "bytes": 542169,
+    "entries": 50,
+    "build": "0.1.55-jaw-edge-preview-b835b1dc65dc",
+    "layout": {
+      "entry": "\u306f\u3058\u3081\u306b_START-HERE.html",
+      "application": "\u30a2\u30d7\u30ea\u672c\u4f53/",
+      "terms": "\u5229\u7528\u6761\u4ef6.txt"
+    }
+  },
+  "licenseScopeUpdate": {
+    "baseline": "d0de6c73a8959c6e586c0e5077a34bf0783d0537",
+    "date": "2026-10-17",
+    "ownerCreatedBatAndEmbeddedPNG": "MIT",
+    "ownerSceneSampledAndValidationValues": "MIT",
+    "ownCode": "MIT",
+    "copyright": "Copyright (c) 2026 hiro-collab",
+    "standardMITTextUnchanged": true,
+    "thirdPartyCDmirSkull": "CC0 1.0 unchanged",
+    "runtimeExecutableBodiesAndAllDataValuesUnchanged": true,
+    "newZIPChecks": {
+      "jawCore": 19,
+      "languageAndUI": 14,
+      "offlineAndSecurityBoundaries": 15,
+      "failed": 0
+    },
+    "prior832FunctionalChecks": "Retained baseline evidence;not claimed as newly rerun. Executable bodies and all model/image/numeric values identical.",
+    "publicExecution": false
+  }
 }

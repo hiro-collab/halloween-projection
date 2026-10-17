@@ -1,4 +1,5 @@
-/* MIT code. owner-bat-atlas.png remains a separate private reference asset. */
+/* Copyright (c) 2026 hiro-collab. MIT; see LICENSE.txt.
+ * Renderer and referenced owner-created bat atlas are MIT licensed. */
 'use strict';
 window.HalloweenBatArt = (() => {
   const URL_PATH='./assets/owner-bat-atlas.png';

@@ -52,7 +52,7 @@ PNGはbat-atlas-data.jsにも同一バイトで埋込み、bat-art.jsとビル�
 画像をPNGだけ差し替えても反映できません。開発者が寸法・60コマの切出し・ハッシュ・埋込データを合わせて更新します。
 3D模型や採取済み数値は独自バイナリ/圧縮データです。一般的な模型変換ツールは同梱していません。
 配布ZIP再生成やHTTP配信版のService Worker整合性更新にはリポジトリーのPythonビルダーを使用します。
-ZIPへ開発ツールやPython/Nodeは同梱しません。コードのMITと素材条件は別です（LICENSE.txt / RIGHTS.txt）。
+ZIPへ開発ツールやPython/Nodeは同梱しません。自作コード・本人コウモリ・採取値はMIT、第三者模型はCC0です（LICENSE.txt / RIGHTS.txt）。
 
 The package contains editable HTML, CSS and JavaScript, with meaningful names and no bundler requirement.
 Edit console.html / console.css for operator UI, GUIDE.html / guide.css for help, and i18n.js for UI translations.
@@ -62,3 +62,5 @@ The bat PNG is also embedded in bat-atlas-data.js and hash-pinned in bat-art.js 
 Model and sampled fields use custom binary/compressed formats; no general model converter is included.
 Maintainers use the repository Python builder to regenerate the ZIP and hashed Service Worker for HTTP hosting.
 GitHub automatic Source code ZIP is the repository snapshot. A curated application ZIP can be attached manually to a Release; this preview creates no public Release.
+
+2026-10-17 MIT scope update: owner-created bat PNG/embedded bytes and owner-scene sampled/validation data are MIT, Copyright (c) 2026 hiro-collab. The third-party model remains CC0. Runtime logic and all data values are unchanged. Public publication has not been performed.

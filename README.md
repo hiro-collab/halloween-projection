@@ -9,7 +9,7 @@ Bの原PNG、動き、位相は保持し、表示サンプリングとalpha処�
 - Package: dist/halloween-projection-web-v0.1.55-jaw-edge-preview.zip
 - Release evidence: [releases/v55.json](releases/v55.json)
 - Editing and asset replacement: [web/README.txt](web/README.txt)
-- Own code: standard MIT. Assets and sampled data: [provenance / public-readiness facts](docs/PUBLIC-READINESS.md)
+- Own code, owner-created bat and owner-scene sampled/validation data: standard MIT. Third-party skull: CC0. [provenance / public-readiness facts](docs/PUBLIC-READINESS.md)
 
 Extract the curated ZIP and open はじめに_START-HERE.html in Chrome. Choose English; no extra software, commands or build step are needed.
 L selects jaw width, M opens/closes, C restores automatic motion. Original artwork and accepted motion/phase are preserved.
@@ -88,7 +88,7 @@ Q W E R T Y U I  O P   色8位置
 
 ビルド: `python tools/build-web-package.py`。検証: `node tests/app-control-api.qa.cjs`、`node tests/actor-presence.qa.cjs`、`node tests/presence-lag.qa.cjs`。既存Playwright CLIのJSパスをPLAYWRIGHT_CLIへ設定して `python tests/run-browser-qa.py keyboard-lifecycle offline-unpacked`。Python/Node.jsは保守作業用で、利用者の導入には不要です。
 
-コードはMIT。本人bat素材・測定データはMIT対象外で一般公開/再配布条件は未確定。RIGHTS.txtとdocs/PRIVATE-ASSET-BOUNDARIES.mdを確認してください。本人承認の既存private GitHubへのコード/同梱素材の通常pushだけが許可され、公開化・公開Releaseは含みません。実投影/別端末は未検収です。ZIP/動画/ログはGitへ含めません。
+自作コード・本人bat素材・本人作品由来の採取値/検証値はMIT。第三者模型はCC0。RIGHTS.txtとdocs/PRIVATE-ASSET-BOUNDARIES.mdを確認してください。本人承認の既存private GitHubへのコード/同梱素材の通常pushだけが許可され、公開化・公開Releaseは含みません。実投影/別端末は未検収です。ZIP/動画/ログはGitへ含めません。
 
 
 v51では、通常の顎支点を使用モデルの登録済み関節位置に揃えました。開口時に顎が頭の内部へ入り込む問題を修正しています。頭の動き・顎の独立開閉・閉じた姿・3段キーは保持しています。詳しくはdocs/JAW-HINGE-V51.md。
@@ -97,4 +97,4 @@ v51では、通常の顎支点を使用モデルの登録済み関節位置に�
 
 配布ZIPは入口HTML・アプリ本体・利用条件の3項目です。展開した入口をChromeで開きます。日本語/Englishは再読込みせず切替できます。
 通常のHTML/CSS/JS編集にビルドは不要です。配布ソースはweb/のまま。埋込み画像・模型・数値データとService Worker再生成は[編集案内](web/README.txt)を参照。
-自作コードは標準MIT、Copyright (c) 2026 hiro-collab。画像・CC0模型・採取値は[権利台帳](docs/PUBLIC-READINESS.md)で区分します。公開操作は今回行っていません。
+自作コード・本人コウモリ・本人作品由来の採取値/検証値は標準MIT、Copyright (c) 2026 hiro-collab。CC0模型の条件を保持し、素材の区分は[権利台帳](docs/PUBLIC-READINESS.md)で区分します。公開操作は今回行っていません。

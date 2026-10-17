@@ -1,4 +1,4 @@
-/* Generated private owner PNG payload; same restrictions as assets/owner-bat-atlas.png. */
+/* Copyright (c) 2026 hiro-collab. MIT; see LICENSE.txt. Generated owner-created PNG payload, identical to assets/owner-bat-atlas.png. */
 'use strict';
 (() => {
   if(location.protocol!=='file:')return;

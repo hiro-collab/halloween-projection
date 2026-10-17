@@ -1,0 +1,14 @@
+Owner-scene validation values — MIT
+Copyright (c) 2026 hiro-collab
+
+The owner's 2026-10-17 MIT approval covers these developer validation datasets:
+- a-fluid-sampling-golden.json: authored synthetic ramp/one-hot/tie inputs and observed numeric GPU outputs.
+- a-scene-poses.json: authored six fixed poses.
+- a-scene-golden.json: head/jaw matrices for those poses and the CC0 alternate model registration.
+- skull-origin-golden.json: fixed-pose matrices and measured pixel bounds.
+- skull-rig-golden.json: registration/camera values, fixed-pose matrices and measured bounds.
+
+The unchanged standard MIT license is ../LICENSE.
+Their data bytes are unchanged. They are in the source repository, not the application ZIP.
+The third-party CDmir Human Skull model separately retains CC0 1.0, as web/RIGHTS.txt records.
+This notice does not claim ownership of third-party source code or alter CC0.

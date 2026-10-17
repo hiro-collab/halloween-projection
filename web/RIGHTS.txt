@@ -15,16 +15,17 @@ assets/owner-bat-atlas.png と、その同一バイトの埋込み bat-atlas-dat
 60フレームと記録しています。旧候補Bat_FBXやbase2の雪とは別物です。
 1600×540 RGBA8 PNG、1コマ160×90、10列×6行。JPEGではありません。
 SHA256: 9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a
-この画像はコードのMIT対象外として管理されてきました。
-本人確認用再利用・既存private GitHubへの通常pushは承認済みです。
-一般公開で画像の利用・改変・再配布・商用利用をどこまで認めるかは、まだ明記されていません。
-出所不明を理由にしているのではなく、本人素材の公開配布条件を区別しています。
+2026-10-17の本人承認により、このPNGと同一バイトの埋込みにもMITを適用します。
+Copyright (c) 2026 hiro-collab。標準全文はLICENSE.txtです。
+利用・改変・再配布・商用利用を含む条件は標準MITに従います。素材用の追加制限は設けません。
+従来のMIT対象外・private限定という素材許諾表示は、この承認で更新されました。
 v55は元PNGを変更せず、表示時だけ2倍の高品質サンプリングと被覆alpha処理を適用します。
 
 The ledger identifies these 60 frames as the owner's circle/rectangle-generated artwork.
 They are separate from the old Bat_FBX candidate. PNG and embedded bytes are identical.
-Private owner review and normal pushes to the existing private repository are authorized.
-The scope of public use, modification, redistribution and commercial reuse of this artwork is not yet stated; it is outside the blanket code MIT.
+On 2026-10-17 the owner explicitly approved MIT licensing of this artwork and its identical embedded payload.
+Copyright (c) 2026 hiro-collab. See LICENSE.txt for the standard MIT terms, including use, modification, redistribution and commercial use.
+The previous private-only asset notice is superseded; no additional asset restrictions are imposed.
 v55 keeps original image bytes and refines runtime sampling / alpha compositing only.
 
 ■ 第三者のCC0模型 / Third-party CC0 model
@@ -46,10 +47,12 @@ a-fluid.js: 時刻0の100×57 RG速度場（half-float）。固定入力/比較�
 output-uv.js: 1280×720 RG投影補正座標。元Remap用。
 これらは本人作品内のTD演算から採取した値で、第三者の完成映像を取り込んだ記録はありません。
 演算結果の数値であり、TD/NVIDIAのソースコードそのものとは区別します。
-既存台帳は数値データをコードMITの一括対象外としています。公開配布条件は未確定です。
+2026-10-17の本人承認により、上記の採取済み数値もMITです。Copyright (c) 2026 hiro-collab。
+ソースGitの本人作品由来の検証値5ファイルも同じMIT条件です（tests/DATA-LICENSE.txt）。
 詳細な出所・実行時の用途・外せる範囲はリポジトリー docs/PUBLIC-READINESS.md。
 These are measured operator outputs/settings from the owner's scene, not recorded third-party video or bundled TD source.
-Existing notices exclude the sampled datasets from blanket MIT. Public redistribution scope remains to be stated.
+The owner-scene sampled datasets and the five developer validation JSON files are MIT licensed by the same owner approval.
+Copyright (c) 2026 hiro-collab. The unchanged standard license is LICENSE.txt; tests/DATA-LICENSE.txt identifies developer-only data.
 
 ■ 実装と非同梱物 / Implementation and exclusions
 実行時第三者JSライブラリ/CDNなし。OS/ブラウザーのフォントを使用し、フォントファイルは同梱しません。
@@ -59,6 +62,6 @@ Existing notices exclude the sampled datasets from blanket MIT. Public redistrib
 No third-party JS runtime library, CDN, bundled font, TD/NVIDIA runtime, original TOE/TOG, original TD mesh, music, lyrics, video or private log is included.
 Generic numerical methods and independently written code are distinguished from literal source copying. This notice is not a complete patent search or a guarantee about every possible claim.
 
-現在は本人確認用の非公開配布です。公開Releaseやリポジトリー可視性の変更は実施していません。
+今回の納品・リポジトリーは引き続き非公開です。素材のMIT許諾と公開操作は別であり、公開Releaseや可視性変更は実施していません。
 本作品の公開URLは未確認のため創作していません。リポジトリーURLは https://github.com/hiro-collab/halloween-projection 。
-This remains a private owner preview. No public Release or visibility change has been performed.
+This delivery remains a private owner preview. That delivery status adds no restriction to the MIT terms. No public Release or visibility change has been performed.

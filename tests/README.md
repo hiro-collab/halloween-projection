@@ -55,3 +55,7 @@ offline-security.qa.jsは13静的assetの完全一覧のみ許可。ZIPはsw.js�
 0.1.11: b-force-field.qa.cjsは原4固定Vortex/Spiral条件の12goldenと2edge契約（14）。Wyvill/方向/成分の実生産関数を原1stepへ照合。軸/外側guardはNative直接採取ではない。詳細docs/B-FORCE-FIELD-VALIDATION.md。
 
 - 顎回帰: node tests/jaw-hinge.qa.cjs。通常Aの支点、0度の不変、親子行列と独立開口、個数/再選択による支点の保持、明示的な旧支点比較を確認。
+
+## Data license
+
+The five owner-scene validation JSON datasets are MIT licensed, Copyright (c) 2026 hiro-collab. See [DATA-LICENSE.txt](DATA-LICENSE.txt). Numeric contents are unchanged; the third-party model retains CC0.

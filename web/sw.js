@@ -1,11 +1,11 @@
 'use strict';
-const BUILD = "0.1.55-jaw-edge-preview-b835b1dc65dc";
+const BUILD = "0.1.55-jaw-edge-preview-e7dc7ac2c1f3";
 const HASHES = {
   "index.html": "d28c79619283b05c38b72a31a78bf4e5f5f40f4d6ab45dbadfdf6bb7c9afa94a",
   "styles.css": "f22326303cfde63790650c60acd7c1d576bcb3c0177412887b9f47d000f93d7c",
   "app.js": "1a3b3632ef36ce97405884fd8763766f71b3a86961eae08072dde5f7a9afdd46",
   "offline.js": "6e1875ea2feab8a8907add195906eae18bbb9fc67fa1622a82fae79ffc236707",
-  "README.txt": "5a1033315e9d6c968f5b5123e7771ded93509eeb89e64180249b8ffc6f43d94f",
+  "README.txt": "72a8ca86e78d0e07e078f8040fd4dcbe32fc8d8ffcc81d885285fc1025c35ea7",
   "console.html": "8fd3716c3bba681dbba0ec77b137e699173f62904f5d44ab7d647396ca5520d3",
   "console.css": "1ef68b02708f001a9eb90fc12342f1edb7aae6f0a3a6fa03dd12684ff08e525b",
   "console.js": "2c866d3b1259e624cb8d159eea932b4bd99d0ee25447f0015f9902cdf6121b72",
@@ -19,7 +19,7 @@ const HASHES = {
   "PERFORMANCE-PLAN.html": "93fb5bbfadea1afee19e8245566d26a609bd2a03fcc8e5b1beea9fecae8d4444",
   "guide.css": "9861e7bbf26008b78bba20406f7176ffbb1d2b61224cbf6913b053b6933ec440",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
-  "RIGHTS.txt": "b6de1283128232e2e36d9c6f972958aae36fe88ecac0f60b61667037d6a8a4a8",
+  "RIGHTS.txt": "2c50e5d9600e7f11c215f8e0023b8047f4dccfc6212904fb3758e410829b4510",
   "motion-clock.js": "52fcea2e517c25c89a9b525843d43f088f1f9ffcae0b94d6b83b21f3faf5083c",
   "control-response.js": "a6c1cc00d6d4a0eafbb0ea2af6a7a1ea0a6273e285c7014721694fa6a2e9a954",
   "a-source-blur.js": "321d86574d83503fdc4431813de60de8fe67647663a52da574fcf6788d95ba49",
@@ -34,20 +34,20 @@ const HASHES = {
   "text-operators.js": "cae2c3186e9e588d7eb8878996437e6c8dd195c4bf038933fc22a0276405707a",
   "app-control-api.js": "6fe5201e21ee468c71ea3175eb7d3c1176befe5160b7773d0f225723403d8058",
   "control-adapters.js": "2b861abb80f04fc743b00839e332639a4c0551640bc082ae5325be725400c87b",
-  "bat-motion.js": "4c6a92858633499f9b8392c61e79d3ceb02b7b550156a47d2bf4ffb958e4ae28",
-  "bat-phase.js": "b92f78f1bf2a3be283156cc193dee1560a9527428c1938a51c4c7ca4b8884961",
+  "bat-motion.js": "204440725a0228c67f171436b438a960a337ce648d1f12f259af1d312e32acfb",
+  "bat-phase.js": "444c0cbe9305e0d4c385c5c4ed4a4e67868739a6f3eabf5830927873fad8c15b",
   "b-motion-runtime.js": "7677ce53099014e9cb02a70c6fbf9055645a25f5ee3c3593091c0657290ae858",
-  "bat-art.js": "67c0fcea04746607cb863980db628432be2c083083be31875301fcb21e500c23",
-  "bat-atlas-data.js": "9dd654e2c6bd36e6f50d96cc412840da8aea614e7010ce03c900dae7de71caf0",
+  "bat-art.js": "d05cfd1bd0a95e4583a061c52d7bdd4c87cfe852988a8905c9ccfe0ac46756c2",
+  "bat-atlas-data.js": "cb2d214552c1a4eb8a61ffe167e23aafdd368fa6c7214dbf7091080a8ac2a69d",
   "bat-fire.js": "be398b01f41e675cb8653f267a600843b3bf4bb0d64e98bb7b9e971df86905df",
   "text-sequence.js": "0479ed104d7171d58a13bd0dd305326b2e827542de338601985f726687d64835",
-  "output-uv.js": "3f8eb08c52142de86626e9b558c835644a046611897122fc59fd547caa1871f7",
+  "output-uv.js": "29c8f82abba5ccd7e349a7f431aac264416f1bb7f99060fd87c02748e616942a",
   "output-operators.js": "948b2d2d40c996c67eb949b60d270d1e47ad4b5874cde5eca6b03a054e187dde",
   "a-source-noise.js": "6555f43b09f21d11ebcb821c2170fc987e2a9ae615cc7c1bd389952c45a9bbeb",
-  "a-fluid.js": "4d620536e1c550a49634e5ea21f64ef1a908a9374be6336fdfb8f16b1af9105f",
+  "a-fluid.js": "19ec098262d7f9c1dd660fa10314bb66da42cbfc80df60e5b6c76333a2b6cb48",
   "a-composite.js": "20d6839197bb59d4d5da763b81269a31210fef68b2f7b2c94d0e628ed3283bb7",
   "assets/owner-bat-atlas.png": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",
-  "assets/OWNER-BAT-ASSET.txt": "1c87dd8e950d7070b54608917fb4e9aae44abcbdb070e92d60b3bb784c6b9379"
+  "assets/OWNER-BAT-ASSET.txt": "44fff898cae99a8e4d8f13184708754df07deda56b58220e0ffd05f6ca570873"
 };
 const SCOPE = self.registration.scope;
 const PREFIX = 'halloween-projection:' + SCOPE + ':';

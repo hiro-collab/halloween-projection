@@ -1,4 +1,4 @@
-本人コウモリのprivate参照素材
+本人作成コウモリ — MIT / Owner-created bat — MIT
 
 本人が円で生成したTouchDesignerコウモリの保存キャッシュ60フレームを、
 RGBA8候補として160×90、10列×6行に配置。形・色・alpha・行方向は加工していません。
@@ -6,7 +6,11 @@ Tex3D payload SHA256: 287602b91d5d9f699258d5cb6b4e79dcc8ec28569d5a9928171e0a8c5f
 Atlas PNG SHA256: 9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a
 正しい参照枝はbat_set/bat/batImgs。base2の雪、旧候補のBat_FBXとは別です。
 
-本人が生成画像群の再利用を許容したprivate本人確認のための素材です。
-このassetへコードのMITを適用していません。外部配布/一般公開の条件は未確定です。
+2026-10-17の本人承認により、owner-bat-atlas.pngと同一バイトのbat-atlas-data.jsをMITで配布します。
+Copyright (c) 2026 hiro-collab。標準全文は ../LICENSE.txt。
+利用・改変・再配布・商用利用を含む条件は標準MITに従います。追加の素材制限は設けません。
+The owner-created PNG and its identical embedded payload are MIT licensed.
+Copyright (c) 2026 hiro-collab. See ../LICENSE.txt for the unchanged standard MIT license.
+この許諾更新によって原PNGの内容や、今回のprivate納品・公開操作の範囲は変わりません。
 元TOE/モデル/動画/会話/私的pathは含めません。
 TD実再生の最終色/向き/alpha/合成との照合は未完。元作品完全再現とは称しません。
