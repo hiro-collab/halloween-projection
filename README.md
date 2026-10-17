@@ -1,4 +1,6 @@
-# Halloween Projection — private preview v47
+# Halloween Projection — private preview v48
+
+Both settle in200ms: accepted6% remains default, proposed8% is optional comparison only. The canceled350ms plan is not delivered. [Comparison and verification](docs/ENTRY-COMPARISON-V48.md).
 
 The accepted v46 entry now peaks at6% overshoot, preserving its peak time and200ms settling. Exit/orbit/default3/live1–6 remain. [Adjustment and verification](docs/PRESENCE-SIX-V47.md).
 
@@ -14,7 +16,7 @@ v42 preserves the v41 motion display fix and restores the intended30Hz A cadence
 
 Open web/START-HERE.html for the operator and projection windows. This is a preview; real-projector and longer-duration acceptance remain pending. Code licensing does not relicense private owner assets. No public site or push is part of this local recovery.
 
-Build: python tools/build-web-package.py . Exact saved ZIP reproduction: python tools/reproduce-saved-release.py releases/v47.json . Python is a maintainer tool; end users use the static ZIP. dist/ and output/ are ignored.
+Build: python tools/build-web-package.py . Exact saved ZIP reproduction: python tools/reproduce-saved-release.py releases/v48.json . Python is a maintainer tool; end users use the static ZIP. dist/ and output/ are ignored.
 
 Validation: node tests/app-control-api.qa.cjs . Set PLAYWRIGHT_CLI to an installed CLI JS entry point and run python tests/run-browser-qa.py common-api resources keyboard-lifecycle realtime-controls offline-unpacked natural-motion . v40 additionally has actor-count and count-fhd tests. Browser test output/captures are ignored.
 

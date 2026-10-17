@@ -29,15 +29,16 @@ window.HalloweenActorLayout=(()=>{
  const presenceDuration=.2,presenceSources=Object.freeze([0,2,4,1,3,5]);
  // Quintic S curve and an analytic damped step. The tail settles exactly at .2s.
  const smootherstep=t=>Math.max(0,Math.min(1,t*t*t*(t*(t*6-15)+10)));
- // Set exact step overshoot6%; retain v46 first-peak time and the .2s endpoint.
- const springOvershoot=.06,springLog=-Math.log(springOvershoot),springDamping=springLog/Math.hypot(Math.PI,springLog);
- const springFrequency=8*Math.sqrt(1-.75**2),springPhase=springFrequency/Math.sqrt(1-springDamping**2);
- function springStep(t){
-  const response=1-Math.exp(-springDamping*springPhase*t)*(Math.cos(springFrequency*t)+springDamping*springPhase/springFrequency*Math.sin(springFrequency*t));
-  const tail=t<=.75?1:1-smootherstep((t-.75)/.25);
-  return Math.max(0,1+(response-1)*tail);
- }
- function createPresence(initialCount=3,entryStyle='spring'){
+ // Comparison candidates share v47's200ms duration and normalized peak time.
+ const springFrequency=8*Math.sqrt(1-.75**2);
+ function createPresence(initialCount=3,entryStyle='spring',springOvershoot=.06){
+  if(![.06,.08].includes(springOvershoot))throw RangeError('Presence overshoot6% or comparison8% required');
+  const springLog=-Math.log(springOvershoot),springDamping=springLog/Math.hypot(Math.PI,springLog),springPhase=springFrequency/Math.sqrt(1-springDamping**2);
+  function springStep(t){
+   const response=1-Math.exp(-springDamping*springPhase*t)*(Math.cos(springFrequency*t)+springDamping*springPhase/springFrequency*Math.sin(springFrequency*t));
+   const tail=t<=.75?1:1-smootherstep((t-.75)/.25);
+   return Math.max(0,1+(response-1)*tail);
+  }
   if(!['spring','scurve'].includes(entryStyle))throw RangeError('Presence style spring or scurve required');
   const validCount=n=>{if(!Number.isInteger(n)||n<1||n>6)throw RangeError('Actor count1..6 required');};
   validCount(initialCount);let requestedCount=initialCount,revision=0,disposed=false;
@@ -59,7 +60,7 @@ window.HalloweenActorLayout=(()=>{
   }
   const pending=()=>records.some(record=>record.duration>0);
   const visible=()=>records.filter(record=>record.scale>0||record.target===1).map(record=>({...record}));
-  return Object.freeze({requestCount,advance,pending,visible,revision:()=>revision,status:()=>({requestedCount,revision,transitioning:pending(),duration:presenceDuration,entryStyle,entryCurve:entryStyle==='spring'?'damped step, peak6%, fixed peak time, smooth finite tail':'quintic smootherstep',exitCurve:'quintic smootherstep; nonnegative monotone',overshootTarget:entryStyle==='spring'?springOvershoot:0,overshootLimit:entryStyle==='spring'?Math.exp(-Math.PI*springDamping/Math.sqrt(1-springDamping**2)):0,velocityState:false,disposed,slots:records.map(record=>({...record})),pausePolicy:'presentation continues; source motion and solver freeze',identityPolicy:'fixed slots/source phases 0,2,4,1,3,5; continuing actors never retrigger'}),dispose(){if(disposed)return;disposed=true;records=[];revision++;}});
+  return Object.freeze({requestCount,advance,pending,visible,revision:()=>revision,status:()=>({requestedCount,revision,transitioning:pending(),duration:presenceDuration,entryStyle,entryCurve:entryStyle==='spring'?'damped step, peak'+Math.round(springOvershoot*100)+'%, 200ms, smooth finite tail':'quintic smootherstep',exitCurve:'quintic smootherstep; nonnegative monotone',comparisonCandidate:entryStyle==='spring'&&springOvershoot===.08,overshootTarget:entryStyle==='spring'?springOvershoot:0,overshootLimit:entryStyle==='spring'?Math.exp(-Math.PI*springDamping/Math.sqrt(1-springDamping**2)):0,velocityState:false,disposed,slots:records.map(record=>({...record})),pausePolicy:'presentation continues; source motion and solver freeze',identityPolicy:'fixed slots/source phases 0,2,4,1,3,5; continuing actors never retrigger'}),dispose(){if(disposed)return;disposed=true;records=[];revision++;}});
  }
  function envelope(vertices,jawVertices,registration,jawPivot){
   const origin=registration.parentPivot;let radius2=0;
