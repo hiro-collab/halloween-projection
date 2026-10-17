@@ -1,0 +1,7 @@
+'use strict';
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict'),ctx={window:{}},checks=[];vm.runInNewContext(fs.readFileSync('web/a-skull-raster.js','utf8'),ctx);const normal=ctx.window.HalloweenSkullRaster.normals,check=(name,fn)=>{fn();checks.push({name,ok:true});};
+check('shared planar vertices have identical continuous normals',()=>{const p=new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0]),n=normal(p,new Uint16Array([0,1,2,0,2,3]),new Uint8Array(4));for(let i=0;i<4;i++)assert.deepEqual(Array.from(n.slice(i*3,i*3+3)),[0,0,1]);});
+check('duplicate positions are welded for lighting within the same bone',()=>{const p=new Float32Array([0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1]),n=normal(p,new Uint16Array([0,1,2,3,4,5]),new Uint8Array(6));assert.deepEqual(Array.from(n.slice(0,3)),Array.from(n.slice(9,12)));assert(n[0]>0&&n[2]>0);});
+check('head and jaw normals never weld across independent bones',()=>{const p=new Float32Array([0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1]),n=normal(p,new Uint16Array([0,1,2,3,4,5]),new Uint8Array([0,0,0,1,1,1]));assert.deepEqual(Array.from(n.slice(0,3)),[0,0,1]);assert.deepEqual(Array.from(n.slice(9,12)),[1,0,0]);});
+check('degenerate geometry cannot create NaN lighting or extra vertices',()=>{const p=new Float32Array([0,0,0,0,0,0,0,0,0]),n=normal(p,new Uint16Array([0,1,2]),new Uint8Array(3));assert.equal(n.length,p.length);assert(Array.from(n).every(Number.isFinite));});
+console.log(JSON.stringify({passed:checks.length,failed:0,checks}));

@@ -20,7 +20,18 @@ window.HalloweenBMotion=(()=>{
   if(!Number.isFinite(period)||period<=0||!Number.isFinite(seed)||!amplitude||amplitude.length!==3||amplitude.some(v=>!Number.isFinite(v)||v<0))throw new RangeError('Positive spatial Period, finite seed and nonnegative axis amplitudes required');
   const p=position.map(v=>v/period);return amplitude.map((amp,axis)=>amp*spatialNoise(...p,seed*131+axis*997));
  }
- function parameters(settings={}){const mix=settings.motionMix??.5;finite(mix,'motionMix');if(mix<0||mix>1)throw new RangeError('motionMix requires0..1');return {Initialspeed:nonnegative(settings.initialSpeed??1.3,'initialSpeed'),Cross:mix,Vortex:5-4*mix,Spiral:-1.7+.8*mix,rotationCross:.77*(1-mix)};}
+ function parameters(settings={}){const mix=settings.motionMix??.5,gain=settings.forceGain??1;finite(mix,'motionMix');finite(gain,'forceGain');if(gain<0||gain>1)throw new RangeError('forceGain requires0..1');if(mix<0||mix>1)throw new RangeError('motionMix requires0..1');return {Forcegain:gain,Initialspeed:nonnegative(settings.initialSpeed??1.3,'initialSpeed'),Cross:mix,ForceCross:gain*mix,Vortex:5-4*gain*mix,Spiral:-1.7+.8*gain*mix,rotationCross:.77*(1-mix)};}
+ // The measured native field is retained at full strength. Quiet circulation
+ // fades, while inward force is softened near the center to avoid collapsing
+ // old particles into one point. Its finite return rate uses source drag/life.
+ function motionForce(api,point,p,center,quietReturnRate=2){
+  const force=api.force(point,p.Vortex,p.Spiral,center);if(p.Forcegain===1)return force;
+  const x=point.x-center[0],y=point.y-center[1],r=Math.hypot(x,y);if(!r)return force;
+  const nx=x/r,ny=y/r,tx=-ny,ty=nx,tangent=force[0]*tx+force[1]*ty,radial=force[0]*nx+force[1]*ny;
+  const quietScale=Math.min(1,quietReturnRate*r/Math.max(1e-12,Math.abs(radial))),radialScale=p.Forcegain+(1-p.Forcegain)*quietScale;
+  return [tangent*p.Forcegain*tx+radial*radialScale*nx,tangent*p.Forcegain*ty+radial*radialScale*ny,force[2]];
+ }
+
  function create({particleAPI=window.HalloweenBatParticle,signals=window.HalloweenBatSignals,sparseField,
   birthAgeProvider=comparisonBirthAge,turbulenceProvider=comparisonTurbulence,turbulencePhase='array-index',turbulenceAmplitude=[.2,.2,.2],turbulencePeriod=.03,
   phaseAPI=window.HalloweenBatPhase,sourceClock=null,seed=1,externalForce=[.1,.1,.1],drag=5,forceEnabled=true,phaseFrameOffset=0}={}){
@@ -53,7 +64,7 @@ window.HalloweenBMotion=(()=>{
     const phase=turbulencePhase==='birth-id'?b.i:i;
     const noise=turbulenceProvider({seconds:flightTime,step:steps,phase,id:b.i,arrayIndex:i,position:[b.x,b.y,b.z],seed,period:turbulencePeriod,amplitude:turbulenceAmplitude});
     if(!noise||noise.length!==3||Array.from(noise).some(v=>!Number.isFinite(v)))throw new RangeError('Three finite turbulence values required');
-    const force=forceEnabled?particleAPI.force(b,p.Vortex,p.Spiral,center):[0,0,0],previous=[b.x,b.y,b.z];
+    const force=forceEnabled?motionForce(particleAPI,b,p,center,2*drag/LIFE):[0,0,0],previous=[b.x,b.y,b.z];
     particleAPI.integrate(b,...externalForce.map((v,j)=>v+force[j]+noise[j]),FDT,drag);
     for(const key of ['vx','vy','vz'])b[key]=Math.fround(b[key]);
     ['x','y','z'].forEach((key,j)=>b[key]=Math.fround(previous[j]+Math.fround(b[['vx','vy','vz'][j]]*FDT)));
@@ -102,7 +113,7 @@ window.HalloweenBMotion=(()=>{
    return points.map((b,i)=>({tx:b.x,ty:b.y*aspectY,tz:b.z,rz:orientationNoise(b.x,b.y*aspectY,b.z)*(1-mix)+lag[i]*mix,index:indices[i]}));
   }
   function status(){return {steps,births,flightTime,flapTime,flapFrame:Math.floor(flapTime*60+1e-8),receivedSeconds,pendingSeconds:pending,phasePendingSeconds:phasePending,phaseTicks,phaseCooks,phaseCookHz:60,phaseSampleHz:60,phaseSampling:'current input held across elapsed Time Slice',phaseClockDomain:sourceClock?'shared absolute transport; current-frame-hold Time Slice':'legacy integrated clock; current-frame-hold Time Slice',phaseUsesSharedClock:!!sourceClock,sourceClock:sourceClock?.kind??'legacy integrated clock',sourceSeconds:lastSourceSeconds,emitterCenter:[...lastCenter],forceCenter:[...lastCenter],forceCenterMode:'mean of translated source sphere; follows current emitter; existing particles are not teleported',droppedSeconds:0,particleCount:flock.length,peakCount,liveIds:flock.map(b=>b.i),storageSlots:flock.map(b=>b.storageSlot),
-   dt:DT,solverDt:FDT,birthRate:5,life:LIFE,slots:SLOTS,emitterCount:particleAPI.emitterCount,initialSpeed:parameters(lastSettings).Initialspeed,
+   forceParameters:parameters(lastSettings),forceEnvelope:'Fade tangent;soften native inward force near center to2*drag/life return rate;no point clamp/ring/teleport;external,turbulence,drag,clock unchanged',quietReturnRate:2*drag/LIFE,dt:DT,solverDt:FDT,birthRate:5,life:LIFE,slots:SLOTS,emitterCount:particleAPI.emitterCount,initialSpeed:parameters(lastSettings).Initialspeed,
    birthAgeMode:birthAgeProvider===comparisonBirthAge?'own-seeded-uniform-comparison':'explicit-provider; caller establishes native match',birthJitterMatched:false,
    turbulenceMode:turbulenceProvider===comparisonTurbulence?'seeded-spatial-gradient-comparison':'explicit-provider; caller establishes native match',orientationField:{measuredBounds:[-.8,.8],outsideMode:'continuous boundary-anchored seeded extension',extendedSamples:orientationExtendedSamples,nativeOutsideValuesMatched:false},turbulencePhase,turbulenceLogic:{position:'world xyz before integration',period:turbulencePeriod,amplitude:[...turbulenceAmplitude],seed,explicitTimeDependence:false,indexDependence:false,fieldValuesMatchNative:false},
    phaseFrameOffset,phaseResponseCapacity:40,phaseResponseOverflow:flock.length>40,phaseState:phaseState.status(),nativeMotionMatched:false,
@@ -112,5 +123,5 @@ window.HalloweenBMotion=(()=>{
   function dispose(){if(disposed)return;disposed=true;flock=[];lastEvent=null;clock=null;phaseState.reset();}
   return Object.freeze({advance,step,poses,parameters,status,snapshot,reset,dispose});
  }
- return Object.freeze({create,parameters,comparisonBirthAge,comparisonTurbulence});
+ return Object.freeze({create,parameters,motionForce,comparisonBirthAge,comparisonTurbulence});
 })();

@@ -3,7 +3,7 @@
  const role=window.HalloweenStageRole;if(!role?.remote)return;
  const api=window.halloweenControls,perf=HalloweenPerformance.create(api,{batch:window.halloweenRenderBatch,requestUpdate:()=>window.halloweenRequestPresentation?.()===true}),limits=HalloweenWindowSafety;window.halloweenPerformance=perf;
  let port=null,last=Date.now(),connected=false,ended=false,started=false,accepted=0,rejected=0,ownerArmed=false,lastSequence=-1;
- let lastCuePost=0;let armGeneration=0;let requiresArm=true,reason='演奏開始を押してください',epoch=0,trips=0,lastFrame=Date.now(),accentUntil=0,holdUntil=0,holdGesture=-1,checking=false;
+ let lastCuePost=0;let armGeneration=0;let requiresArm=true,reason='演奏開始を押してください',epoch=0,trips=0,accentCaps=0,lastFrame=Date.now(),accentUntil=0,holdUntil=0,holdGesture=-1,checking=false;
  const start=document.getElementById('stage-start');
  function health(now=Date.now()){const surface=limits.surface(),running=api.getState().transport.phase==='running',renderAge=now-lastFrame;return {...surface,renderAge,ready:surface.available&&(!running||renderAge<=limits.renderMs),reason:surface.reason||(running&&renderAge>limits.renderMs?'描画応答を確認できません':'')};}
  function release(){accentUntil=holdUntil=0;holdGesture=-1;perf.release();}
@@ -12,12 +12,12 @@
   if(frame){if(ownerArmed&&now-lastFrame>limits.renderMs)trip('描画の長い中断。演奏開始で戻ります');lastFrame=now;}
   const h=health(now);if(!h.ready)trip(h.reason);
   if(connected&&now-last>limits.heartbeatMs){trip('操作窓の応答が途切れました。演奏開始で戻ります');}
-  if(ownerArmed&&accentUntil&&now>=accentUntil)trip('Vは最大3秒です。離して演奏開始を押してください');
+  if(ownerArmed&&accentUntil&&now>=accentUntil){accentUntil=0;accentCaps++;perf.dispatch({action:'accent',value:false});}
   if(ownerArmed&&holdUntil&&now>=holdUntil)trip('連続押下は最大8秒です。離して演奏開始を押してください');
   if(api.getState().transport.phase!=='running')lastFrame=now;
  }finally{checking=false;}}
  window.halloweenBeforeRender=()=>check(Date.now(),true);
- function snapshot(){check();const s=api.getState(),h=health();return {kind:'state',version:1,performance:perf.state(),app:{scene:s.scene,transport:s.transport,settings:s.settings},started,fullscreen:!!document.fullscreenElement,visible:h.available,browserVisible:h.browserVisible,connected:connected&&Date.now()-last<=limits.heartbeatMs,ownerArmed,accepted,rejected,ended,safety:{requiresArm,reason,epoch,trips,armGeneration,ready:h.ready,outer:h.outer,renderAge:h.renderAge,accentRemaining:Math.max(0,accentUntil-Date.now()),holdRemaining:Math.max(0,holdUntil-Date.now()),limits:{accentMs:limits.accentMs,holdMs:limits.holdMs}}};}
+ function snapshot(){check();const s=api.getState(),h=health();return {kind:'state',version:1,performance:perf.state(),app:{scene:s.scene,transport:s.transport,settings:s.settings},started,fullscreen:!!document.fullscreenElement,visible:h.available,browserVisible:h.browserVisible,connected:connected&&Date.now()-last<=limits.heartbeatMs,ownerArmed,accepted,rejected,ended,safety:{requiresArm,reason,epoch,trips,accentCaps,armGeneration,ready:h.ready,outer:h.outer,renderAge:h.renderAge,accentRemaining:Math.max(0,accentUntil-Date.now()),holdRemaining:Math.max(0,holdUntil-Date.now()),limits:{accentMs:limits.accentMs,holdMs:limits.holdMs}}};}
  function disconnect(){trip('接続が切れました');connected=false;port?.close();port=null;}
  function post(value){try{port?.postMessage(value);}catch{disconnect();}}
  function reply(id,error){post({kind:'ack',id,error:error??null,state:snapshot()});}

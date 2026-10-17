@@ -62,6 +62,36 @@ window.HalloweenActorLayout=(()=>{
   const visible=()=>records.filter(record=>record.scale>0||record.target===1).map(record=>({...record}));
   return Object.freeze({requestCount,advance,pending,visible,revision:()=>revision,status:()=>({requestedCount,revision,transitioning:pending(),duration:presenceDuration,entryStyle,entryCurve:entryStyle==='spring'?'damped step, peak'+Math.round(springOvershoot*100)+'%, 200ms, smooth finite tail':'quintic smootherstep',exitCurve:'quintic smootherstep; nonnegative monotone',comparisonCandidate:entryStyle==='spring'&&springOvershoot===.08,overshootTarget:entryStyle==='spring'?springOvershoot:0,overshootLimit:entryStyle==='spring'?Math.exp(-Math.PI*springDamping/Math.sqrt(1-springDamping**2)):0,velocityState:false,disposed,slots:records.map(record=>({...record})),pausePolicy:'presentation continues; source motion and solver freeze',identityPolicy:'fixed slots/source phases 0,2,4,1,3,5; continuing actors never retrigger'}),dispose(){if(disposed)return;disposed=true;records=[];revision++;}});
  }
+ // Original locked position/rotation is the rest transform. Jaw remains an
+ // independent child; the performance layer controls its existing Noise input.
+ function blendRest(pose,rest,strength=1){
+  if(!Number.isFinite(strength)||strength<0||strength>1)throw RangeError('Rest strength0..1 required');
+  return {...pose,position:pose.position.map((v,k)=>rest.position[k]+(v-rest.position[k])*strength),rotation:pose.rotation.map((v,k)=>rest.rotation[k]+(v-rest.rotation[k])*strength)};
+ }
+ // The saved six-sample locked image repeats three positions in pairs. This
+ // count adaptation gives1..6 visible actors a single non-overlapping rest row.
+ function createRest(){
+  let count=0,elapsed=duration,from=[],current=[],target=[],fromCapacity=1,capacity=1;
+  return {sample(n,dt,paused=false){
+   if(!Number.isInteger(n)||n<1||n>6)throw RangeError('Rest count1..6 required');
+   if(n!==count){from=Array.from({length:6},(_,i)=>[...(current[i]??[(Math.min(i,n-1)+.5)/n,.5])]);target=Array.from({length:6},(_,i)=>i<n?[(i+.5)/n,.5]:[...from[i]]);fromCapacity=capacity;elapsed=count&&!paused?0:duration;count=n;}
+   elapsed=paused?duration:Math.min(duration,elapsed+Math.max(0,dt));const t=elapsed/duration,e=t*t*(3-2*t);current=target.map((p,i)=>p.map((v,k)=>from[i][k]+(v-from[i][k])*e));capacity=fromCapacity+(count-fromCapacity)*e;
+   return {anchors:current,capacity};
+  }};
+ }
+ // Bounded, time-based presentation slew. Numeric cues retain150ms response;
+ // returning a whole row uses450ms full travel and never resets source history.
+ function createStrength(initial=1,duration=.45){
+  if(!Number.isFinite(initial)||initial<0||initial>1||!Number.isFinite(duration)||duration<=0)throw RangeError('Strength0..1 and positive duration');let value=initial;
+  const valid=target=>{if(!Number.isFinite(target)||target<0||target>1)throw RangeError('Strength0..1 required');};
+  return {advance(dt,target){valid(target);if(!Number.isFinite(dt)||dt<0)throw RangeError('Nonnegative presentation time');const delta=target-value,step=dt/duration;value=Math.abs(delta)<=step?target:value+Math.sign(delta)*step;return value;},pending(target){valid(target);return value!==target;},value:()=>value,status:target=>({value,target,fullTravelSeconds:duration,policy:'finite bounded presentation slew; original source clocks retained'})};
+ }
+ function restPlacement(pose,anchor,frame,capacity,mix){
+  const {width,height,focal,radius,pivot}=frame,d=90-pose.position[2],sourceCenter=[width/2+(pose.position[0]+pivot[0])*focal/d,height/2-(pose.position[1]+pivot[1])*focal/d];
+  const projectedRadius=focal*radius/(d-radius)*(1+Math.max(Math.abs(pose.position[0])+Math.abs(pivot[0]),Math.abs(pose.position[1])+Math.abs(pivot[1]))/d);
+  const targetScale=Math.min(1,width*.44/capacity/projectedRadius,height*.42/projectedRadius),scale=1+(targetScale-1)*mix,targetCenter=[anchor[0]*width,anchor[1]*height],center=sourceCenter.map((v,k)=>v+(targetCenter[k]-v)*mix);
+  return {scale,center,sourceCenter,mix,capacity,targetScale};
+ }
  function envelope(vertices,jawVertices,registration,jawPivot){
   const origin=registration.parentPivot;let radius2=0;
   for(let i=0;i<jawVertices.length;i++){
@@ -88,5 +118,5 @@ window.HalloweenActorLayout=(()=>{
   const center=[anchor[0]*width+gain[0]*pose.position[0]*cameraZ/d,anchor[1]*height-gain[1]*pose.position[1]*cameraZ/d];
   return {scale,center,sourceCenter,normalized:[center[0]/width,center[1]/height],limits,radius,policy:'fixed full-rotation/jaw envelope; linear XY; original perspective Z; no silhouette recenter/resize'};
  }
- return Object.freeze({create,place,envelope,slots,duration,travel,sourceIndices,createPresence,presenceDuration});
+ return Object.freeze({create,place,envelope,blendRest,createRest,createStrength,restPlacement,slots,duration,travel,sourceIndices,createPresence,presenceDuration});
 })();

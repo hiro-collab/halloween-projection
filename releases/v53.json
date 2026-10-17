@@ -1,0 +1,92 @@
+{
+  "version": "0.1.53-motion-surface-preview",
+  "baselineCommit": "dac1e2e2e397d2d6b3fc1084224f6f3841152646",
+  "zip": "halloween-projection-web-v0.1.53-motion-surface-preview.zip",
+  "bytes": 521106,
+  "sha256": "2e3481f4c352dcaa34ec97ee07d2a5a194823f2a112ad5a676a785d7f3bc53b6",
+  "entries": 45,
+  "validationSHA256": "24ed6bf7077b7e64b4275983058b3303a49400f39f13feb619f32d2c9409c254",
+  "validation": {
+    "unitPassed": 123,
+    "browserCorePassed": 49,
+    "browserRegressionsPassed": 310,
+    "nativeWindowPassed": 12,
+    "sustainedRunPassed": 35,
+    "completedCheckFailures": 0
+  },
+  "performance": {
+    "sustainedSeconds": 601.783,
+    "conditions": "Chrome offline file;FHD1920x1080 DPR1;A internal1280x720;unrecorded;actual production draw counters",
+    "blocks": [
+      {
+        "block": 0,
+        "scene": "a",
+        "count": 3,
+        "seconds": 98.61029999999703,
+        "drawFPS": 29.996866453099617,
+        "solverTicksPerSecond": 60.003873834682366
+      },
+      {
+        "block": 1,
+        "scene": "a",
+        "count": 6,
+        "seconds": 97.80370000000298,
+        "drawFPS": 29.998865073610823,
+        "solverTicksPerSecond": 60.00795470927809
+      },
+      {
+        "block": 2,
+        "scene": "b",
+        "count": null,
+        "seconds": 97.76089999999105,
+        "drawFPS": 55.9937561949665,
+        "solverTicksPerSecond": null
+      },
+      {
+        "block": 3,
+        "scene": "a",
+        "count": 3,
+        "seconds": 97.40459999999403,
+        "drawFPS": 29.998583229130645,
+        "solverTicksPerSecond": 59.986900002672954
+      },
+      {
+        "block": 4,
+        "scene": "a",
+        "count": 6,
+        "seconds": 97.81040000000596,
+        "drawFPS": 29.996810155155497,
+        "solverTicksPerSecond": 59.993620310310995
+      },
+      {
+        "block": 5,
+        "scene": "b",
+        "count": null,
+        "seconds": 97.77189999999106,
+        "drawFPS": 55.9976844062609,
+        "solverTicksPerSecond": null
+      }
+    ]
+  },
+  "video": {
+    "filename": "halloween-v53-realtime-comparison.mp4",
+    "bytes": 64120652,
+    "sha256": "c4499bc0a2093381f0d362783d7fb4a9344ad0cf533b020a37541c4f58387097",
+    "seconds": 53.066016,
+    "realTime": true,
+    "sequentialTakes": true,
+    "audio": false,
+    "fullDecodePassed": true
+  },
+  "change": "V effect cap without disarming;finite skull rest row;live bat forces and central quiet flock;opaque smooth skull surface without added polygons",
+  "modelAndSourceAssetsPreserved": true,
+  "nativeFocusVerified": "owned Windows PID/title/foreground;OS Escape;10s V and real window transfer;not physical keyboard/projector",
+  "limits": [
+    "physical projector and other hardware unverified",
+    "full TouchDesigner Noise equality unverified",
+    "quiet force envelope and arbitrary-count rest row are documented Web adaptations",
+    "CPU diagnostic fallback not accepted as equivalent quality/performance",
+    "private owner preview;public/commercial asset permissions not established"
+  ],
+  "publicRelease": false
+}

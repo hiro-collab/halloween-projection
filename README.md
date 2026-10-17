@@ -1,3 +1,11 @@
+# v53 Motion, input and skull surface
+
+The latest private preview fixes V long holds, the skull rest row at low strength, live bat-force strength/C modes, and internal triangle seams together. Open the extracted START-HERE.html in Chrome. Digits1..8 move from quiet to strong; A quiet returns the body to a fixed row, B quiet keeps flutter and central flight. V caps its accent after3seconds while key performance remains armed; release before a new accent.
+
+- Details and source distinctions: `docs/MOTION-SURFACE-V53.md`.
+- Package: `dist/halloween-projection-web-v0.1.53-motion-surface-preview.zip`.
+- Release evidence: `releases/v53.json`.
+
 # v52 導入説明の修正
 
 配布ZIPを新しく展開してChromeでSTART-HERE.htmlから起動できます。準備段階は画面ボタン、キー操作は「演奏開始」の後という順番を明記しました。導入・ヘルプの版表示と終了・再起動の説明を更新しています。v51の描画、モデル、画像、動き、キー動作は維持します。

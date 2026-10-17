@@ -1,3 +1,7 @@
+# v53 focused checks
+
+Run `node tests/motion-strength.qa.cjs`, `node tests/surface-normals.qa.cjs`, `node tests/operator-contract.qa.cjs` and existing lifecycle units. With PLAYWRIGHT_CLI configured, run `python tests/run-browser-qa.py motion-surface input-hold-safety surface-quality resources keyboard-lifecycle actor-count actor-presence presence-lag entry-comparison offline-unpacked security-boundaries operator-flip`. GPU cases run sequentially. Motion-surface tests actual offline file UI, force distributions and production counters; surface-quality measures shared-edge alpha plus72 count/glow/yaw states. Headless focus tests are not hardware keyboard evidence.
+
 # v51 現行QA
 
 通常の導入はSTART-HERE.htmlから二窓のWeb版です。Python/Node.jsは利用者には不要です。

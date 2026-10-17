@@ -5,7 +5,7 @@ window.HalloweenAppControl=(()=>{
  const freeze=value=>{if(value&&typeof value==='object'){for(const v of Object.values(value))freeze(v);Object.freeze(value);}return value;};
  const scenes={a:'skull3d',b:'bats',skeleton:'skeleton'},aliases={skull3d:'a',bats:'b',skeleton:'skeleton'};
  const defaults={"speed":1,"size":1,"flapRate":1,"frameLock":null,"motionMix":0.5,"initialSpeed":1.3,"emitterX":0,"emitterY":0,"headRate":1,"motionCross":0.5,"jawPeriod":0.12,"jawExponent":4,"jawRate":1,"jawOpen":28,"pivotY":-0.75,"pivotZ":-0.12,"headX":0,"headY":0,"headZ":0,"actorPoses":null,"headGlowMix":0,"backgroundHue":0.38333333333333336,"colorHue":0.6666666666666666};
- Object.assign(defaults,{jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1});
+ Object.assign(defaults,{motionStrength:1,forceGain:1,jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1});
  Object.assign(defaults,{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1});
  const settings={};
  function field(key,type,range,scene,legacyKey,label,extra={}){settings[key]={type,...(range?{min:range[0],max:range[1]}:{}),status:'implemented',sourceMatch:'web-candidate',scene,legacyKey,label,default:type==='boolean'?false:(Object.hasOwn(defaults,legacyKey)?defaults[legacyKey]:null),...(type==='string'?{defaultFrom:'initialText'}:{}),...extra};}
@@ -14,6 +14,8 @@ window.HalloweenAppControl=(()=>{
  field('b.flapRate','number',[.25,2],'bats','flapRate','羽ばたき再生倍率');field('b.frameLock','integer',[0,59],'bats','frameLock','図案フレーム固定',{nullable:true});
  field('b.colorHue','number',[0,1],'bats','colorHue','コウモリの色相',{unit:'normalized hue',sourceMatch:'new performance colour control;default original blue body retained'});
  field('b.motionMix','number',[0,1],'bats','motionMix','旋回・流れの混合',{backend:'source',sourceMatch:'recorded-input-contract',effect:'Vortex/Spiral/rotationCross; independent of playback and birth speed'});
+ field('b.forceGain','number',[0,1],'bats','forceGain','飛行中の力の強度',{sourceMatch:'Web component envelope over verified native Force vector;soften inward center using2*drag/life,fade tangential circulation;full-strength native force retained;not a time multiplier'});
+ field('a.motionStrength','number',[0,1],'skull3d','motionStrength','定位置からの動き',{sourceMatch:'Original locked rest transform to live motion;count-aware presentation adaptation'});
  field('b.initialSpeed','number',[0,2.6],'bats','initialSpeed','出生時の初速',{backend:'source',sourceMatch:'recorded-input-contract',effect:'Birth only; existing particles keep their previous initial velocity'});
  field('a.scale','number',[.5,1.5],'skull3d','size','映像の大きさ');field('a.text','string',null,'skull3d','text','文字入力',{maxLength:240,maxLines:8});
  for(const [name,old,range,label] of [['headCycleRate','headRate',[0,2],'頭の候補周期倍率'],['jawCycleRate','jawRate',[0,2],'顎の候補周期倍率'],['jawMaxAngle','jawOpen',[0,45],'顎の最大角度'],['debug.pivotY','pivotY',[-1.15,.2],'検査用の顎支点Y'],['debug.pivotZ','pivotZ',[-.3,.2],'検査用の顎支点Z'],['headX','headX',[-180,180],'頭のX角'],['headY','headY',[-180,180],'頭のY角'],['headZ','headZ',[-180,180],'頭のZ角']])field('a.'+name,'number',range,'skull3d',old,label);
