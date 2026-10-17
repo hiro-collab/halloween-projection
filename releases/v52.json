@@ -1,0 +1,19 @@
+{
+  "version": "0.1.52-install-guide-preview",
+  "baselineCommit": "666671102edc01a7e0ca0b3313b612516234c652",
+  "zip": "halloween-projection-web-v0.1.52-install-guide-preview.zip",
+  "bytes": 517332,
+  "sha256": "8b5f20dafb9b1f986e6bdd16b11c2b15c00f9bbc2cbe0bffe346acf6bca5e1f4",
+  "entries": 45,
+  "validationSHA256": "8ac101914e39491e0330a8104bd8440b2aa50edef34d7345ceb30c76b08aa0e4",
+  "validation": {
+    "UIWorkflowPassed": 52,
+    "unitPassed": 47,
+    "nativeWindowPassed": 11,
+    "completedCheckFailures": 0,
+    "nativeOSInput": "After reconnect: owned-window foreground+PID verified,OS Escape/focus/shutdown passed"
+  },
+  "change": "Beginner installation guide ordering,download/extract/end/restart wording and current version titles;runtime implementation unchanged",
+  "downloadVerification": "Exact delivered v51 authenticated Library bytes,Windows compressed-folder extraction;native ChatGPT browser download button not exercised",
+  "publicRelease": false
+}

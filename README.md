@@ -1,3 +1,10 @@
+# v52 導入説明の修正
+
+配布ZIPを新しく展開してChromeでSTART-HERE.htmlから起動できます。準備段階は画面ボタン、キー操作は「演奏開始」の後という順番を明記しました。導入・ヘルプの版表示と終了・再起動の説明を更新しています。v51の描画、モデル、画像、動き、キー動作は維持します。
+
+- `docs/INSTALLATION-V52.md`: 実配布ZIPからの導入確認と検証範囲。
+- 配布物: `dist/halloween-projection-web-v0.1.52-install-guide-preview.zip`。
+
 # Halloween Projection v51
 
 Windows・Chrome向けの本人用導入確認版。既定は3体の回遊、出現6％・0.2秒です。
