@@ -27,7 +27,16 @@ window.HalloweenActorLayout=(()=>{
  // Lifecycle triggers own the target; the value channel owns elapsed interpolation.
  // Fixed slot identities keep surviving actors and all six source histories intact.
  const presenceDuration=.2,presenceSources=Object.freeze([0,2,4,1,3,5]);
- function createPresence(initialCount=3){
+ // Quintic S curve and an analytic damped step. The tail settles exactly at .2s.
+ const smootherstep=t=>Math.max(0,Math.min(1,t*t*t*(t*(t*6-15)+10)));
+ const springDamping=.75,springPhase=8,springFrequency=springPhase*Math.sqrt(1-springDamping**2);
+ function springStep(t){
+  const response=1-Math.exp(-springDamping*springPhase*t)*(Math.cos(springFrequency*t)+springDamping*springPhase/springFrequency*Math.sin(springFrequency*t));
+  const tail=t<=.75?1:1-smootherstep((t-.75)/.25);
+  return Math.max(0,1+(response-1)*tail);
+ }
+ function createPresence(initialCount=3,entryStyle='spring'){
+  if(!['spring','scurve'].includes(entryStyle))throw RangeError('Presence style spring or scurve required');
   const validCount=n=>{if(!Number.isInteger(n)||n<1||n>6)throw RangeError('Actor count1..6 required');};
   validCount(initialCount);let requestedCount=initialCount,revision=0,disposed=false;
   let records=Array.from({length:6},(_,id)=>({id,sourceIndex:presenceSources[id],scale:id<initialCount?1:0,from:id<initialCount?1:0,target:id<initialCount?1:0,elapsed:0,duration:0,state:id<initialCount?'visible':'hidden',entries:id<initialCount?1:0}));
@@ -35,7 +44,7 @@ window.HalloweenActorLayout=(()=>{
    const target=show?1:0;if(record.target===target)return;
    if(show&&record.state==='hidden'){record.scale=0;record.entries++;}
    record.from=record.scale;record.target=target;record.elapsed=0;
-   record.duration=presenceDuration*Math.abs(target-record.scale);
+   record.duration=presenceDuration*Math.min(1,Math.abs(target-record.scale));
    record.state=show?'entering':'exiting';revision++;
    if(!record.duration)settle(record);
   }
@@ -44,11 +53,11 @@ window.HalloweenActorLayout=(()=>{
   function advance(seconds){
    if(!Number.isFinite(seconds)||seconds<0)throw RangeError('Finite nonnegative seconds required');
    if(disposed||!seconds)return;
-   for(const record of records){if(!record.duration)continue;record.elapsed=Math.min(record.duration,record.elapsed+seconds);const t=record.elapsed/record.duration,e=t*t*(3-2*t);record.scale=record.from+(record.target-record.from)*e;revision++;if(record.elapsed>=record.duration)settle(record);}
+   for(const record of records){if(!record.duration)continue;record.elapsed=Math.min(record.duration,record.elapsed+seconds);if(record.duration-record.elapsed<1e-12)record.elapsed=record.duration;const t=record.elapsed/record.duration,e=record.target&&entryStyle==='spring'?springStep(t):smootherstep(t);record.scale=record.from+(record.target-record.from)*e;revision++;if(record.elapsed>=record.duration)settle(record);}
   }
   const pending=()=>records.some(record=>record.duration>0);
   const visible=()=>records.filter(record=>record.scale>0||record.target===1).map(record=>({...record}));
-  return Object.freeze({requestCount,advance,pending,visible,revision:()=>revision,status:()=>({requestedCount,revision,transitioning:pending(),duration:presenceDuration,disposed,slots:records.map(record=>({...record})),pausePolicy:'presentation continues; source motion and solver freeze',identityPolicy:'fixed slots/source phases 0,2,4,1,3,5; continuing actors never retrigger'}),dispose(){if(disposed)return;disposed=true;records=[];revision++;}});
+  return Object.freeze({requestCount,advance,pending,visible,revision:()=>revision,status:()=>({requestedCount,revision,transitioning:pending(),duration:presenceDuration,entryStyle,entryCurve:entryStyle==='spring'?'damped step, zeta0.75, phase8, smooth finite tail':'quintic smootherstep',exitCurve:'quintic smootherstep; nonnegative monotone',overshootLimit:entryStyle==='spring'?Math.exp(-Math.PI*springDamping/Math.sqrt(1-springDamping**2)):0,velocityState:false,disposed,slots:records.map(record=>({...record})),pausePolicy:'presentation continues; source motion and solver freeze',identityPolicy:'fixed slots/source phases 0,2,4,1,3,5; continuing actors never retrigger'}),dispose(){if(disposed)return;disposed=true;records=[];revision++;}});
  }
  function envelope(vertices,jawVertices,registration,jawPivot){
   const origin=registration.parentPivot;let radius2=0;

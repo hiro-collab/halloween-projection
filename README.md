@@ -1,4 +1,6 @@
-# Halloween Projection — private preview v45
+# Halloween Projection — private preview v46
+
+Skulls enter with a restrained2.8% overshoot and settle in about0.2s. Exit uses a quintic S curve without rebound. [Curves and comparison](docs/PRESENCE-LAG-V46.md).
 
 Count changes trigger a0→1 appearance multiplier and1→0 exit over about0.2s. Default3, live1–6, accepted orbit and standard size remain. [Lifecycle and verification](docs/COUNT-SCALE-V45.md).
 
@@ -10,7 +12,7 @@ v42 preserves the v41 motion display fix and restores the intended30Hz A cadence
 
 Open web/START-HERE.html for the operator and projection windows. This is a preview; real-projector and longer-duration acceptance remain pending. Code licensing does not relicense private owner assets. No public site or push is part of this local recovery.
 
-Build: python tools/build-web-package.py . Exact saved ZIP reproduction: python tools/reproduce-saved-release.py releases/v45.json . Python is a maintainer tool; end users use the static ZIP. dist/ and output/ are ignored.
+Build: python tools/build-web-package.py . Exact saved ZIP reproduction: python tools/reproduce-saved-release.py releases/v46.json . Python is a maintainer tool; end users use the static ZIP. dist/ and output/ are ignored.
 
 Validation: node tests/app-control-api.qa.cjs . Set PLAYWRIGHT_CLI to an installed CLI JS entry point and run python tests/run-browser-qa.py common-api resources keyboard-lifecycle realtime-controls offline-unpacked natural-motion . v40 additionally has actor-count and count-fhd tests. Browser test output/captures are ignored.
 
