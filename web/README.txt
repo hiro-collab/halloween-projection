@@ -1,4 +1,4 @@
-ハロウィン投影 0.1.50-operator-flip-preview
+ハロウィン投影 0.1.51-jaw-hinge-preview
 
 1 ZIPをすべて展開。
 2 START-HERE.htmlをChromeで開く。

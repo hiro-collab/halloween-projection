@@ -1,0 +1,11 @@
+# v51 jaw hinge repair
+
+The lower jaw could lose its separate silhouette during a large opening. In v50, enabling normal A/composite mode or changing actor count also forced the legacy origin pivot `[0,0,0]`. That origin belongs to the source transform convention, while the bundled alternate CC0 mesh has a different registered joint location. At a frontal 90-degree opening, the jaw folds upward/back into the head instead of remaining below it.
+
+The controlled v50 reproduction uses one actor, rotation `[0,0,0]`, opening 90 degrees, no glow, full appearance scale, and a centered image. All 1,892 jaw triangles are still submitted. There are no shared head/jaw vertices, and the existing GPU raster already disables both culling and depth testing. The jaw is drawn, but its outline overlaps the head; this is not disappearance of the mesh or a newly enabled back-face rule.
+
+In that fixture, the origin-pivot jaw Y range is `[-0.65246, 0.11414]`, inside the head range `[-0.89405, 0.83664]`, and the jaw also rotates deeper into the head. The existing registered hinge `[-0.0000073, -0.4276821, -0.0809456]` leaves the jaw bottom at `Y=-1.16109`. Opening remains an independent X rotation after the parent head transform. Closing to zero keeps the exact original closed pose.
+
+The repair removes only the automatic pivot override from scene/composite/count dependencies. Normal A retains the registered hinge, and changes of count, Reset and scene do not silently select another joint. The legacy origin remains available as the explicit `a.debug.originalJawPivot` comparison. The mesh, motion provider, jaw angle range, shader, painter order, culling, glow and final image transforms are unchanged.
+
+The registered hinge is a practical joint for this alternate CC0 mesh. It does not establish exact skeletal equivalence with the original FBX. Normal rear-view occlusion and whole-actor entry/exit remain possible. Verification separates those cases from the frontal wrong-pivot failure, and covers 1/3/6 actors, closed/open/noise modes, XYZ rotations, actual glow values, output flips and appearance transitions. Local evidence includes UTC/source timestamps, matrices, bounds and before/after frames; raw private QA assets stay outside Git.

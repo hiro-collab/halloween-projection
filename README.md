@@ -1,4 +1,4 @@
-# Halloween Projection v50
+# Halloween Projection v51
 
 Windows・Chrome向けの本人用導入確認版。既定は3体の回遊、出現6％・0.2秒です。
 
@@ -47,3 +47,6 @@ Q W E R T Y U I  O P   色8位置
 ビルド: `python tools/build-web-package.py`。検証: `node tests/app-control-api.qa.cjs`、`node tests/actor-presence.qa.cjs`、`node tests/presence-lag.qa.cjs`。既存Playwright CLIのJSパスをPLAYWRIGHT_CLIへ設定して `python tests/run-browser-qa.py keyboard-lifecycle offline-unpacked`。Python/Node.jsは保守作業用で、利用者の導入には不要です。
 
 コードはMIT。本人bat素材・測定データはMIT対象外で一般公開/再配布条件は未確定。RIGHTS.txtとdocs/PRIVATE-ASSET-BOUNDARIES.mdを確認してください。本人承認の既存private GitHubへのコード/同梱素材の通常pushだけが許可され、公開化・公開Releaseは含みません。実投影/別端末は未検収です。ZIP/動画/ログはGitへ含めません。
+
+
+v51では、通常の顎支点を使用モデルの登録済み関節位置に揃えました。開口時に顎が頭の内部へ入り込む問題を修正しています。頭の動き・顎の独立開閉・閉じた姿・3段キーは保持しています。詳しくはdocs/JAW-HINGE-V51.md。

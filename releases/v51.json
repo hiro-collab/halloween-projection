@@ -1,0 +1,871 @@
+{
+  "version": "0.1.51-jaw-hinge-preview",
+  "build": "0.1.51-jaw-hinge-preview-7db23fc7b4df",
+  "baseline_git_commit": "81f8147baa6cb3bcec8bcc8ad5fd818b2966b072",
+  "change": "Normal A/composite/count selection retains registered CC0 hinge;legacy origin explicit only;model,rig math,motion,culling,shader unchanged",
+  "zip": {
+    "filename": "halloween-projection-web-v0.1.51-jaw-hinge-preview.zip",
+    "bytes": 516805,
+    "sha256": "769e3b0e9f217ef0936efca7bd22ff9a42c311989461cb4dd8294c93b6eda52e",
+    "entries": [
+      {
+        "name": "index.html",
+        "bytes": 21719,
+        "sha256": "9ffa9f8ed46e6f9751ea284491d6e662d11bf1c31e2a003ea4cad519ad2e8e1b",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "styles.css",
+        "bytes": 5995,
+        "sha256": "d4e5def090e660ac384b9abad6551e8d317e6d62749af9fd551c639bac364fee",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "app.js",
+        "bytes": 128993,
+        "sha256": "29bb9cc3ec0047fbb5db095883c4b1c12a953bb2c79989597b83372d11de1e15",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "offline.js",
+        "bytes": 8287,
+        "sha256": "8cdb2898712173809fcc8b365fc2a81072f3052526f6a470448be1aac0a7126c",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "README.txt",
+        "bytes": 2052,
+        "sha256": "7a38c7347774d56ec15637df6c3799760f3a08b8a2cc9e0cecedf72d4508a26f",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "console.html",
+        "bytes": 15736,
+        "sha256": "9a097c2972343f455dc05cea8f8267df93c2827f1382546d90f5fc8c0354b517",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "console.css",
+        "bytes": 4231,
+        "sha256": "60923926e05558a9ad43c1393a25e07e17e4dd3075bceed32ac4de9740d7b412",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "console.js",
+        "bytes": 11155,
+        "sha256": "e48017376a610c1f3cc1899040b26e805f3fa6d1037811587e2d8a66e4887328",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "stage-role.js",
+        "bytes": 375,
+        "sha256": "2324a1b5784ac08a949953760c70bf07bfe2d17eb1be3656fbfdd98f5a5f8f67",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "stage-receiver.js",
+        "bytes": 7881,
+        "sha256": "d64442b9d2c5f50938b2d67f0f9ac333ac486a9871789e1bbd84656f88ebfc91",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "performance-api.js",
+        "bytes": 7515,
+        "sha256": "57dbae094848768e819255a8b98f6fcf361fe9515d004c9dfbb5ee43a26d8859",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "keyboard-performance.js",
+        "bytes": 4350,
+        "sha256": "59e0b64e6ae66418ddc37ee7f3db73803e905f239a39c06587521dfd963fa80e",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "window-safety.js",
+        "bytes": 411,
+        "sha256": "08e04346e0bed71048ca73b23a06d7b1f92fa09faf7e3f9204b4427e117b1d83",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "START-HERE.html",
+        "bytes": 2451,
+        "sha256": "636f15e3b71d7538869cb60f51f7282c106a6a02e1e608a1e982ea3f63ebe9f6",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "GUIDE.html",
+        "bytes": 8962,
+        "sha256": "d57715b403fdf57dd6bc76b9b23186c29e853f79f212caf8b7c3ab7210b04e49",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "PERFORMANCE-PLAN.html",
+        "bytes": 1320,
+        "sha256": "a4696a0be7b975990a7d3b45f4f6affbf84a445c7e2d79c982f7ac17893a3ec4",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "guide.css",
+        "bytes": 3523,
+        "sha256": "d4f94d33b312751889fa8d48bf166bf31c8081788a8f599ebb7f36847e52e91b",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "LICENSE.txt",
+        "bytes": 1068,
+        "sha256": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "RIGHTS.txt",
+        "bytes": 4490,
+        "sha256": "7151d387bba1a84befa9212ec63116a07c7e6e3da27e7a85908b845e807d939c",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "motion-clock.js",
+        "bytes": 1133,
+        "sha256": "52fcea2e517c25c89a9b525843d43f088f1f9ffcae0b94d6b83b21f3faf5083c",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "control-response.js",
+        "bytes": 2361,
+        "sha256": "a6c1cc00d6d4a0eafbb0ea2af6a7a1ea0a6273e285c7014721694fa6a2e9a954",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-source-blur.js",
+        "bytes": 10917,
+        "sha256": "321d86574d83503fdc4431813de60de8fe67647663a52da574fcf6788d95ba49",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-motion-lag.js",
+        "bytes": 727,
+        "sha256": "7466b1bd00fae5757448f1785151cbc9ca8ef3d0ae8fe1eeb806baab83c524ba",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-motion.js",
+        "bytes": 11316,
+        "sha256": "45ed4b9b2ab06c8f9feabe47a62156bad8a9c391d9808f2168ec5d4a28984f6d",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-actor-layout.js",
+        "bytes": 8253,
+        "sha256": "8c0f839ed94fa18b0e929182869e6d02d5b73eaf0fea02424a7aeafabd613a2f",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-skull-raster.js",
+        "bytes": 5775,
+        "sha256": "2f36f07ae335d8d53d2bb573388a26f2587de628b056b6c029e901454bfb72c2",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "control-api.js",
+        "bytes": 12465,
+        "sha256": "390cb2eecfcd8b6bc0cffacbb2957c4a221ca42fa029e0b89fd64f9a9752297f",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "text-operators.js",
+        "bytes": 3405,
+        "sha256": "cae2c3186e9e588d7eb8878996437e6c8dd195c4bf038933fc22a0276405707a",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "app-control-api.js",
+        "bytes": 22222,
+        "sha256": "4108256de8859bdbf1a19da96fae3151a23e41c6c5b09132cf71709e597095f1",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "control-adapters.js",
+        "bytes": 12599,
+        "sha256": "2b861abb80f04fc743b00839e332639a4c0551640bc082ae5325be725400c87b",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-motion.js",
+        "bytes": 112070,
+        "sha256": "4c6a92858633499f9b8392c61e79d3ceb02b7b550156a47d2bf4ffb958e4ae28",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-phase.js",
+        "bytes": 3090,
+        "sha256": "b92f78f1bf2a3be283156cc193dee1560a9527428c1938a51c4c7ca4b8884961",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "b-motion-runtime.js",
+        "bytes": 12859,
+        "sha256": "0ce6efead0a507b669935e1cc79f066d450c152334b99724d3b80c5c8dea7139",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-art.js",
+        "bytes": 12556,
+        "sha256": "cf0a608f3c3c79ddd688a2e7d82f56345356c307d8e6f0c761cc0cbc7736bfa8",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-atlas-data.js",
+        "bytes": 81984,
+        "sha256": "9dd654e2c6bd36e6f50d96cc412840da8aea614e7010ce03c900dae7de71caf0",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-fire.js",
+        "bytes": 9832,
+        "sha256": "be398b01f41e675cb8653f267a600843b3bf4bb0d64e98bb7b9e971df86905df",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "text-sequence.js",
+        "bytes": 2664,
+        "sha256": "0479ed104d7171d58a13bd0dd305326b2e827542de338601985f726687d64835",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "output-uv.js",
+        "bytes": 168603,
+        "sha256": "3f8eb08c52142de86626e9b558c835644a046611897122fc59fd547caa1871f7",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "output-operators.js",
+        "bytes": 7464,
+        "sha256": "948b2d2d40c996c67eb949b60d270d1e47ad4b5874cde5eca6b03a054e187dde",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-source-noise.js",
+        "bytes": 4479,
+        "sha256": "6555f43b09f21d11ebcb821c2170fc987e2a9ae615cc7c1bd389952c45a9bbeb",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-fluid.js",
+        "bytes": 54750,
+        "sha256": "4d620536e1c550a49634e5ea21f64ef1a908a9374be6336fdfb8f16b1af9105f",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-composite.js",
+        "bytes": 24725,
+        "sha256": "20d6839197bb59d4d5da763b81269a31210fef68b2f7b2c94d0e628ed3283bb7",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "assets/owner-bat-atlas.png",
+        "bytes": 61130,
+        "sha256": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "assets/OWNER-BAT-ASSET.txt",
+        "bytes": 907,
+        "sha256": "1c87dd8e950d7070b54608917fb4e9aae44abcbdb070e92d60b3bb784c6b9379",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "sw.js",
+        "bytes": 7380,
+        "sha256": "0b2bb7f5242e8c050c38bee8df87f18d7dfba5485729eaddabf9724cb9ea655a",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      }
+    ]
+  },
+  "video": {
+    "bytes": 969294,
+    "sha256": "688deca62a8d6c6d8cf7ad20d1a5a609cd5072e05b06131fc3e7839934f90495",
+    "durationSeconds": 10.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "timeline": "10second controlled angle comparison;each input pose held;not real-time operation/FPS measurement;actual per-frame capture UTC retained",
+    "capturedFrames": 100,
+    "captureSegments": [
+      {
+        "frames": "0..89",
+        "source": "earlier matched pose capture;glow0 validated"
+      },
+      {
+        "frames": "90..99",
+        "source": "new foreground capture;actual shader glow>.95 validated"
+      }
+    ],
+    "comparisonSourceDescriptionChange": {
+      "path": "web/app-control-api.js",
+      "onlyChange": "Declarative dependencies description;no field/type/range/validation or rendering code changed",
+      "beforeSHA256": "3a1e15f90d895d2ba752e57fcb2bca42c9c2406d801f7e6c5451919bfa6d1c15",
+      "afterSHA256": "4108256de8859bdbf1a19da96fae3151a23e41c6c5b09132cf71709e597095f1",
+      "comparisonVideoFunctionalSourceUnchanged": true
+    }
+  },
+  "validation": {
+    "summarySHA256": "12db70802fc26f25b8feb77f62b35f83231d92b5136ce7447cf39e60a2db2bb9",
+    "passed": 389,
+    "failed": 0,
+    "unit": 87,
+    "browser": 256,
+    "native": 11,
+    "soak": {
+      "elapsedSeconds": 361.84,
+      "minutesRequested": 6,
+      "passed": 35,
+      "failed": 0,
+      "blocks": [
+        {
+          "block": 0,
+          "scene": "a",
+          "count": 3,
+          "seconds": 58.60370000000298,
+          "jawMode": "noise",
+          "productionFPS": 29.998105921638235,
+          "solverTicksPerSecond": 59.99621184327647
+        },
+        {
+          "block": 1,
+          "scene": "a",
+          "count": 6,
+          "seconds": 57.79820000000298,
+          "jawMode": "open",
+          "productionFPS": 30.000934285149203,
+          "solverTicksPerSecond": 60.001868570298406
+        },
+        {
+          "block": 2,
+          "scene": "b",
+          "count": null,
+          "seconds": 57.6555,
+          "jawMode": null,
+          "productionFPS": 55.77958737674636,
+          "solverTicksPerSecond": null
+        },
+        {
+          "block": 3,
+          "scene": "a",
+          "count": 3,
+          "seconds": 57.47739999999851,
+          "jawMode": "closed",
+          "productionFPS": 29.994397798091853,
+          "solverTicksPerSecond": 59.98879559618371
+        },
+        {
+          "block": 4,
+          "scene": "a",
+          "count": 6,
+          "seconds": 57.8135,
+          "jawMode": "noise",
+          "productionFPS": 30.01029171387306,
+          "solverTicksPerSecond": 60.00328642964014
+        },
+        {
+          "block": 5,
+          "scene": "b",
+          "count": null,
+          "seconds": 57.72170000000298,
+          "jawMode": null,
+          "productionFPS": 55.802237286840715,
+          "solverTicksPerSecond": null
+        }
+      ],
+      "modes": {
+        "noise": {
+          "min": 0,
+          "max": 90
+        },
+        "open": {
+          "min": 90,
+          "max": 90
+        },
+        "closed": {
+          "min": 7.184325695037842,
+          "max": 7.184325695037842
+        }
+      },
+      "heapBytes": {
+        "initial": 15504480,
+        "min": 6907068,
+        "max": 32417084,
+        "afterFinalGC": 6196440
+      },
+      "samples": 37,
+      "errors": 0,
+      "HTTPRequests": 0,
+      "ownerAlways1": true,
+      "conditions": "Local Chrome headless;1920x1080 viewport;DPR1;internal720p;actual file ZIP;offline;no forcedGC during timed blocks;no camera/microphone;not real projector or other machine",
+      "notes": [
+        "Recorded raster.draws used for A;fluid.steps used for solver",
+        "C closed mode keeps existing feedback residual angle;fixed jaw0 closed-pixel identity is tested separately",
+        "B texture/program/FBO counts;OS/GPU driver VRAM not measured"
+      ]
+    },
+    "closedImageIdentity": "1/3/6 actors x3 head rotations;exact raw RGBA hashes",
+    "hingeInvariant": "head transforms unchanged;registered pivot fixed during independent0..90 opening;unit rotation/scale"
+  },
+  "limits": [
+    "Alternate CC0 model uses its existing registered practical hinge;exact original FBX skeleton equivalence is unverified",
+    "Normal rear-view occlusion,screen-edge clipping,and whole-actor appearance/exit remain distinct",
+    "Fixed jaw0 closure is pixel-identical;C closed feedback mode retains its existing residual angle",
+    "6-minute finalv51 run,not another30-minute run;historicalv50 evidence kept separately",
+    "Controlled-pose comparison video is not a real-time performance benchmark",
+    "Physical projector,other devices,and OS/GPU driver memory unverified"
+  ]
+}
