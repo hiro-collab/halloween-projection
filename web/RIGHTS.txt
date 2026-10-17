@@ -1,4 +1,4 @@
-素材と権利 — Web技術試作0.1.5
+素材と権利 — 0.1.50-operator-flip-preview
 
 このリポジトリーの自作コード・新規2D図形・説明文はMITライセンスです。
 既存GitHub名義hiro-collabを著作権表示に使用しています。
@@ -13,7 +13,7 @@
 
 含めないもの:
 - 原VJの3Dドクロモデル、TOE/TOG、動画、音楽、私的ログ。
-- 調査中の外部モデル・CC0候補も未採用です。
+- 元TDモデルは含みません。後述のCC0別モデルを埋め込み、本人bat素材は限定利用です。
 
 外部素材を追加する場合、その素材の利用・改変・再配布条件を個別に確認し、
 source URL/作者/ライセンス/版/ハッシュ/変更/帰属を台帳へ記録します。
@@ -53,3 +53,5 @@ Local ZIP startup: bat-atlas-data.js embeds the identical owner-bat-atlas.png by
 v31のa-source-noise.jsは独立seedのsimplex演算実装です。元のNoise画像列・録画・元モデルを追加同梱していません。
 
 v32のoutput-uv.jsには、元の投影補正に使われる数値UV座標のみを含みます。歌詞・項目名・BPMデータ・元画像/映像・操作画面の画像は含みません。従来同様、本人確認用の限定配布です。
+
+現行の本人承認範囲: 既存の非公開GitHub hiro-collab/halloween-projectionへコードと同梱素材を通常pushできます。一般公開や公開Release、第三者への素材再許諾は含みません。

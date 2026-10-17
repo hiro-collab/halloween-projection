@@ -1,0 +1,851 @@
+{
+  "version": "0.1.50-operator-flip-preview",
+  "build": "0.1.50-operator-flip-preview-606231fb983a",
+  "baseline_git_commit": "1f9f6c86530ac4ce9eb51ae76144ca5b0d7b25a0",
+  "provenance": "Final3x8 physical-row cues and4 final-image orientations;source model/TD/motion provider retained;accepted6percent200ms/default3/source orbit retained",
+  "zip": {
+    "filename": "halloween-projection-web-v0.1.50-operator-flip-preview.zip",
+    "bytes": 516731,
+    "sha256": "e6c10fd2b31cca50104f8bff12f1e6e4ff8c8946d489f3ab939ee2443f0de8c5",
+    "entries": [
+      {
+        "name": "index.html",
+        "bytes": 21727,
+        "sha256": "3309c5a9c68a8af60894598ecf4928c4488238280869705098fd4cac08351d47",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "styles.css",
+        "bytes": 5995,
+        "sha256": "d4e5def090e660ac384b9abad6551e8d317e6d62749af9fd551c639bac364fee",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "app.js",
+        "bytes": 128997,
+        "sha256": "16980655f30b358f610dd790f4046c137da7d8eceb1e8b20e5a535387c3b4ad8",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "offline.js",
+        "bytes": 8287,
+        "sha256": "8cdb2898712173809fcc8b365fc2a81072f3052526f6a470448be1aac0a7126c",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "README.txt",
+        "bytes": 2056,
+        "sha256": "cbee9fe00ef17324132593df1de9120914671a064d8642254b0ee05b10f6c7c3",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "console.html",
+        "bytes": 15744,
+        "sha256": "8560267828802ee5e20834df729cd4f2748bdda7f96a10e4aacab20ec3835cb6",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "console.css",
+        "bytes": 4231,
+        "sha256": "60923926e05558a9ad43c1393a25e07e17e4dd3075bceed32ac4de9740d7b412",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "console.js",
+        "bytes": 11159,
+        "sha256": "2eaf4a896d53d8d2b9dea2629214d30dd76a3ff9a4c650cd18a6edc5bd779a50",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "stage-role.js",
+        "bytes": 375,
+        "sha256": "2324a1b5784ac08a949953760c70bf07bfe2d17eb1be3656fbfdd98f5a5f8f67",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "stage-receiver.js",
+        "bytes": 7881,
+        "sha256": "d64442b9d2c5f50938b2d67f0f9ac333ac486a9871789e1bbd84656f88ebfc91",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "performance-api.js",
+        "bytes": 7515,
+        "sha256": "57dbae094848768e819255a8b98f6fcf361fe9515d004c9dfbb5ee43a26d8859",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "keyboard-performance.js",
+        "bytes": 4350,
+        "sha256": "59e0b64e6ae66418ddc37ee7f3db73803e905f239a39c06587521dfd963fa80e",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "window-safety.js",
+        "bytes": 411,
+        "sha256": "08e04346e0bed71048ca73b23a06d7b1f92fa09faf7e3f9204b4427e117b1d83",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "START-HERE.html",
+        "bytes": 2455,
+        "sha256": "a2e9d1b67f1c37296c54ae465782cf1f18b4c46c06b494fac39ca2a65b057420",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "GUIDE.html",
+        "bytes": 8966,
+        "sha256": "f460cc0f499dc06eb54e42c24fb297199dda79268c0c758f0efbb9e831c833cd",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "PERFORMANCE-PLAN.html",
+        "bytes": 1324,
+        "sha256": "536a47a4e57ac3eb08b47e8d61ab469840db8697155d7b0ade1764772a2299d0",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "guide.css",
+        "bytes": 3523,
+        "sha256": "d4f94d33b312751889fa8d48bf166bf31c8081788a8f599ebb7f36847e52e91b",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "LICENSE.txt",
+        "bytes": 1068,
+        "sha256": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "RIGHTS.txt",
+        "bytes": 4494,
+        "sha256": "7713e2e3ba2b5ff07f42c5d46ee5c5c1887d1ab45dc6baa9b8319ed548a51bad",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "motion-clock.js",
+        "bytes": 1133,
+        "sha256": "52fcea2e517c25c89a9b525843d43f088f1f9ffcae0b94d6b83b21f3faf5083c",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "control-response.js",
+        "bytes": 2361,
+        "sha256": "a6c1cc00d6d4a0eafbb0ea2af6a7a1ea0a6273e285c7014721694fa6a2e9a954",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-source-blur.js",
+        "bytes": 10917,
+        "sha256": "321d86574d83503fdc4431813de60de8fe67647663a52da574fcf6788d95ba49",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-motion-lag.js",
+        "bytes": 727,
+        "sha256": "7466b1bd00fae5757448f1785151cbc9ca8ef3d0ae8fe1eeb806baab83c524ba",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-motion.js",
+        "bytes": 11316,
+        "sha256": "45ed4b9b2ab06c8f9feabe47a62156bad8a9c391d9808f2168ec5d4a28984f6d",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-actor-layout.js",
+        "bytes": 8253,
+        "sha256": "8c0f839ed94fa18b0e929182869e6d02d5b73eaf0fea02424a7aeafabd613a2f",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-skull-raster.js",
+        "bytes": 5775,
+        "sha256": "2f36f07ae335d8d53d2bb573388a26f2587de628b056b6c029e901454bfb72c2",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "control-api.js",
+        "bytes": 12354,
+        "sha256": "e1d81730500879fe3814c69303819f8fc1d59f6e6d02e6e72a2433081a20815b",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "text-operators.js",
+        "bytes": 3405,
+        "sha256": "cae2c3186e9e588d7eb8878996437e6c8dd195c4bf038933fc22a0276405707a",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "app-control-api.js",
+        "bytes": 22230,
+        "sha256": "3a1e15f90d895d2ba752e57fcb2bca42c9c2406d801f7e6c5451919bfa6d1c15",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "control-adapters.js",
+        "bytes": 12599,
+        "sha256": "2b861abb80f04fc743b00839e332639a4c0551640bc082ae5325be725400c87b",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-motion.js",
+        "bytes": 112070,
+        "sha256": "4c6a92858633499f9b8392c61e79d3ceb02b7b550156a47d2bf4ffb958e4ae28",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-phase.js",
+        "bytes": 3090,
+        "sha256": "b92f78f1bf2a3be283156cc193dee1560a9527428c1938a51c4c7ca4b8884961",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "b-motion-runtime.js",
+        "bytes": 12859,
+        "sha256": "0ce6efead0a507b669935e1cc79f066d450c152334b99724d3b80c5c8dea7139",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-art.js",
+        "bytes": 12556,
+        "sha256": "cf0a608f3c3c79ddd688a2e7d82f56345356c307d8e6f0c761cc0cbc7736bfa8",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-atlas-data.js",
+        "bytes": 81984,
+        "sha256": "9dd654e2c6bd36e6f50d96cc412840da8aea614e7010ce03c900dae7de71caf0",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "bat-fire.js",
+        "bytes": 9832,
+        "sha256": "be398b01f41e675cb8653f267a600843b3bf4bb0d64e98bb7b9e971df86905df",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "text-sequence.js",
+        "bytes": 2664,
+        "sha256": "0479ed104d7171d58a13bd0dd305326b2e827542de338601985f726687d64835",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "output-uv.js",
+        "bytes": 168603,
+        "sha256": "3f8eb08c52142de86626e9b558c835644a046611897122fc59fd547caa1871f7",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "output-operators.js",
+        "bytes": 7464,
+        "sha256": "948b2d2d40c996c67eb949b60d270d1e47ad4b5874cde5eca6b03a054e187dde",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-source-noise.js",
+        "bytes": 4479,
+        "sha256": "6555f43b09f21d11ebcb821c2170fc987e2a9ae615cc7c1bd389952c45a9bbeb",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-fluid.js",
+        "bytes": 54750,
+        "sha256": "4d620536e1c550a49634e5ea21f64ef1a908a9374be6336fdfb8f16b1af9105f",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "a-composite.js",
+        "bytes": 24725,
+        "sha256": "20d6839197bb59d4d5da763b81269a31210fef68b2f7b2c94d0e628ed3283bb7",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "assets/owner-bat-atlas.png",
+        "bytes": 61130,
+        "sha256": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "assets/OWNER-BAT-ASSET.txt",
+        "bytes": 907,
+        "sha256": "1c87dd8e950d7070b54608917fb4e9aae44abcbdb070e92d60b3bb784c6b9379",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      },
+      {
+        "name": "sw.js",
+        "bytes": 7384,
+        "sha256": "38fc308afc613a5e587fa702da2a4096801d1b2730015f85cf2eb66498445d22",
+        "date_time": [
+          2026,
+          10,
+          17,
+          0,
+          0,
+          0
+        ],
+        "compress_type": 8,
+        "create_system": 0,
+        "external_attr": 2175008768
+      }
+    ],
+    "reproducible": "Fixed ZIP timestamp/create_system/permissions;Python/zlib environment recorded by delivery verification"
+  },
+  "video": {
+    "bytes": 19228874,
+    "sha256": "2c1559b7ba253da4c44e69d94386a756657c166e698688035e93f17900b89561",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "durationSeconds": 25.333333,
+    "framesPerSecond": 30,
+    "speedMultiplier": 1,
+    "timeline": "Original simultaneous CDP timestamps;operator left800x1080 and projection right1120x630 padded vertically;30fps resampling;no time cuts"
+  },
+  "validation": {
+    "summarySHA256": "01c0eb449d969bb56a17de1af3dbb6956304f448a7e272ff7671b08a1dd0a7c5",
+    "units": 73,
+    "browser": 229,
+    "native": 11,
+    "nativeFullscreenPerformance": {
+      "seconds": 10.00910000000149,
+      "drawFPS": 29.97272482040896,
+      "solverTicksPerSecond": 59.94544964081792,
+      "before": {
+        "wall": 1.9345999999940395,
+        "draws": 39,
+        "solver": 80,
+        "canvas": [
+          1062,
+          726
+        ],
+        "dpr": 1,
+        "fullscreen": true
+      },
+      "after": {
+        "wall": 11.94369999999553,
+        "draws": 339,
+        "solver": 680,
+        "canvas": [
+          1062,
+          726
+        ],
+        "dpr": 1,
+        "fullscreen": true
+      },
+      "headless": false,
+      "recording": false
+    },
+    "soak": 35,
+    "total": 348,
+    "failed": 0,
+    "soakElapsedSeconds": 1801.834,
+    "blocks": [
+      {
+        "block": 0,
+        "scene": "a",
+        "count": 3,
+        "seconds": 299.7775,
+        "productionFPS": 29.992244247817133,
+        "solverTicksPerSecond": 60.00116753258667,
+        "counter": "skullRasterResources.draws"
+      },
+      {
+        "block": 1,
+        "scene": "a",
+        "count": 6,
+        "seconds": 299.0161000000015,
+        "productionFPS": 30.01176190847234,
+        "solverTicksPerSecond": 60.003458007779216,
+        "counter": "skullRasterResources.draws"
+      },
+      {
+        "block": 2,
+        "scene": "b",
+        "count": null,
+        "seconds": 298.9075,
+        "productionFPS": 55.75637948194675,
+        "solverTicksPerSecond": null,
+        "counter": "app presentation frames"
+      },
+      {
+        "block": 3,
+        "scene": "a",
+        "count": 3,
+        "seconds": 298.645799999997,
+        "productionFPS": 29.99874768036279,
+        "solverTicksPerSecond": 59.99749536072558,
+        "counter": "skullRasterResources.draws"
+      },
+      {
+        "block": 4,
+        "scene": "a",
+        "count": 6,
+        "seconds": 299.05339999999853,
+        "productionFPS": 30.011362519202404,
+        "solverTicksPerSecond": 60.002661731985285,
+        "counter": "skullRasterResources.draws"
+      },
+      {
+        "block": 5,
+        "scene": "b",
+        "count": null,
+        "seconds": 298.895700000003,
+        "productionFPS": 55.73181547944595,
+        "solverTicksPerSecond": null,
+        "counter": "app presentation frames"
+      }
+    ],
+    "securityFindings": 0,
+    "entropyUnclassified": 0
+  },
+  "limits": [
+    "App-owned GPU counters and JS heap;B texture/program/FBO counts,not B VRAM bytes;driver/native GPU memory not measured",
+    "Final GC comparison is a bounded retention check,not exhaustive leak proof",
+    "Single local Windows Chrome machine;not a real projector or other device",
+    "Target interpolation is numerical input behavior;existing motion dynamics and their response remain",
+    "Native JIS physical hardware input not certified;Latin physical event codes tested",
+    "Public redistribution of owner assets remains unapproved"
+  ]
+}

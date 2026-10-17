@@ -7,10 +7,8 @@ window.HalloweenControlAdapters=(()=>{
   const pressed=new Set();let disposed=false;
   function command(event,onlyB=false){if(!event||event.repeat||event.editable||event.isComposing||event.ctrlKey||event.metaKey||event.altKey)return null;const key=event.key?.toLowerCase(),s=api.getState();if(onlyB&&s.scene!=='b')return null;
    if(s.scene==='b'&&['arrowleft','arrowright','arrowup','arrowdown'].includes(key)){const mix=key==='arrowleft'||key==='arrowright',name=mix?'b.motionMix':'b.initialSpeed',delta=(key==='arrowright'||key==='arrowup'?1:-1)*(mix?.05:.1),max=mix?1:2.6;return {type:'set',key:name,value:Math.min(max,Math.max(0,Math.round((s.settings[name]+delta)*100)/100))};}
-   if(!onlyB&&s.scene==='a'&&!event.shiftKey&&['q','e'].includes(key))return {type:'set',key:'a.actorCount',value:Math.min(6,Math.max(1,s.settings['a.actorCount']+(key==='e'?1:-1)))};
    if(onlyB){if(key===' ')return {type:'command',name:'transport.togglePause'};if(key==='r')return {type:'command',name:'scene.reset'};return null;}
-   if(key==='1'||key==='2')return {type:'command',name:'scene.select',scene:key==='1'?'a':'b'};
-   const name=({' ':'transport.togglePause',r:'scene.reset',h:'view.toggleControls',f:'view.fullscreen',escape:'view.showControls'})[key];return name?{type:'command',name}:null;
+   const name=({' ':'transport.togglePause',escape:'view.showControls'})[key];return name?{type:'command',name}:null;
   }
   function handlePlain(event,onlyB=false){if(disposed)return false;const c=command(event,onlyB);if(!c)return false;api.dispatch(c,{source:onlyB?'legacy-vj-keyboard':'keyboard'});return true;}
   function keydown(event){if(disposed||dialogOpen()||event.target?.closest?.('input,textarea,select,[contenteditable]:not([contenteditable="false"])')||event.key===' '&&event.target?.closest?.('button,a[href]'))return;const id=event.code||event.key?.toLowerCase();if(pressed.has(id))return;const c=command(event);if(!c)return;pressed.add(id);event.preventDefault();const result=api.dispatch(c,{source:'keyboard'});result?.catch?.(()=>{});}

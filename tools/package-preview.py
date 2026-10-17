@@ -3,7 +3,7 @@ import zipfile,hashlib,json
 root=Path(__file__).resolve().parent.parent
 out=root/'dist';out.mkdir(exist_ok=True)
 names=['START.cmd','index.html','はじめに.txt','README.txt','RIGHTS.txt','VERIFICATION.txt']
-sources={n:(root/n if n in ['START.cmd','はじめに.txt'] else root/'app'/n) for n in names}
+sources={n:(root/'app'/('README.txt' if n=='はじめに.txt' else n)) for n in names}
 dest=out/'halloween-projection-v0.1.1-windows-preview.zip'
 with zipfile.ZipFile(dest,'w',compression=zipfile.ZIP_DEFLATED) as z:
  for name in names:z.write(sources[name],name)

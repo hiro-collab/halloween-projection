@@ -8,5 +8,7 @@ command='$server={'+compact+"}; if($env:HALLOWEEN_TEST_CONSOLE -eq '1'){& $serve
 lines=['@echo off','setlocal DisableDelayedExpansion','set '+chr(34)+'HALLOWEEN_ROOT=%~dp0'+chr(34),'set '+chr(34)+'HALLOWEEN_NO_BROWSER=0'+chr(34),'set '+chr(34)+'HALLOWEEN_TEST_CONSOLE=0'+chr(34),'set '+chr(34)+'HALLOWEEN_QA=0'+chr(34),'if '+chr(34)+'%~1'+chr(34)+'=='+chr(34)+'--test-console'+chr(34)+' set '+chr(34)+'HALLOWEEN_TEST_CONSOLE=1'+chr(34),'if '+chr(34)+'%~2'+chr(34)+'=='+chr(34)+'--no-browser'+chr(34)+' set '+chr(34)+'HALLOWEEN_NO_BROWSER=1'+chr(34),'if '+chr(34)+'%~1'+chr(34)+'=='+chr(34)+'--qa'+chr(34)+' set '+chr(34)+'HALLOWEEN_QA=1'+chr(34),chr(34)+r'%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe'+chr(34)+' -NoProfile -Command '+chr(34)+command+chr(34),'endlocal']
 assert max(map(len,lines))<8191
 data=('\r\n'.join(lines)+'\r\n').encode('ascii')
-for rel in ['START.cmd','app/START.cmd']:(root/rel).write_bytes(data)
-print('Generated matching root/app Windows launchers.')
+(root/'app/START.cmd').write_bytes(data)
+entry=['@echo off','setlocal DisableDelayedExpansion','if not '+chr(34)+'%~1'+chr(34)+'=='+chr(34)+chr(34)+' goto legacy','start '+chr(34)+chr(34)+' '+chr(34)+r'%~dp0web\START-HERE.html'+chr(34),'exit /b',':legacy']
+(root/'START.cmd').write_bytes(('\r\n'.join(entry)+'\r\n').encode('ascii')+data)
+print('Generated current static root entry and legacy app launcher; explicit old QA flags retain legacy route.')

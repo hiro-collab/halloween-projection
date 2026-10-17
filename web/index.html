@@ -2,14 +2,14 @@
 <html lang="ja">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; font-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Halloween Projection 0.1.37</title>
+<title>Halloween Projection 0.1.50-operator-flip-preview</title>
 <script src="./stage-role.js"></script><link rel="stylesheet" href="./styles.css"><script defer src="./a-actor-layout.js"></script></head>
 <body>
 <aside id="stage-start"><h1>投影窓の準備</h1><p id="stage-start-note">この窓を投影先へ移し、開始を押してください。開始後は操作UIを表示しません。</p><button id="stage-fullscreen">全画面で始める</button><button id="stage-windowed">ウィンドウで始める</button></aside>
 <aside id="controls" aria-label="操作パネル">
 <p><a href="./console.html">キーボード操作席を開く（2窓）</a></p><div class="brand">HALLOWEEN / PROJECTION</div><h1>壁が、ハロウィンの<br>ステージになる。</h1>
-<p class="lead">ブラウザで開いて、そのまま投影。<br>現場で操作を確かめる確認版 0.1.34</p>
-<nav class="help-links" aria-label="使い方"><button id="guide">はじめての投影ガイド</button><a href="./START-HERE.html" target="_blank" rel="noopener noreferrer">かんたん手順</a><a href="./GUIDE.html" target="_blank" rel="noopener noreferrer">くわしい使い方・困ったとき</a><a href="./PERFORMANCE-PLAN.html" target="_blank" rel="noopener noreferrer">少数操作の計画（未実装）</a></nav><div class="label">エフェクト</div><div class="effects">
+<p class="lead">ブラウザで開いて、そのまま投影。<br>本人向け導入確認版 0.1.50-operator-flip-preview</p>
+<nav class="help-links" aria-label="使い方"><button id="guide">はじめての投影ガイド</button><a href="./START-HERE.html" target="_blank" rel="noopener noreferrer">かんたん手順</a><a href="./GUIDE.html" target="_blank" rel="noopener noreferrer">くわしい使い方・困ったとき</a><a href="./PERFORMANCE-PLAN.html" target="_blank" rel="noopener noreferrer">使える操作とキー一覧</a></nav><div class="label">エフェクト</div><div class="effects">
 <button id="skeleton" data-effect="skeleton" aria-pressed="true">くるくる骸骨<small>簡易 2D ベクター</small></button>
 <button id="bats" data-effect="bats" aria-pressed="false">コウモリと文字<small>本人の原図案60フレーム</small></button><button id="skull3d" data-effect="skull3d" aria-pressed="false">3Dドクロ<small>CC0別候補・私的比較</small></button></div>
 <section id="text-options"><label><input id="text-manual-size" type="checkbox">文字サイズを自分で決める</label><label class="range-label" for="text-size-normalized"><span>主文字サイズ</span><output id="text-size-value">自動調整</output></label><input id="text-size-normalized" type="range" min="0" max="1" step="any" value="0.625" disabled><p class="help">手動サイズでは長い文字が切れることがあります。小さくするか、自動調整へ戻してください。0でも小さい文字が残ります。</p><label class="range-label" for="text-width"><span>文字の表示幅</span><output id="text-width-value">82%</output></label><input id="text-width" type="range" min="0.1" max="1" step="0.01" value="1"><label class="range-label" for="text-height"><span>文字の表示高さ</span><output id="text-height-value">48%</output></label><input id="text-height" type="range" min="0.1" max="1" step="0.01" value="1"><label for="text">文字を入力</label><textarea id="text" maxlength="240" spellcheck="false">HAPPY
@@ -23,7 +23,7 @@ HALLOWEEN</textarea>
 <button id="project" class="primary">投影開始 · 全画面</button><button id="hide">操作パネルを隠す（H）</button>
 <button id="quit">表示を終了</button>
 <p id="status" role="status" aria-live="polite"></p><p id="fit-note"></p>
-<p class="help">1：ドクロ · 2：コウモリ<br>H：パネル切替 · F：全画面 · Space：一時停止<br>R：リセット · Esc / ダブルクリック：操作に戻る</p>
+<p class="help">キー操作は二窓の操作席を使用<br>Space：一時停止<br>Esc / ダブルクリック：操作に戻る</p>
 <section class="offline" aria-label="この端末への保存">
 <h2>接続なしで使う準備</h2><p id="offline-status" role="status" aria-live="polite">保存状態を確認しています…</p>
 <div class="offline-buttons"><button id="offline-save" data-maintenance>この端末へ保存</button><button id="offline-check" data-maintenance disabled>更新を確認</button><button id="offline-clear" data-maintenance disabled>保存を解除</button><button id="offline-apply" data-maintenance hidden>最新版に切り替える</button></div>
@@ -32,16 +32,16 @@ HALLOWEEN</textarea>
 </aside>
 <main id="stage" aria-label="投影映像"><canvas id="canvas" aria-label="骸骨またはコウモリのアニメーション"></canvas><div id="message" hidden><div id="message-text"></div></div></main>
 <dialog id="guide-dialog" aria-labelledby="guide-title"><h2 id="guide-title" tabindex="-1" autofocus>はじめての投影</h2><p>Windows・Chrome向け。まずはこの順で進めます。</p><ol>
-<li>ZIPを「すべて展開」。START-HERE.htmlをChromeで開き、「アプリを開く」。展開フォルダーのままなら接続なしで使えます。</li>
+<li>ZIPを「すべて展開」。START-HERE.htmlをChromeで開き、「操作窓を開く」。展開フォルダーのままなら接続なしで使えます。</li>
 <li>PCと投影機を接続。WindowsのWin＋Pで複製/拡張を選ぶ準備は、スタッフが行います。</li>
 <li>「コウモリと文字」、または「3Dドクロ」＋「原AのmotionMat構成で比較（動きは候補）」をON。ドクロは「原の描画サイズで比較（投影画面へ拡大）」もON。</li>
 <li>「文字を入力」で文章を決めます。ふだんは自動調整。自分でサイズを変えるなら「文字サイズを自分で決める」をON。幅/高さで文字を出す範囲を調整。</li>
 <li>既存の動き・光を少しずつ調整。「投影開始 · 全画面」で映します。許可されなければエラー表示を確認します。</li>
-<li>H / Esc / 映像のダブルクリックで操作へ。「一時停止」「再開」「リセット」を使います。リセット後も文字と調整は残ります。</li>
+<li>操作窓の「一時停止・再開」「映像をReset」を使います。演奏キーは1〜8、Q〜I、A〜Kの3段です。ResetはNを0.6秒長押し。Escはキー演奏を解除し、映像は続きます。</li>
 <li>黒いときは「円マスクを開く」をONにして再開。文字だけ出ないときは「先頭へ戻す」か自動調整。</li>
 <li>「表示を終了」→終了の表示→タブを閉じます。文字・調整は保存されません。</li></ol>
-<p>1/2・Space・H・F・Rは今使える基本キーです。入力欄を出て映像をクリックしてから使います。操作パネルを出すと投影にも映ります。動きの自然さ・実機投影は確認中です。</p>
+<p>この一窓は詳細調整用です。キー演奏は二窓の操作席で行います。入力欄を出て映像をクリックしてから使います。操作パネルを出すと投影にも映ります。動きの自然さ・実機投影は確認中です。</p>
 <p><a href="./START-HERE.html" target="_blank" rel="noopener noreferrer">かんたん手順を別ページで読む</a> · <a href="./GUIDE.html" target="_blank" rel="noopener noreferrer">くわしい使い方・困ったとき</a></p>
-<p><a href="./PERFORMANCE-PLAN.html" target="_blank" rel="noopener noreferrer">少数操作の計画（未実装）</a>は、今使えるキーとは別です。</p><button id="close-guide">閉じる</button></dialog>
+<p><a href="./PERFORMANCE-PLAN.html" target="_blank" rel="noopener noreferrer">使える操作とキー一覧</a>で、現在の3段キー配置を確認できます。</p><button id="close-guide">閉じる</button></dialog>
 <script defer src="./motion-clock.js"></script><script defer src="./control-response.js"></script><script defer src="./a-motion-lag.js"></script><script defer src="./a-motion.js"></script><script defer src="./control-api.js"></script><script defer src="./text-operators.js"></script><script defer src="./bat-motion.js"></script><script defer src="./bat-phase.js"></script><script defer src="./b-motion-runtime.js"></script><script defer src="./bat-atlas-data.js"></script><script defer src="./bat-art.js"></script><script defer src="./bat-fire.js"></script><script defer src="./a-source-noise.js"></script><script defer src="./a-fluid.js"></script><script defer src="./a-source-blur.js"></script><script defer src="./a-composite.js"></script><script defer src="./app-control-api.js"></script><script defer src="./control-adapters.js"></script><script defer src="./a-skull-raster.js"></script><script defer src="./output-uv.js"></script><script defer src="./text-sequence.js"></script><script defer src="./output-operators.js"></script>
 <script defer src="./app.js"></script><script defer src="./offline.js"></script><script defer src="./window-safety.js"></script><script defer src="./performance-api.js"></script><script defer src="./stage-receiver.js"></script></body></html>

@@ -4,7 +4,7 @@ window.HalloweenAppControl=(()=>{
  const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
  const freeze=value=>{if(value&&typeof value==='object'){for(const v of Object.values(value))freeze(v);Object.freeze(value);}return value;};
  const scenes={a:'skull3d',b:'bats',skeleton:'skeleton'},aliases={skull3d:'a',bats:'b',skeleton:'skeleton'};
- const defaults={"speed":1,"size":1,"flapRate":1,"frameLock":null,"motionMix":0.5,"initialSpeed":1.3,"emitterX":0,"emitterY":0,"headRate":1,"motionCross":0.5,"jawPeriod":0.12,"jawExponent":4,"jawRate":1,"jawOpen":28,"pivotY":-0.75,"pivotZ":-0.12,"headX":0,"headY":0,"headZ":0,"actorPoses":null,"headGlowMix":0,"backgroundHue":0.38333333333333336};
+ const defaults={"speed":1,"size":1,"flapRate":1,"frameLock":null,"motionMix":0.5,"initialSpeed":1.3,"emitterX":0,"emitterY":0,"headRate":1,"motionCross":0.5,"jawPeriod":0.12,"jawExponent":4,"jawRate":1,"jawOpen":28,"pivotY":-0.75,"pivotZ":-0.12,"headX":0,"headY":0,"headZ":0,"actorPoses":null,"headGlowMix":0,"backgroundHue":0.38333333333333336,"colorHue":0.6666666666666666};
  Object.assign(defaults,{jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1});
  Object.assign(defaults,{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1});
  const settings={};
@@ -12,6 +12,7 @@ window.HalloweenAppControl=(()=>{
  for(const [scene,prefix] of [['skeleton','skeleton'],['bats','b']]){field(prefix+'.playbackRate','number',[.2,2],scene,'speed','比較再生倍率');field(prefix+'.scale','number',[.5,1.5],scene,'size','映像の大きさ');field(prefix+'.text','string',null,scene,'text','文字入力',{maxLength:240,maxLines:8});}
  for(const axis of ['X','Y'])field('b.emitter'+axis,'number',[-1,1],'bats','emitter'+axis,'放出中心 '+axis,{sourceMatch:'sphere input h/v -> mean position -> metaball center',effect:'move source sphere for new births and current Force center; keep existing particle positions',backend:'rendered',default:0});
  field('b.flapRate','number',[.25,2],'bats','flapRate','羽ばたき再生倍率');field('b.frameLock','integer',[0,59],'bats','frameLock','図案フレーム固定',{nullable:true});
+ field('b.colorHue','number',[0,1],'bats','colorHue','コウモリの色相',{unit:'normalized hue',sourceMatch:'new performance colour control;default original blue body retained'});
  field('b.motionMix','number',[0,1],'bats','motionMix','旋回・流れの混合',{backend:'source',sourceMatch:'recorded-input-contract',effect:'Vortex/Spiral/rotationCross; independent of playback and birth speed'});
  field('b.initialSpeed','number',[0,2.6],'bats','initialSpeed','出生時の初速',{backend:'source',sourceMatch:'recorded-input-contract',effect:'Birth only; existing particles keep their previous initial velocity'});
  field('a.scale','number',[.5,1.5],'skull3d','size','映像の大きさ');field('a.text','string',null,'skull3d','text','文字入力',{maxLength:240,maxLines:8});

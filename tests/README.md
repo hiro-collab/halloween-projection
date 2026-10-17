@@ -1,3 +1,15 @@
+# v50 現行QA
+
+通常の導入はSTART-HERE.htmlから二窓のWeb版です。Python/Node.jsは利用者には不要です。
+
+- 単体: node tests/app-control-api.qa.cjs、node tests/actor-presence.qa.cjs、node tests/presence-lag.qa.cjs、node tests/operator-contract.qa.cjs。24位置の物理キー、150msの時刻補間、移行途中の再指定、循環色相、長押し保護を確認します。
+- ブラウザー: PLAYWRIGHT_CLIに既存CLIのJSパスを設定し、python tests/run-browser-qa.py keyboard-lifecycle operator-flip offline-unpacked resources actor-count actor-presence presence-lag entry-comparison security-boundaries。ケースは順次実行し、GPU競合を避けます。operator-flipは四隅マーカーと非対称文字を使い、実際の出力シェーダーとA/B最終画像の4方向を画素比較します。entry-comparisonは比較導線を閉じて6%を保持することを検証します。
+- 30分運転: PLAYWRIGHT_MODULEに既存playwrightモジュールを設定し、node tests/stability-soak.cjs <新規ZIP展開フォルダー> <Git外の保存先> 30。3体/6体/B各5分を2巡、Pause/Resetと資源回収を確認。画面FHD・DPR1・A内部720p。
+- Windows実窓: 同じモジュール設定でnode tests/native-window.qa.cjs <ソースZIPまたは配布ZIP展開フォルダー> <Git外の保存先>。所有Chrome窓のPID・タイトル・前景を確認してからOSのEscを送ります。ほかの窓へ入力しません。
+- file起動はネットワークofflineの隔離Chromeで検証します。Windows ExplorerのダウンロードUI・物理投影・別端末は別の検収です。
+
+以下は旧版の履歴記録です。旧asset数や旧起動試験の合格をv49へ流用しません。
+
 # 技術試作のQA（開発者用）
 
 現在のWebはtests/serve-web-preview.pyでweb/だけを127.0.0.1へ配信し、

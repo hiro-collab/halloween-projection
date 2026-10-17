@@ -1,5 +1,11 @@
 @echo off
 setlocal DisableDelayedExpansion
+if not "%~1"=="" goto legacy
+start "" "%~dp0web\START-HERE.html"
+exit /b
+:legacy
+@echo off
+setlocal DisableDelayedExpansion
 set "HALLOWEEN_ROOT=%~dp0"
 set "HALLOWEEN_NO_BROWSER=0"
 set "HALLOWEEN_TEST_CONSOLE=0"

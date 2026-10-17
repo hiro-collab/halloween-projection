@@ -1,0 +1,50 @@
+/* Optional Windows-only local proof. Uses an isolated Chrome and its own windows. */
+'use strict';
+const fs=require('fs'),path=require('path'),{pathToFileURL}=require('url'),{execFileSync}=require('child_process');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const root=path.resolve(process.argv[2]),out=path.resolve(process.argv[3]);fs.mkdirSync(out,{recursive:true});
+if(process.platform!=='win32')throw Error('Windows-only native window proof');
+const stamp='V50-QA-'+Date.now(),rows=[],errors=[];let browser;
+const write=(n,v)=>fs.writeFileSync(path.join(out,n),JSON.stringify(v,null,2));
+function check(name,ok,data){rows.push({name,ok:!!ok,data});write('checks.json',rows);if(!ok)throw Error(name);}
+function activate(title,escape=false){
+ if(!/^V50-QA-\d+-(OPERATOR|STAGE)$/.test(title))throw Error('Unexpected owned title');
+ const script=String.raw`$ErrorActionPreference='Stop'; Add-Type @'
+using System;using System.Runtime.InteropServices;using System.Text;using System.Collections.Generic;
+public static class NativeQA{
+ public delegate bool EnumProc(IntPtr h,IntPtr l);
+ [DllImport("user32.dll")]public static extern bool EnumWindows(EnumProc p,IntPtr l);
+ [DllImport("user32.dll",CharSet=CharSet.Unicode)]public static extern int GetWindowText(IntPtr h,StringBuilder b,int n);
+ [DllImport("user32.dll")]public static extern bool SetForegroundWindow(IntPtr h);
+ [DllImport("user32.dll")]public static extern IntPtr GetForegroundWindow();
+ [DllImport("user32.dll")]public static extern bool ShowWindow(IntPtr h,int n);
+ [DllImport("user32.dll")]public static extern uint GetWindowThreadProcessId(IntPtr h,out uint p);
+ public static string Title(IntPtr h){var s=new StringBuilder(2048);GetWindowText(h,s,s.Capacity);return s.ToString();}
+ public static IntPtr Find(string t){var found=new List<IntPtr>();EnumWindows((h,l)=>{if(Title(h)==t||Title(h).StartsWith(t+" - "))found.Add(h);return true;},IntPtr.Zero);if(found.Count!=1)throw new Exception("Owned window match count "+found.Count);return found[0];}
+}
+'@; $title=$env:V50_QA_TITLE; $h=[NativeQA]::Find($title); [uint32]$pidOwned=0; [void][NativeQA]::GetWindowThreadProcessId($h,[ref]$pidOwned); if($env:V50_QA_PIDS.Split(',') -notcontains [string]$pidOwned){throw 'Window process is not in owned browser process list'}; if($env:V50_QA_ESCAPE -ne '1'){[void][NativeQA]::ShowWindow($h,9)}; [void][NativeQA]::SetForegroundWindow($h); Start-Sleep -Milliseconds 180; if([NativeQA]::GetForegroundWindow() -ne $h){throw 'Foreground verification failed; no keys sent'}; if($env:V50_QA_ESCAPE -eq '1'){$sh=New-Object -ComObject WScript.Shell; if([NativeQA]::GetForegroundWindow() -ne $h){throw 'Focus drift; no keys sent'}; $sh.SendKeys('{ESC}');Start-Sleep -Milliseconds 250}; @{titleVerified=$true;pidOwned=$pidOwned;foregroundVerified=([NativeQA]::GetForegroundWindow() -eq $h);escapeSent=($env:V50_QA_ESCAPE -eq '1')} | ConvertTo-Json -Compress`;
+ const raw=execFileSync('powershell.exe',['-NoProfile','-Command',script],{windowsHide:true,encoding:'utf8',timeout:10000,env:{...process.env,V50_QA_TITLE:title,V50_QA_PIDS:process.env.V50_QA_PIDS,V50_QA_ESCAPE:escape?'1':'0'}});return JSON.parse(raw.trim());
+}
+(async()=>{
+ browser=await chromium.launch({channel:'chrome',headless:false,args:['--window-size=1280,900']});
+ const bcdp=await browser.newBrowserCDPSession();const processes=await bcdp.send('SystemInfo.getProcessInfo');process.env.V50_QA_PIDS=processes.processInfo.map(x=>x.id).join(',');
+ const c=await browser.newContext({viewport:null});await c.setOffline(true);c.on('page',p=>p.on('pageerror',e=>errors.push(e.message)));
+ const page=await c.newPage();await page.goto(pathToFileURL(path.join(root,'START-HERE.html')).href);if(await page.locator('a[href="./web/START-HERE.html"]').count())await page.locator('a[href="./web/START-HERE.html"]').click();await page.locator('#open-console').click();await page.waitForFunction(()=>window.halloweenConsole);await page.evaluate(t=>document.title=t,stamp+'-OPERATOR');
+ const pop=page.waitForEvent('popup');await page.locator('#open-stage').click();const stage=await pop;await stage.waitForFunction(()=>window.halloweenStageLink);await stage.evaluate(t=>document.title=t,stamp+'-STAGE');await page.waitForFunction(()=>halloweenConsole.status().connected);
+ for(const p of [page,stage]){const pc=await c.newCDPSession(p);await pc.send('Emulation.setFocusEmulationEnabled',{enabled:false});}
+ const p2=await bcdp.send('SystemInfo.getProcessInfo');process.env.V50_QA_PIDS=p2.processInfo.map(x=>x.id).join(',');
+ const display=await page.evaluate(()=>({width:screen.availWidth,height:screen.availHeight,dpr:devicePixelRatio}));
+ for(const [p,left,width,height] of [[page,0,Math.floor(display.width*.43)-8,display.height-50],[stage,Math.floor(display.width*.43)+8,Math.floor(display.width*.57)-16,Math.min(display.height-80,800)]]){const pc=await c.newCDPSession(p),t=await pc.send('Target.getTargetInfo'),w=await bcdp.send('Browser.getWindowForTarget',{targetId:t.targetInfo.targetId});await bcdp.send('Browser.setWindowBounds',{windowId:w.windowId,bounds:{windowState:'normal'}});await bcdp.send('Browser.setWindowBounds',{windowId:w.windowId,bounds:{left,top:0,width,height}});}
+ let proof=activate(stamp+'-STAGE');check('owned native stage foreground verified',proof.foregroundVerified,proof);await stage.locator('#stage-fullscreen').click();await stage.waitForFunction(()=>!!document.fullscreenElement);check('headed real click enters fullscreen',true);
+ await stage.waitForFunction(()=>halloweenDiagnostics().skull?.scene.count===3);await stage.waitForTimeout(500);const timing=()=>stage.evaluate(()=>{const d=halloweenDiagnostics();return {wall:performance.now()/1000,draws:d.skullRasterResources.draws,solver:d.aFluidResources.steps,canvas:[document.getElementById('canvas').width,document.getElementById('canvas').height],dpr:devicePixelRatio,fullscreen:!!document.fullscreenElement};});const t0=await timing();await stage.waitForTimeout(10000);const t1=await timing(),fullscreenPerformance={seconds:t1.wall-t0.wall,drawFPS:(t1.draws-t0.draws)/(t1.wall-t0.wall),solverTicksPerSecond:(t1.solver-t0.solver)/(t1.wall-t0.wall),before:t0,after:t1,headless:false,recording:false};check('headed fullscreen ten-second production draw and solver cadence',fullscreenPerformance.seconds>=10&&fullscreenPerformance.drawFPS>=25&&fullscreenPerformance.solverTicksPerSecond>=59&&fullscreenPerformance.solverTicksPerSecond<=61&&t1.fullscreen,fullscreenPerformance);
+ proof=activate(stamp+'-STAGE',true);await stage.waitForFunction(()=>!document.fullscreenElement);check('native OS Escape exits fullscreen and retains isolation',await stage.evaluate(()=>getComputedStyle(document.getElementById('controls')).display==='none'),proof);
+ activate(stamp+'-OPERATOR');await page.locator('#arm').click();await page.waitForFunction(()=>halloweenConsole.status().keyboard.armed);check('native operator has real DOM focus',await page.evaluate(()=>document.hasFocus()));
+ await page.keyboard.down('v');await page.waitForFunction(()=>halloweenConsole.status().snapshot.performance.accent);const nativeTransfer=activate(stamp+'-STAGE');await page.waitForFunction(()=>!document.hasFocus()&&!halloweenConsole.status().keyboard.armed&&halloweenConsole.status().keyboard.pressed.length===0);await stage.waitForFunction(()=>!halloweenPerformance.state().accent);check('native focus transfer clears pressed keys and accent',await page.evaluate(()=>!document.hasFocus()&&halloweenConsole.status().keyboard.pressed.length===0),nativeTransfer);await page.keyboard.up('v');
+ activate(stamp+'-OPERATOR');check('native return stays disarmed',await page.evaluate(()=>document.hasFocus()&&!halloweenConsole.status().keyboard.armed));await page.locator('#arm').click();await page.waitForFunction(()=>halloweenConsole.status().keyboard.armed);await page.locator('#main-text').fill('HAPPY\nHALLOWEEN');check('native text input disarms',await page.evaluate(()=>!halloweenConsole.status().keyboard.armed));
+ await page.locator('#arm').click();await page.waitForFunction(()=>halloweenConsole.status().keyboard.armed);const n=await stage.evaluate(()=>halloweenControls.get('a.actorCount'));await page.keyboard.press('0');await stage.waitForFunction(n=>halloweenControls.get('a.actorCount')===n+1,n);check('native focused 0 single event changes count',true);
+ await page.locator('#actor-count').selectOption('3');await page.locator('#text-size').focus();await page.keyboard.press('Home');await page.keyboard.press('ArrowRight');check('real slider keyboard input disarms performance keys',await page.evaluate(()=>!halloweenConsole.status().keyboard.armed));
+ await page.locator('#text-size').evaluate(e=>{e.value='.625';e.dispatchEvent(new Event('input',{bubbles:true}));});await page.waitForFunction(()=>halloweenConsole.status().pending===0);
+ await page.screenshot({path:path.join(out,'operator-native.png')});activate(stamp+'-STAGE');await stage.screenshot({path:path.join(out,'stage-native.png')});
+ activate(stamp+'-OPERATOR');await page.locator('details').first().evaluate(e=>e.open=true);const closed=stage.waitForEvent('close');await page.locator('#end').click();await closed;check('native workflow no page errors',errors.length===0,errors);
+ write('result.json',{passed:rows.filter(x=>x.ok).length,failed:0,checks:rows,errors,browserVersion:browser.version(),display,fullscreenPerformance,scope:'Owned isolated Windows Chrome windows only;verified Win32 foreground/process membership;OS Escape;real focus transfer;unrecorded headed fullscreen cadence;not projector/other device'});await browser.close();write('cleanup.json',{browserExit:0});
+})().catch(async e=>{write('failure.json',{message:e.message,stack:e.stack,checks:rows,errors});if(browser)await browser.close().catch(()=>{});write('cleanup.json',{exit:1});console.error(e.stack);process.exitCode=1;});

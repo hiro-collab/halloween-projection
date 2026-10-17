@@ -1,29 +1,49 @@
-# Halloween Projection — private preview v48
+# Halloween Projection v50
 
-Both settle in200ms: accepted6% remains default, proposed8% is optional comparison only. The canceled350ms plan is not delivered. [Comparison and verification](docs/ENTRY-COMPARISON-V48.md).
+Windows・Chrome向けの本人用導入確認版。既定は3体の回遊、出現6％・0.2秒です。
 
-The accepted v46 entry now peaks at6% overshoot, preserving its peak time and200ms settling. Exit/orbit/default3/live1–6 remain. [Adjustment and verification](docs/PRESENCE-SIX-V47.md).
+## 導入
 
-Skulls enter with a restrained2.8% overshoot and settle in about0.2s. Exit uses a quintic S curve without rebound. [Curves and comparison](docs/PRESENCE-LAG-V46.md).
+1. 配布ZIPを「すべて展開」。
+2. 展開フォルダーのSTART-HERE.htmlをChromeで開く。
+3. 「操作窓を開く」→「投影窓を開く」。
+4. 投影窓で「ウィンドウで始める」または「全画面で始める」。
+5. 操作窓で文字と見えを準備し、「演奏開始」。
 
-Count changes trigger a0→1 appearance multiplier and1→0 exit over about0.2s. Default3, live1–6, accepted orbit and standard size remain. [Lifecycle and verification](docs/COUNT-SCALE-V45.md).
+コマンド入力・追加ソフトは不要。展開フォルダー内の全ファイルを保持するとネット接続なしで起動できます。文字・設定は投影窓を閉じると初期化されます。詳しくはweb/GUIDE.html。
 
-The adopted v43 source orbit now starts with3 visible skulls. The live1–6 selector and Q/E keys remain. Three-body source rendering selects histories0,2,4 (even120-degree source phases), without changing or resetting the original six histories. [Scope and verification](docs/THREE-SKULLS-V44.md).
+GitHubの「Code → Download ZIP」で取得したソースZIPの場合も、展開後に一番上のSTART-HERE.htmlをChromeで開けます。現在のweb/への入口です。app/は旧Windows試作の履歴で、通常の導入には使いません。
 
-v43 restores the large source-camera skull orbit that the previous row presentation reduced to about4% of its visible travel. The default is now central orbit; the old symmetric rows remain an explicit option. No extra spin or changed motion generator is added. See [diagnosis and verification](docs/SKULL-ORBIT-V43.md).
+## キー配置
 
-v42 preserves the v41 motion display fix and restores the intended30Hz A cadence while reducing GPU overhead. See [measured causes and validation](docs/A-PERFORMANCE-V42.md). The branch also retains the recovered v39 baseline and separate v40 count-selection commit. Intermediate local development history was not recorded and is not reconstructed. See [release recovery](docs/LOCAL-RELEASE-RECOVERY.md) and [asset boundaries](docs/PRIVATE-ASSET-BOUNDARIES.md).
+| キー | 操作 | 押し方 |
+|---|---|---|
+| 1 2 3 4 5 6 7 8 | 動きの激しさを8位置から指定 | 1押下で目標へ |
+| Q W E R T Y U I | 色相を8位置から指定 | 1押下で目標へ |
+| A S D F G H J K | 文字サイズを8位置から指定 | 1押下で目標へ |
+| 9 / 0 | ドクロ数を減らす / 増やす（1〜6体） | 1押下ずつ |
+| Z | ドクロ / コウモリを交互に切替 | 単発 |
+| X | 通常→左右→上下→上下左右→通常 | 単発 |
+| C | 動き方を3状態で切替 | 単発 |
+| V | 一時アクセント | 押している間・最大3秒 |
+| B | 準備した基準へ戻す | 0.6秒長押し |
+| N | 映像計算をReset（文字・設定は保持） | 0.6秒長押し |
+| Space | 一時停止・再開 | 単発 |
+| Esc | キー演奏を解除（映像は続く） | いつでも |
 
-Open web/START-HERE.html for the operator and projection windows. This is a preview; real-projector and longer-duration acceptance remain pending. Code licensing does not relicense private owner assets. No public site or push is part of this local recovery.
+```text
+1 2 3 4 5 6 7 8  9 0   動き8位置 / 体数−＋
+Q W E R T Y U I  O P   色8位置
+ A S D F G H J K  L    文字サイズ8位置
+  Z X C V B N M         映像 / 向き / 動き方 / 一時 / 基準 / Reset
+```
 
-Build: python tools/build-web-package.py . Exact saved ZIP reproduction: python tools/reproduce-saved-release.py releases/v48.json . Python is a maintainer tool; end users use the static ZIP. dist/ and output/ are ignored.
+目標指定は8段階、実値は約0.15秒の時間基準で線形移行。途中の再指定は現在値から連続。色相は短い円周経路。正確な中間値は各スライダーで指定できます。「演奏開始」を押し、操作窓にフォーカスがある間だけ有効。半角英数・Shiftなしで使います。入力欄・選択欄・IME・修飾キー・別窓への移動でキー演奏を解除し、戻っても自動再開しません。数字や文字を入力中に演奏キーを奪いません。
 
-Validation: node tests/app-control-api.qa.cjs . Set PLAYWRIGHT_CLI to an installed CLI JS entry point and run python tests/run-browser-qa.py common-api resources keyboard-lifecycle realtime-controls offline-unpacked natural-motion . v40 additionally has actor-count and count-fhd tests. Browser test output/captures are ignored.
+向きは通常→左右→上下→上下左右→通常で、文字とエフェクトを含む最終出力だけを反転します。UIは正位置、映像切替でも向きを保持。台形補正・90度回転は追加していません。
 
-v40 controls: a.actorCount integer1..6; Japanese selector; Q decrease/E increase after arming. The optional rows mode protects standard central text; default source orbit may cross it. Layout interpolation retains shared clock and surviving motion histories. Details remain in web/GUIDE.html.
+## 開発者向け
 
-The v41 display correction retains source motionMat/rig/camera logic while removing per-frame silhouette fitting. See docs/MOTION-DISPLAY-V41.md and the projection-isolation/natural-screen-trace browser tests. Subjective naturalness is not certified by numerical checks.
+ビルド: `python tools/build-web-package.py`。検証: `node tests/app-control-api.qa.cjs`、`node tests/actor-presence.qa.cjs`、`node tests/presence-lag.qa.cjs`。既存Playwright CLIのJSパスをPLAYWRIGHT_CLIへ設定して `python tests/run-browser-qa.py keyboard-lifecycle offline-unpacked`。Python/Node.jsは保守作業用で、利用者の導入には不要です。
 
-Optional continuity measurement: `python tests/run-browser-qa.py motion-display-continuity` records90 seconds of six-actor A,20 seconds of B, Pause/Reset and scene lifecycle. Its fps is an observed run result, not an acceptance guarantee.
-
-The v42 A performance correction preserves the v41 display fix, caches stable GPU state, specializes the identical copy/Level selector, and fixes30Hz pacing at60Hz RAF. See [measured causes and validation](docs/A-PERFORMANCE-V42.md). Reproduce a saved package with `python tools/reproduce-saved-release.py releases/v42.json`.
+コードはMIT。本人bat素材・測定データはMIT対象外で一般公開/再配布条件は未確定。RIGHTS.txtとdocs/PRIVATE-ASSET-BOUNDARIES.mdを確認してください。本人承認の既存private GitHubへのコード/同梱素材の通常pushだけが許可され、公開化・公開Releaseは含みません。実投影/別端末は未検収です。ZIP/動画/ログはGitへ含めません。
