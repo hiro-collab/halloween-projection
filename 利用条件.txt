@@ -1,0 +1,14 @@
+利用条件 / Terms
+
+入口は はじめに_START-HERE.html。アプリ本体フォルダーを一緒に保持してください。
+Open はじめに_START-HERE.html and keep the アプリ本体 folder together.
+
+自作コード: 標準MIT。Copyright (c) 2026 hiro-collab。
+全文: アプリ本体/LICENSE.txt
+画像・模型・採取済み数値の出所と個別条件: アプリ本体/RIGHTS.txt
+本人作成のコウモリと採取値は、コードMITと分けて管理されています。
+このZIPは本人確認用です。公開配布の実行や素材の追加許諾は行っていません。
+
+Own code: standard MIT. See アプリ本体/LICENSE.txt.
+Images, model and sampled datasets: see アプリ本体/RIGHTS.txt for separate provenance and conditions.
+This is an owner preview. This package does not itself grant new public permissions for excluded assets.

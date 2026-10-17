@@ -6,8 +6,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / 'web'
-APP_VERSION = '0.1.54-inertial-rest-preview'
-ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt','console.html','console.css','console.js','stage-role.js','stage-receiver.js','performance-api.js','keyboard-performance.js','window-safety.js', 'START-HERE.html', 'GUIDE.html', 'PERFORMANCE-PLAN.html', 'guide.css', 'LICENSE.txt', 'RIGHTS.txt', 'motion-clock.js','control-response.js','a-source-blur.js','a-motion-lag.js','a-motion.js','a-actor-layout.js','a-return-motion.js','a-skull-raster.js','control-api.js','text-operators.js', 'app-control-api.js', 'control-adapters.js', 'bat-motion.js','bat-phase.js','b-motion-runtime.js', 'bat-art.js', 'bat-atlas-data.js', 'bat-fire.js', 'text-sequence.js','output-uv.js','output-operators.js','a-source-noise.js','a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt']
+APP_VERSION = '0.1.55-jaw-edge-preview'
+ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt','console.html','console.css','console.js','stage-role.js','stage-receiver.js','performance-api.js','keyboard-performance.js','window-safety.js', 'START-HERE.html', 'GUIDE.html', 'PERFORMANCE-PLAN.html', 'guide.css', 'LICENSE.txt', 'RIGHTS.txt', 'motion-clock.js','control-response.js','a-source-blur.js','a-motion-lag.js','a-motion.js','a-actor-layout.js','a-return-motion.js','a-jaw-control.js','i18n.js','a-skull-raster.js','control-api.js','text-operators.js', 'app-control-api.js', 'control-adapters.js', 'bat-motion.js','bat-phase.js','b-motion-runtime.js', 'bat-art.js', 'bat-atlas-data.js', 'bat-fire.js', 'text-sequence.js','output-uv.js','output-operators.js','a-source-noise.js','a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt']
 # The local-file route uses the same private image bytes, without file fetch/CORS.
 import base64
 atlas = (WEB / 'assets/owner-bat-atlas.png').read_bytes()
@@ -103,20 +103,25 @@ worker = worker_template.replace('__BUILD__', json.dumps(build)).replace('__HASH
 (WEB / 'sw.js').write_text(worker, encoding='utf-8', newline='\n')
 out = ROOT / 'dist'
 out.mkdir(exist_ok=True)
-dest = out / 'halloween-projection-web-v0.1.54-inertial-rest-preview.zip'
+dest = out / 'halloween-projection-web-v0.1.55-jaw-edge-preview.zip'
 names = ASSETS + ['sw.js']
+prefix = 'アプリ本体/'
+entry = (WEB / 'START-HERE.html').read_text(encoding='utf-8').replace('href="./', 'href="./' + prefix).replace('src="./', 'src="./' + prefix).encode('utf-8')
+contents = {'はじめに_START-HERE.html': entry, '利用条件.txt': (ROOT / '利用条件.txt').read_bytes()}
+contents.update({prefix + name: (WEB / name).read_bytes() for name in names})
 with zipfile.ZipFile(dest, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
-    for name in names:
+    for name, raw in contents.items():
         info = zipfile.ZipInfo(name, date_time=(2026, 10, 17, 0, 0, 0))
         info.compress_type = zipfile.ZIP_DEFLATED
         info.create_system = 0
         info.external_attr = 0o100644 << 16
-        archive.writestr(info, (WEB / name).read_bytes())
+        archive.writestr(info, raw)
 with zipfile.ZipFile(dest) as archive:
-    assert archive.testzip() is None and archive.namelist() == names
-    for name in names:
-        assert archive.read(name) == (WEB / name).read_bytes()
+    assert archive.testzip() is None and archive.namelist() == list(contents)
+    for name, raw in contents.items():
+        assert archive.read(name) == raw
 result = {'version':APP_VERSION, 'build':build, 'zip':dest.name, 'bytes':dest.stat().st_size,
-          'sha256':hashlib.sha256(dest.read_bytes()).hexdigest(), 'entries':names, 'assetHashes':hashes}
+          'sha256':hashlib.sha256(dest.read_bytes()).hexdigest(), 'entries':list(contents), 'assetHashes':hashes,
+          'layout':{'entry':'はじめに_START-HERE.html','application':prefix,'terms':'利用条件.txt'}}
 (out / 'web-manifest.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
-print(json.dumps(result))
+print(json.dumps({k:v for k,v in result.items() if k not in ['assetHashes','entries']}))

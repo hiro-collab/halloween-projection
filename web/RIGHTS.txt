@@ -1,57 +1,64 @@
-素材と権利 — 0.1.54-inertial-rest-preview
+素材と権利 / Assets & rights — 0.1.55-jaw-edge-preview
 
-このリポジトリーの自作コード・新規2D図形・説明文はMITライセンスです。
-既存GitHub名義hiro-collabを著作権表示に使用しています。
-利用・改変・再配布・商用利用の条件は同梱LICENSE.txtを参照してください。
-初回無料提供と、MITによる第三者の改変・再配布・商用利用許諾は別の決定です。
-将来のサービス料金や提供方法は未決定です。現在は非公開の本人確認用です。
+自作のアプリコード、説明文、新規2D描画はMITです。
+Copyright (c) 2026 hiro-collab。標準全文はLICENSE.txt（原文のまま）です。
+コピーや相当部分の再配布では、著作権表示と許諾表示を保持します。
+MIT本文へ追加条件を入れていません。画像・模型・採取済みデータは以下の区分です。
 
-同梱物:
-- 新規作成のJS/CSS/Canvas2D描画・UI（AI制作支援）。原作の忠実再現ではありません。
-- オフライン保存処理・日本語案内。第三者ライブラリやCDNは使っていません。
-- OS/ブラウザーのフォントを利用。フォントファイルは同梱しません。
+Own application code, documentation and new 2D drawings are MIT licensed.
+Keep the copyright and permission notice in copies or substantial portions.
+See LICENSE.txt for the unchanged standard license. Assets and sampled data have separate status below.
 
-含めないもの:
-- 原VJの3Dドクロモデル、TOE/TOG、動画、音楽、私的ログ。
-- 元TDモデルは含みません。後述のCC0別モデルを埋め込み、本人bat素材は限定利用です。
+■ 本人作成のコウモリ / Owner-created bat
+assets/owner-bat-atlas.png と、その同一バイトの埋込み bat-atlas-data.js。
+台帳は、本人作品の bat_set/bat/batImgs/bat_img_generator にて円・矩形から生成した
+60フレームと記録しています。旧候補Bat_FBXやbase2の雪とは別物です。
+1600×540 RGBA8 PNG、1コマ160×90、10列×6行。JPEGではありません。
+SHA256: 9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a
+この画像はコードのMIT対象外として管理されてきました。
+本人確認用再利用・既存private GitHubへの通常pushは承認済みです。
+一般公開で画像の利用・改変・再配布・商用利用をどこまで認めるかは、まだ明記されていません。
+出所不明を理由にしているのではなく、本人素材の公開配布条件を区別しています。
+v55は元PNGを変更せず、表示時だけ2倍の高品質サンプリングと被覆alpha処理を適用します。
 
-外部素材を追加する場合、その素材の利用・改変・再配布条件を個別に確認し、
-source URL/作者/ライセンス/版/ハッシュ/変更/帰属を台帳へ記録します。
-コードのMITライセンスによって外部素材の権利を一括変更することはありません。
+The ledger identifies these 60 frames as the owner's circle/rectangle-generated artwork.
+They are separate from the old Bat_FBX candidate. PNG and embedded bytes are identical.
+Private owner review and normal pushes to the existing private repository are authorized.
+The scope of public use, modification, redistribution and commercial reuse of this artwork is not yet stated; it is outside the blanket code MIT.
+v55 keeps original image bytes and refines runtime sampling / alpha compositing only.
 
-0.1.3追加素材: assets/owner-bat-atlas.png。
-本人自作TDコウモリの保存キャッシュ60フレームをprivate本人確認で再利用します。
-この画像はコードのMIT対象外です。一般公開/外部配布条件は未確定。
-詳細はassets/OWNER-BAT-ASSET.txt。原データ・色・alphaを変えず配置したRGBA8候補で、TD実再生との照合は未完です。
+■ 第三者のCC0模型 / Third-party CC0 model
+CDmir / Human Skull
+Source: https://opengameart.org/content/human-skull-0
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+skull-obj.zip 内 skull-obj/skull-Low4K.obj を変換し、app.jsに埋込。
+原TDのドクロ模型ではありません。テクスチャ・normal/AO画像は未同梱。
+fan三角化、float32座標、頭/上歯と顎/下歯へのラベル、独自binaryへ変換。
+archive SHA256: 067899af520649177c0dd5de1a4b18bd4f46daf667df04a405dc9a27d206011b
+OBJ SHA256: f24014fa02de4b3e3be2926df887114f42cb49361592b103a47d7cac8d8225af
+converted SHA256: bb38451e202e30ce2d84cdc224433ac27aafd43539ed362e6127a980b3538706
+The converted mesh is CC0, separately from the MIT renderer. Source textures are not included.
 
+■ 本人作品からの採取済み数値 / Sampled values from the owner's work
+bat-motion.js: 回転用Sparse Noise格子33³、Lag応答、粒子数別Random応答、球面42発生点/法線。
+bat-phase.js: seed1/depth60のRandom応答。動く画像の60コマ選択に使用。
+a-fluid.js: 時刻0の100×57 RG速度場（half-float）。固定入力/比較フォールバック。
+output-uv.js: 1280×720 RG投影補正座標。元Remap用。
+これらは本人作品内のTD演算から採取した値で、第三者の完成映像を取り込んだ記録はありません。
+演算結果の数値であり、TD/NVIDIAのソースコードそのものとは区別します。
+既存台帳は数値データをコードMITの一括対象外としています。公開配布条件は未確定です。
+詳細な出所・実行時の用途・外せる範囲はリポジトリー docs/PUBLIC-READINESS.md。
+These are measured operator outputs/settings from the owner's scene, not recorded third-party video or bundled TD source.
+Existing notices exclude the sampled datasets from blanket MIT. Public redistribution scope remains to be stated.
 
-0.1.5追加: CC0別候補の頭/顎モデル（app.js内の埋込模型データ）。
-作者: CDmir / Human Skull
-一次出典: https://opengameart.org/content/human-skull-0
-ライセンス: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
-配布元の対象archive: skull-obj.zip
-対象OBJ: skull-obj/skull-Low4K.obj
-これは本人の元TDモデルを同定したものではなく、別候補の私的比較用です。
-素材データはCC0、独自の描画/操作コードはMIT。本人bat PNGは引き続きMIT外のprivate素材です。
-変換: fan三角化、float32位置、頭/上歯と顎/下歯へのラベル付け、独自binary埋込。
-texture/normal/AO画像は使用・同梱しません。面の切断・欠落・重複なし。
-CC0は改変・商用・再配布を含む条件ですが、今回の試作全体の一般公開/外部配布は行っていません。
-source archive SHA256: 067899af520649177c0dd5de1a4b18bd4f46daf667df04a405dc9a27d206011b
-source OBJ SHA256: f24014fa02de4b3e3be2926df887114f42cb49361592b103a47d7cac8d8225af
-converted model SHA256: bb38451e202e30ce2d84cdc224433ac27aafd43539ed362e6127a980b3538706
+■ 実装と非同梱物 / Implementation and exclusions
+実行時第三者JSライブラリ/CDNなし。OS/ブラウザーのフォントを使用し、フォントファイルは同梱しません。
+流体、Sobel、HSV、補間、noise等の独自Web実装。元shaderを同梱したと台帳は記録していません。
+ヘッダーだけで独立作成を証明したものではありません。特許の網羅調査は実施していません。
+元TOE/TOG、元TD模型、音楽、元歌詞、動画、私的ログ、TD/NVIDIAランタイムは同梱しません。
+No third-party JS runtime library, CDN, bundled font, TD/NVIDIA runtime, original TOE/TOG, original TD mesh, music, lyrics, video or private log is included.
+Generic numerical methods and independently written code are distinguished from literal source copying. This notice is not a complete patent search or a guarantee about every possible claim.
 
-0.1.8: bat-motion.jsの格子・Lag・Random応答は本人原セットの私的比較測定値です。
-独自の補間/描画コードと区別し、測定データの一般再配布条件は未確定として扱います。
-この版は非公開比較用です。元atlasも引き続きMIT外です。
-
-0.1.9: 原seed順の球面42発生点/法線も本人セットの私的測定データとして扱います。一般再配布条件を確定したものではありません。
-
-A流体の時刻0評価fieldは原sceneから採取した私的比較用数値です。MIT対象外で、動的noiseの再現/再配布条件の確認は未完です。原shader/原modelは追加していません。
-
-Local ZIP startup: bat-atlas-data.js embeds the identical owner-bat-atlas.png bytes. This duplicate image payload has the same private-owner restriction as the PNG and is not MIT licensed.
-
-v31のa-source-noise.jsは独立seedのsimplex演算実装です。元のNoise画像列・録画・元モデルを追加同梱していません。
-
-v32のoutput-uv.jsには、元の投影補正に使われる数値UV座標のみを含みます。歌詞・項目名・BPMデータ・元画像/映像・操作画面の画像は含みません。従来同様、本人確認用の限定配布です。
-
-現行の本人承認範囲: 既存の非公開GitHub hiro-collab/halloween-projectionへコードと同梱素材を通常pushできます。一般公開や公開Release、第三者への素材再許諾は含みません。
+現在は本人確認用の非公開配布です。公開Releaseやリポジトリー可視性の変更は実施していません。
+本作品の公開URLは未確認のため創作していません。リポジトリーURLは https://github.com/hiro-collab/halloween-projection 。
+This remains a private owner preview. No public Release or visibility change has been performed.

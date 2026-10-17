@@ -1,4 +1,22 @@
-# v54 Skull size and inertial return
+# Halloween Projection v55
+
+配布ZIPをすべて展開し、はじめに_START-HERE.html をChromeで開きます。追加ソフトやコマンド入力は不要です。
+入口・操作席・ガイドは日本語 / Englishを再読込みせず切替できます。投影する本人の文字は翻訳しません。
+
+Lで顎の幅15°/30°/60°/90°、Mで開閉、Cで自動に復帰。閉じても幅は保持します。
+Bの原PNG、動き、位相は保持し、表示サンプリングとalpha処理で輪郭を改善しました。
+
+- Package: dist/halloween-projection-web-v0.1.55-jaw-edge-preview.zip
+- Release evidence: [releases/v55.json](releases/v55.json)
+- Editing and asset replacement: [web/README.txt](web/README.txt)
+- Own code: standard MIT. Assets and sampled data: [provenance / public-readiness facts](docs/PUBLIC-READINESS.md)
+
+Extract the curated ZIP and open はじめに_START-HERE.html in Chrome. Choose English; no extra software, commands or build step are needed.
+L selects jaw width, M opens/closes, C restores automatic motion. Original artwork and accepted motion/phase are preserved.
+The following version notes are history. The curated v55 ZIP uses its top-level Japanese entry plus アプリ本体/ and 利用条件.txt.
+GitHub automatic Source code ZIP remains a repository snapshot; its root START-HERE.html links into web/ and also runs without a build.
+
+# v54 history: Skull size and inertial return
 
 The latest private preview keeps skull scale independent of movement strength and removes the fixed arrival deadline. Quiet returns to the full-size row through a small position/velocity feedback loop; travel time depends on distance and initial velocity. The accepted bats, original model and 6% appearance animation are preserved.
 
@@ -51,6 +69,7 @@ GitHubの「Code → Download ZIP」で取得したソースZIPの場合も、�
 | V | 一時アクセント | 押している間・最大3秒 |
 | B | 準備した基準へ戻す | 0.6秒長押し |
 | N | 映像計算をReset（文字・設定は保持） | 0.6秒長押し |
+| L / M | 顎の開き幅4段階 / 開閉（Aのみ、Cで自動） | 押し直すたび1回 |
 | Space | 一時停止・再開 | 単発 |
 | Esc | キー演奏を解除（映像は続く） | いつでも |
 
@@ -73,3 +92,9 @@ Q W E R T Y U I  O P   色8位置
 
 
 v51では、通常の顎支点を使用モデルの登録済み関節位置に揃えました。開口時に顎が頭の内部へ入り込む問題を修正しています。頭の動き・顎の独立開閉・閉じた姿・3段キーは保持しています。詳しくはdocs/JAW-HINGE-V51.md。
+
+## v55 編集と配布
+
+配布ZIPは入口HTML・アプリ本体・利用条件の3項目です。展開した入口をChromeで開きます。日本語/Englishは再読込みせず切替できます。
+通常のHTML/CSS/JS編集にビルドは不要です。配布ソースはweb/のまま。埋込み画像・模型・数値データとService Worker再生成は[編集案内](web/README.txt)を参照。
+自作コードは標準MIT、Copyright (c) 2026 hiro-collab。画像・CC0模型・採取値は[権利台帳](docs/PUBLIC-READINESS.md)で区分します。公開操作は今回行っていません。

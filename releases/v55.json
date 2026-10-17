@@ -1,0 +1,109 @@
+{
+  "version": "0.1.55-jaw-edge-preview",
+  "baseline": "092a987c9fa6b93669b88af716e760151c35f132",
+  "package": {
+    "version": "0.1.55-jaw-edge-preview",
+    "sha256": "0b11409ce4dfe87c49b3ff7414452c8627ad8167dcffea7a2eb07fc9bcee0b6a",
+    "bytes": 542169,
+    "entries": 50,
+    "build": "0.1.55-jaw-edge-preview-b835b1dc65dc",
+    "layout": {
+      "entry": "\u306f\u3058\u3081\u306b_START-HERE.html",
+      "application": "\u30a2\u30d7\u30ea\u672c\u4f53/",
+      "terms": "\u5229\u7528\u6761\u4ef6.txt"
+    }
+  },
+  "zip": "halloween-projection-web-v0.1.55-jaw-edge-preview.zip",
+  "checks": {
+    "unitPassed": 475,
+    "browserRegressionPassed": 284,
+    "jawCorePassed": 19,
+    "languagePassed": 14,
+    "qualityPassed": 5,
+    "sustainedRunPassed": 35,
+    "finalFailures": 0
+  },
+  "performance": {
+    "elapsedSeconds": 301.858,
+    "conditions": "Local Chrome headless;1920x1080 viewport;DPR1;internal720p;actual file ZIP;offline;no forcedGC during timed blocks;no camera/microphone;not real projector or other machine",
+    "blocks": [
+      {
+        "block": 0,
+        "scene": "a",
+        "count": 3,
+        "seconds": 48.61420000000298,
+        "drawFPS": 29.99123712824464,
+        "solverTicksPerSecond": 59.98247425648928
+      },
+      {
+        "block": 1,
+        "scene": "a",
+        "count": 6,
+        "seconds": 47.826899999991056,
+        "drawFPS": 30.004035385949503,
+        "solverTicksPerSecond": 60.00807077189901
+      },
+      {
+        "block": 2,
+        "scene": "b",
+        "count": null,
+        "seconds": 47.73809999999404,
+        "drawFPS": 55.615954552031425,
+        "solverTicksPerSecond": null
+      },
+      {
+        "block": 3,
+        "scene": "a",
+        "count": 3,
+        "seconds": 47.50029999999702,
+        "drawFPS": 29.99981052751434,
+        "solverTicksPerSecond": 59.97856855641288
+      },
+      {
+        "block": 4,
+        "scene": "a",
+        "count": 6,
+        "seconds": 47.79780000001192,
+        "drawFPS": 30.001380816682826,
+        "solverTicksPerSecond": 59.981840168360996
+      },
+      {
+        "block": 5,
+        "scene": "b",
+        "count": null,
+        "seconds": 47.76859999999404,
+        "drawFPS": 55.601378311282545,
+        "solverTicksPerSecond": null
+      }
+    ]
+  },
+  "comparison": {
+    "file": "halloween-v55-bat-edge-comparison.png",
+    "bytes": 286281,
+    "sha256": "58955045abb64fab8075694b8b7866f0f089e96bb5b6e9e20262d28e91796a29"
+  },
+  "video": {
+    "file": "halloween-v55-realtime-jaw-and-bat.mp4",
+    "bytes": 4724566,
+    "sha256": "3453beda79558fad5f3bc100bb8ee71ca2f7ce1ea189bebacc9915dde96c5150",
+    "duration": 19.4,
+    "realTime": true,
+    "audio": false,
+    "fullDecodePassed": true
+  },
+  "changes": [
+    "L:15/30/60/90 degree width, M:independent open/close, C:return to automatic; display-only35ms response.",
+    "Original PNG bytes and accepted B motion/phase retained;one-time2x sampling and covered-alpha compositing.",
+    "Modern Japanese/English UI without reload, storage or visual-setting changes.",
+    "ZIP-only entry/application/terms layout;editable source retained."
+  ],
+  "limitations": [
+    "Owned headless Chrome on this PC; physical projector, another PC and physical key hardware not tested.",
+    "Native source motion/art/model unchanged, but no claim of exact TouchDesigner output equivalence.",
+    "Runtime 2x atlas adds approximately 10.37MB decoded RGBA estimate; short paired benchmark is 10seconds per version.",
+    "Only modern entry/operator/guide and remote startup/status are bilingual; old developer single-window diagnostics may retain Japanese labels.",
+    "Owner-created bat and sampled-data public permissions remain separate from own-code MIT.",
+    "Finite reachable-history and ZIP scan; no complete patent or zero-PII guarantee."
+  ],
+  "publicRelease": false
+}

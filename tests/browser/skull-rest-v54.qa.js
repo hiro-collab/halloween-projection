@@ -9,7 +9,7 @@ async page=>{
  const cue=async n=>{await page.locator('[data-cue-axis="motion"][data-position="'+n+'"]').click();await page.waitForTimeout(30);};
  try{
   await page.goto('__WEB_URI__/console.html');const pop=page.waitForEvent('popup');await page.locator('#open-stage').click();stage=await pop;await stage.setViewportSize({width:1280,height:720});await stage.locator('#stage-windowed').click();await page.waitForFunction(()=>halloweenConsole.status().snapshot?.started);
-  check('v54 and actual return controller loaded',await stage.evaluate(()=>halloweenDiagnostics().version==='0.1.54-inertial-rest-preview'&&!!window.__qaAReturn));
+  check('v54 and actual return controller loaded',await stage.evaluate(()=>halloweenDiagnostics().version==='0.1.55-jaw-edge-preview'&&!!window.__qaAReturn));
   await stage.evaluate(()=>{const a=halloweenControls;a.dispatch({type:'command',name:'transport.pause'});for(const [k,v]of [['a.motionStrength',1],['a.motionCross',1],['a.positionNoiseAmplitude',0],['a.rotationNoiseAmplitude',0],['a.jawNoiseAmplitude',0],['a.jawMode','closed']])a.set(k,v);a.dispatch({type:'command',name:'scene.reset'});});
   await stage.evaluate(()=>{window.__qaOriginalSkullScene=HalloweenSkullScene;const locked=HalloweenAMotion.map(HalloweenAMotion.compose(HalloweenAMotion.lockedState(),HalloweenAMotion.lockedState()).out);window.HalloweenSkullScene=Object.freeze({...HalloweenSkullScene,poses:()=>locked.map(p=>({position:[...p.position],rotation:[...p.rotation],jaw:p.jaw}))});});
   const geometry=[];for(const layout of ['source','rows'])for(let count=1;count<=6;count++){

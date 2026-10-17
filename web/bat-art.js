@@ -65,11 +65,11 @@ window.HalloweenBatArt = (() => {
     const abort=new AbortController();
     const scope={
       get ready(){return !!bitmap&&!disposed;},
-      status(){return {state,ready:scope.ready,frames:60,width:160,height:90,source:'owner-cache-60-rgba-candidate'};},
+      status(){return {state,ready:scope.ready,frames:60,width:160,height:90,source:'owner-cache-60-rgba-candidate',runtimeAtlas:[bitmap?.width??0,bitmap?.height??0],sourceFrame:[160,90],samplingFrame:[320,180],preparedRGBABytes:bitmap?bitmap.width*bitmap.height*4:0,sampling:'one-time2x high-quality decoder resample;PNG bytes and60-frame indexing unchanged'};},
       drawFrame(ctx,index,x,y,w,h){
         if(!scope.ready)return;
         const frame=Math.max(0,Math.min(59,Math.floor(index)));
-        ctx.drawImage(bitmap,(frame%10)*160,Math.floor(frame/10)*90,160,90,x,y,w,h);
+        ctx.drawImage(bitmap,(frame%10)*320,Math.floor(frame/10)*180,320,180,x,y,w,h);
       },
       // World-space pose contract: final Rz in degrees, integer texture layer.
       // Motion/Noise, image index generation and later composition stay outside.
@@ -95,10 +95,10 @@ window.HalloweenBatArt = (() => {
       try{
         const bytes=await readBytes(abort.signal);
         if(!bytes||disposed){counts.aborted++;return false;}
-        const candidate=await createImageBitmap(new Blob([bytes],{type:'image/png'}),{colorSpaceConversion:'none'});
+        const candidate=await createImageBitmap(new Blob([bytes],{type:'image/png'}),{colorSpaceConversion:'none',resizeWidth:3200,resizeHeight:1080,resizeQuality:'high',premultiplyAlpha:'premultiply'});
         counts.created++;
         if(disposed){candidate.close();counts.closed++;return false;}
-        if(candidate.width!==1600||candidate.height!==540){candidate.close();counts.closed++;throw Error('Image dimensions mismatch');}
+        if(candidate.width!==3200||candidate.height!==1080){candidate.close();counts.closed++;throw Error('Image dimensions mismatch');}
         bitmap=candidate;counts.open++;counts.maxOpen=Math.max(counts.maxOpen,counts.open);state='ready';notify?.();return true;
       }catch(error){
         if(disposed||abort.signal.aborted){counts.aborted++;return false;}
@@ -117,14 +117,15 @@ window.HalloweenBatComposite=(()=>{
  out vec2 uv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.-1.,0.,1.);}`;
  const header=`#version 300 es
  precision highp float;uniform sampler2D image;uniform sampler2D glow;uniform vec2 size;uniform bool swapRB;uniform float bodyHue;in vec2 uv;out vec4 outputColor;
- vec4 at(vec2 delta){vec4 c=texture(image,uv+delta/size);return swapRB?c.bgra:c;}float grey(vec2 d){return dot(at(d).rgb,vec3(.299,.587,.114));}`;
+ vec4 at(vec2 delta){vec4 c=texture(image,uv+delta/size);return swapRB?c.bgra:c;}float grey(vec2 d){vec4 p=at(d);return dot(p.rgb*p.a,vec3(.299,.587,.114));}`;
  const colour=header+`void main(){vec4 s=at(vec2(0));
  float x=-grey(vec2(-1,-1))-2.*grey(vec2(-1,0))-grey(vec2(-1,1))+grey(vec2(1,-1))+2.*grey(vec2(1,0))+grey(vec2(1,1));
  float y=-grey(vec2(-1,-1))-2.*grey(vec2(0,-1))-grey(vec2(1,-1))+grey(vec2(-1,1))+2.*grey(vec2(0,1))+grey(vec2(1,1));
- // Strength 1.38; half-normalised Sobel is a measured approximation to TD Edge.
+ // Strength1.38 retained; use covered luminance so transparent RGB cannot create a hard fringe.
+ // This alpha-correct display refinement is not a new native-operator equivalence claim.
  float e=clamp(length(vec2(x,y))*.69,0.,1.);float b=.223+.777*s.b;
  vec3 rgb=abs(bodyHue-2./3.)<.000001?vec3(.53,.53,1.):mix(vec3(1.),clamp(abs(fract(vec3(bodyHue)+vec3(0.,2./3.,1./3.))*6.-3.)-1.,0.,1.),.47);vec3 body=rgb*b*s.a;
- outputColor=vec4(vec3(e)+body*(1.-e),e+s.a*s.a*(1.-e));}`;
+ outputColor=vec4(vec3(e)+body*(1.-e),e+s.a*(1.-e));}`;
  const blur=header+`void main(){vec4 c=vec4(0);for(int y=-1;y<=1;y++){for(int x=-1;x<=1;x++){
  float weight=float((x==0?2:1)*(y==0?2:1));c+=at(vec2(x,y)*4.)*weight;}}c/=16.;
  outputColor=vec4(pow(max(c.rgb*.89,vec3(0)),vec3(1./.41)),c.a);}`;

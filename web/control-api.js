@@ -50,12 +50,12 @@ window.HalloweenControlAPI = Object.freeze({
     const values = {
       skeleton:{speed:1,size:1,text:initialText},
       bats:{forceGain:1,colorHue:2/3,speed:1,size:1,text:initialText,flapRate:1,frameLock:null,emitterX:0,emitterY:0},
-      skull3d:{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1,size:1,text:initialText,backgroundHue:138/360,headGlowMix:0,foregroundBurst:0,headRate:1,jawRate:1,motionCross:.5,motionStrength:1,jawPeriod:.12,jawExponent:4,jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0,aSceneMode:0,aNativeResolution:0,actorCount:3,actorLayout:'source',actorPoses:null,actorRevision:0}
+      skull3d:{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1,size:1,text:initialText,backgroundHue:138/360,headGlowMix:0,foregroundBurst:0,headRate:1,jawRate:1,motionCross:.5,motionStrength:1,jawPeriod:.12,jawExponent:4,jawManual:0,jawManualAngle:0,jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1,jawOpen:28,pivotY:-.75,pivotZ:-.12,jawTint:0,rigMode:0,headX:0,headY:0,headZ:0,jawPivotMode:0,fluidMode:0,fluidColor:0,aCompositeMode:0,aSceneMode:0,aNativeResolution:0,actorCount:3,actorLayout:'source',actorPoses:null,actorRevision:0}
     };
     const shared={textSizeNormalized:null,textWidth:1,textHeight:1};
     const assertScene = id => { if(!Object.hasOwn(values,id)) throw new RangeError('Unknown scene'); };
     const copy = id => { assertScene(id);const result={...values[id]};if(id==='skull3d'&&result.actorPoses)result.actorPoses=result.actorPoses.map(p=>({position:[...p.position],rotation:[...p.rotation],jaw:p.jaw}));return result; };
-    const ranges = {forceGain:[0,1],motionStrength:[0,1],colorHue:[0,1],emitterX:[-1,1],emitterY:[-1,1],fluidNoiseAmplitude:[0,2],fluidNoisePeriod:[.02,2],positionNoiseAmplitude:[0,1],positionNoisePeriod:[.01,2],rotationNoiseAmplitude:[0,1],rotationNoisePeriod:[.02,3],jawNoiseAmplitude:[0,3],headGlowMix:[0,1],backgroundHue:[0,1],speed:[.2,2],size:[.5,1.5],flapRate:[.25,2],headRate:[0,2],motionCross:[0,1],jawPeriod:[.01,2],jawExponent:[.1,8],jawRate:[0,2],jawOpen:[0,45],pivotY:[-1.15,.2],pivotZ:[-.3,.2],jawTint:[0,1],rigMode:[0,1],headX:[-180,180],headY:[-180,180],headZ:[-180,180],jawPivotMode:[0,1]};
+    const ranges = {forceGain:[0,1],motionStrength:[0,1],colorHue:[0,1],emitterX:[-1,1],emitterY:[-1,1],fluidNoiseAmplitude:[0,2],fluidNoisePeriod:[.02,2],positionNoiseAmplitude:[0,1],positionNoisePeriod:[.01,2],rotationNoiseAmplitude:[0,1],rotationNoisePeriod:[.02,3],jawNoiseAmplitude:[0,3],headGlowMix:[0,1],backgroundHue:[0,1],speed:[.2,2],size:[.5,1.5],flapRate:[.25,2],headRate:[0,2],motionCross:[0,1],jawPeriod:[.01,2],jawExponent:[.1,8],jawRate:[0,2],jawManualAngle:[0,90],jawOpen:[0,45],pivotY:[-1.15,.2],pivotZ:[-.3,.2],jawTint:[0,1],rigMode:[0,1],headX:[-180,180],headY:[-180,180],headZ:[-180,180],jawPivotMode:[0,1]};
     const api = {
       values:copy,
       sharedValues:()=>({...shared}),
@@ -68,7 +68,7 @@ window.HalloweenControlAPI = Object.freeze({
         else if(key==='actorCount'){if(!Number.isInteger(value)||value<1||value>6)throw new RangeError('Actor count must be integer1..6');}
         else if(key==='jawMode'){if(!['noise','closed','open'].includes(value))throw new RangeError('Unknown jaw mode');}
         else if(key==='jawActivity'){if(!['flapping','violent','occasional','stopped','custom'].includes(value))throw new RangeError('Unknown activity');}
-        else if(key==='dynamicFlow'||key==='decorationNoise'||key==='foregroundBurst'||key==='jawTint'||key==='rigMode'||key==='jawPivotMode'||key==='fluidMode'||key==='fluidColor'||key==='aCompositeMode'||key==='aSceneMode'||key==='aNativeResolution'){
+        else if(key==='jawManual'||key==='dynamicFlow'||key==='decorationNoise'||key==='foregroundBurst'||key==='jawTint'||key==='rigMode'||key==='jawPivotMode'||key==='fluidMode'||key==='fluidColor'||key==='aCompositeMode'||key==='aSceneMode'||key==='aNativeResolution'){
           if(value!==0&&value!==1)throw new RangeError('Tint must be 0 or 1');
         }else if(key==='frameLock'){
           if(value!==null&&(!Number.isInteger(value)||value<0||value>59))throw new RangeError('Frame must be null or 0..59');
