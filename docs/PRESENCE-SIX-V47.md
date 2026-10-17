@@ -1,0 +1,5 @@
+# v47: approved entry feel,6% overshoot
+
+The user accepted v46 and requested a larger entry overshoot:6% instead of2.84%. Damping is derived from M=0.06: zeta=-ln(M)/sqrt(pi²+ln(M)²). The damped angular frequency remains v46's8*sqrt(1-0.75²), preserving the first peak at118.741ms. Natural phase is adjusted accordingly. The quintic150–200ms tail and exact200ms scale1/zero endpoint velocity are unchanged. There is one small maximum1.06, then smooth convergence; no prolonged oscillation.
+
+Exit remains nonnegative monotone quintic S to0. Same-target idempotence, retarget from current scale, duration at most200ms, full hidden reentry reset, absence of persistent velocity state, time-subdivision behavior, Pause/visibility/Reset/Stop/A-B and source orbit/initial3/live1–6 remain v46. Standard size is still multiplied by this display response. The S comparison query remains available unchanged; the new short confirmation video focuses on6% entry, exit, reversal and restored3-body orbit. All other source modules/model/GPU/fluid/B remain byte-identical. No GitHub push or public publication. Real projector/highDPR/otherGPU/event-duration acceptance remains pending.
