@@ -1,4 +1,4 @@
-ハロウィン投影 0.1.53-motion-surface-preview
+ハロウィン投影 0.1.54-inertial-rest-preview
 
 1 配布ZIPを保存し、右クリック→「すべて展開」。ZIPの中から直接開かないでください。
 2 展開先のSTART-HERE.htmlをChromeで開く。

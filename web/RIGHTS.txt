@@ -1,4 +1,4 @@
-素材と権利 — 0.1.53-motion-surface-preview
+素材と権利 — 0.1.54-inertial-rest-preview
 
 このリポジトリーの自作コード・新規2D図形・説明文はMITライセンスです。
 既存GitHub名義hiro-collabを著作権表示に使用しています。

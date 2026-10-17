@@ -1,0 +1,123 @@
+{
+  "version": "0.1.54-inertial-rest-preview",
+  "baselineCommit": "e0707ae6081de57275fd5c632c18a3ca3239e8df",
+  "zip": "halloween-projection-web-v0.1.54-inertial-rest-preview.zip",
+  "bytes": 522473,
+  "sha256": "ad730d4c04674a836c50a08ecdcd76b8b0ab0c0a92f6a15f8f8dce69edf21234",
+  "entries": 46,
+  "validationSHA256": "ebde2e7cbb1e3f4b0873b030f59ba20f16e6a5306f54cf30fa4073151e367163",
+  "validation": {
+    "unitPassed": 132,
+    "browserCorePassed": 187,
+    "browserRegressionsPassed": 284,
+    "headedChromePassed": 187,
+    "sustainedRunPassed": 35,
+    "completedCheckFailures": 0
+  },
+  "performance": {
+    "sustainedSeconds": 301.721,
+    "conditions": "Chrome offline file;FHD1920x1080 DPR1;A internal1280x720;unrecorded;actual production counters",
+    "blocks": [
+      {
+        "block": 0,
+        "scene": "a",
+        "count": 3,
+        "seconds": 48.59589999999106,
+        "drawFPS": 30.002531077730183,
+        "solverTicksPerSecond": 59.98448428778016
+      },
+      {
+        "block": 1,
+        "scene": "a",
+        "count": 6,
+        "seconds": 47.83520000000298,
+        "drawFPS": 29.998829313976124,
+        "solverTicksPerSecond": 59.99765862795225
+      },
+      {
+        "block": 2,
+        "scene": "b",
+        "count": null,
+        "seconds": 47.6455,
+        "drawFPS": 56.08084708944182,
+        "solverTicksPerSecond": null
+      },
+      {
+        "block": 3,
+        "scene": "a",
+        "count": 3,
+        "seconds": 47.427,
+        "drawFPS": 30.0040061568305,
+        "solverTicksPerSecond": 59.98692727771101
+      },
+      {
+        "block": 4,
+        "scene": "a",
+        "count": 6,
+        "seconds": 47.808,
+        "drawFPS": 29.994979919678716,
+        "solverTicksPerSecond": 59.98995983935743
+      },
+      {
+        "block": 5,
+        "scene": "b",
+        "count": null,
+        "seconds": 47.7545,
+        "drawFPS": 55.78531866106859,
+        "solverTicksPerSecond": null
+      }
+    ]
+  },
+  "arrivalProbes": [
+    {
+      "label": "near",
+      "distance": 0.08,
+      "velocity": 0,
+      "seconds": 1.276
+    },
+    {
+      "label": "far",
+      "distance": 0.65,
+      "velocity": 0,
+      "seconds": 2.192
+    },
+    {
+      "label": "toward",
+      "distance": 0.35,
+      "velocity": 0.45,
+      "seconds": 1.616
+    },
+    {
+      "label": "away",
+      "distance": 0.35,
+      "velocity": -0.45,
+      "seconds": 2.166
+    }
+  ],
+  "video": {
+    "filename": "halloween-v54-realtime-size-and-return.mp4",
+    "bytes": 9566060,
+    "sha256": "dfe6c40da90c7c08e11a93051d175a6305c36c873b6918273291931cb6665fdb",
+    "seconds": 23.8,
+    "realTime": true,
+    "sequentialTakes": true,
+    "controlledInitialConditionProbes": true,
+    "audio": false,
+    "fullDecodePassed": true
+  },
+  "change": "Remove strength-dependent skull scale and fixed arrival deadline;small position/velocity feedback preserves retargeting velocity;accepted B/model/presence preserved.",
+  "originalVJVerification": "Static Feedback-minus-baseline,0.98,add-baseline,Cross and upstream Lag;no explicit independent velocity state found;full TOE not run.",
+  "modelAndSourceAssetsPreserved": true,
+  "BImplementationPreserved": true,
+  "presenceCodePreserved": true,
+  "newDependencies": false,
+  "limits": [
+    "Physical projector, other hardware and a physical keyboard were not tested by this run.",
+    "Original native topology was statically inspected; no full TOE execution or full native-noise/image equivalence claim.",
+    "The position/velocity feedback and arbitrary-count rest row are explicit Web presentation choices.",
+    "Native perspective and pose foreshortening remain; user-selected legacy rows sizing remains separate.",
+    "CPU diagnostic fallback quality/performance is not certified.",
+    "Private owner preview; public/commercial asset permission is not established."
+  ],
+  "publicRelease": false
+}
