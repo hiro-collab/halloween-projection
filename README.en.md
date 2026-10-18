@@ -71,6 +71,12 @@ Keep the laptop lid open. The **PC shows the console; the projector shows the se
 
 **Power and lid:** Check Windows power settings beforehand so sleep or screen-off does not interrupt use. Closing the lid may cause sleep or a display change. Closed-lid operation depends on the laptop, power settings and display configuration. It is untested and not guaranteed for this app.
 
+### This is the operator console
+
+<img src="docs/images/operator-controls-v57-ja.png" width="760" alt="Actual public v0.1.57 operator console: enable/disable keys and pause buttons, keyboard rows, and motion, hue and text-size selectors and sliders. Japanese UI is shown.">
+
+*Actual v0.1.57 key controls and main sliders, captured before connecting the projection window. Japanese UI is shown; choose English in the console to switch languages. Open the image to view it at full size.*
+
 <details>
 <summary>Download and start projecting in three steps</summary>
 

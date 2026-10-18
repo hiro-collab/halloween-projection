@@ -57,3 +57,6 @@ coverage/
 
 # Approved README PC/projector connection illustration.
 !docs/images/pc-projector-setup.png
+
+# Actual public-release operator-console screenshot for README.
+!docs/images/operator-controls-v57-ja.png
