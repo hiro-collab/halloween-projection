@@ -1,8 +1,28 @@
-# v53 focused checks
+# 現行コードの検証入口
+
+変更箇所と梱包手順は [開発ガイド](../docs/DEVELOPMENT.md) を参照してください。
+CPU単体スイートは `node tools/run-unit-tests.cjs` で順次実行します。
+以下は版別の検証記録です。固定バージョンや旧asset数の期待値を、現行の合格記録へ流用しません。
+
+## 整理前後の固定描画比較
+
+`PLAYWRIGHT_CLI` にインストール済みCLIのエントリーポイントを設定し、
+`python tests/run-readability-qa.py <基準checkout>/web` を実行します。
+基準checkoutは `df9573325d0952f6b1b73b24cf8b0d13349190c1` を別の作業場所へ取得したものです。
+専用Chrome・2個のloopbackサーバーを使用し、終了時にいずれも閉じます。
+出力は無視対象の `output/readability-desktop/` だけに保存します。
+
+時計・乱数・1280×720/DPR1・文字・入力を揃え、A3体/A6体/Bの1・30・90・180フレームでRGBAを比較します。
+Bの時刻0の画像は出生前の黒画面として区別し、それ以降の全画像に可視画素を要求します。
+iframeや `file:` は使用しません。サーバーのCSPとX-Frame-Optionsは保持します。
+既存二窓試験をloopbackで実行する際は、`__WEB_URI__` にも配信URLを使う解決済みコピーを作ります。
+`run-browser-qa.py` の既定のfile URL経路とは別です。
+
+# v53 focused checks（版別記録）
 
 Run `node tests/motion-strength.qa.cjs`, `node tests/surface-normals.qa.cjs`, `node tests/operator-contract.qa.cjs` and existing lifecycle units. With PLAYWRIGHT_CLI configured, run `python tests/run-browser-qa.py motion-surface input-hold-safety surface-quality resources keyboard-lifecycle actor-count actor-presence presence-lag entry-comparison offline-unpacked security-boundaries operator-flip`. GPU cases run sequentially. Motion-surface tests actual offline file UI, force distributions and production counters; surface-quality measures shared-edge alpha plus72 count/glow/yaw states. Headless focus tests are not hardware keyboard evidence.
 
-# v51 現行QA
+# v51 当時のQA
 
 通常の導入はSTART-HERE.htmlから二窓のWeb版です。Python/Node.jsは利用者には不要です。
 

@@ -1,87 +1,1071 @@
 /* Local in-process semantic API. No DOM, keys, network, or renderer code. */
 'use strict';
-window.HalloweenAppControl=(()=>{
- const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
- const freeze=value=>{if(value&&typeof value==='object'){for(const v of Object.values(value))freeze(v);Object.freeze(value);}return value;};
- const scenes={a:'skull3d',b:'bats',skeleton:'skeleton'},aliases={skull3d:'a',bats:'b',skeleton:'skeleton'};
- const defaults={"speed":1,"size":1,"flapRate":1,"frameLock":null,"motionMix":0.5,"initialSpeed":1.3,"emitterX":0,"emitterY":0,"headRate":1,"motionCross":0.5,"jawPeriod":0.12,"jawExponent":4,"jawRate":1,"jawOpen":28,"pivotY":-0.75,"pivotZ":-0.12,"headX":0,"headY":0,"headZ":0,"actorPoses":null,"headGlowMix":0,"backgroundHue":0.38333333333333336,"colorHue":0.6666666666666666};
- Object.assign(defaults,{motionStrength:1,forceGain:1,jawMode:'noise',jawActivity:'custom',jawNoiseAmplitude:2,positionNoiseAmplitude:.2,positionNoisePeriod:.05,rotationNoiseAmplitude:.28,rotationNoisePeriod:1});
- Object.assign(defaults,{dynamicFlow:1,fluidNoiseAmplitude:1.08,fluidNoisePeriod:1.06,decorationNoise:1});
- const settings={};
- function field(key,type,range,scene,legacyKey,label,extra={}){settings[key]={type,...(range?{min:range[0],max:range[1]}:{}),status:'implemented',sourceMatch:'web-candidate',scene,legacyKey,label,default:type==='boolean'?false:(Object.hasOwn(defaults,legacyKey)?defaults[legacyKey]:null),...(type==='string'?{defaultFrom:'initialText'}:{}),...extra};}
- for(const [scene,prefix] of [['skeleton','skeleton'],['bats','b']]){field(prefix+'.playbackRate','number',[.2,2],scene,'speed','比較再生倍率');field(prefix+'.scale','number',[.5,1.5],scene,'size','映像の大きさ');field(prefix+'.text','string',null,scene,'text','文字入力',{maxLength:240,maxLines:8});}
- for(const axis of ['X','Y'])field('b.emitter'+axis,'number',[-1,1],'bats','emitter'+axis,'放出中心 '+axis,{sourceMatch:'sphere input h/v -> mean position -> metaball center',effect:'move source sphere for new births and current Force center; keep existing particle positions',backend:'rendered',default:0});
- field('b.flapRate','number',[.25,2],'bats','flapRate','羽ばたき再生倍率');field('b.frameLock','integer',[0,59],'bats','frameLock','図案フレーム固定',{nullable:true});
- field('b.colorHue','number',[0,1],'bats','colorHue','コウモリの色相',{unit:'normalized hue',sourceMatch:'new performance colour control;default original blue body retained'});
- field('b.motionMix','number',[0,1],'bats','motionMix','旋回・流れの混合',{backend:'source',sourceMatch:'recorded-input-contract',effect:'Vortex/Spiral/rotationCross; independent of playback and birth speed'});
- field('b.forceGain','number',[0,1],'bats','forceGain','飛行中の力の強度',{sourceMatch:'Web component envelope over verified native Force vector;soften inward center using2*drag/life,fade tangential circulation;full-strength native force retained;not a time multiplier'});
- field('a.motionStrength','number',[0,1],'skull3d','motionStrength','定位置からの動き',{sourceMatch:'Original locked rest transform to live motion;count-aware presentation adaptation'});
- field('b.initialSpeed','number',[0,2.6],'bats','initialSpeed','出生時の初速',{backend:'source',sourceMatch:'recorded-input-contract',effect:'Birth only; existing particles keep their previous initial velocity'});
- field('a.scale','number',[.5,1.5],'skull3d','size','映像の大きさ');field('a.text','string',null,'skull3d','text','文字入力',{maxLength:240,maxLines:8});
- for(const [name,old,range,label] of [['headCycleRate','headRate',[0,2],'頭の候補周期倍率'],['jawCycleRate','jawRate',[0,2],'顎の候補周期倍率'],['jawMaxAngle','jawOpen',[0,45],'顎の最大角度'],['debug.pivotY','pivotY',[-1.15,.2],'検査用の顎支点Y'],['debug.pivotZ','pivotZ',[-.3,.2],'検査用の顎支点Z'],['headX','headX',[-180,180],'頭のX角'],['headY','headY',[-180,180],'頭のY角'],['headZ','headZ',[-180,180],'頭のZ角']])field('a.'+name,'number',range,'skull3d',old,label);
- for(const [name,old,label] of [['debug.jawTint','jawTint','顎の色分け'],['debug.registration','rigMode','原座標への登録比較'],['debug.originalJawPivot','jawPivotMode','原登録顎支点比較'],['compare.fluid','fluidMode','流体比較'],['compare.blueBranch','fluidColor','青色枝の比較'],['compare.composite','aCompositeMode','合成比較'],['compare.sixActors','aSceneMode','六体比較'],['compare.nativeResolution','aNativeResolution','原描画解像度比較']])field('a.'+name,'boolean',null,'skull3d',old,label,{dependencies:'Composite/six enable fluid+registration; retain selected hinge (registered CC0 default)'});
- field('a.actorCount','integer',[1,6],'skull3d','actorCount','ドクロの数',{default:3,effect:'enable motionMat actor mode; presentation layout only; retain six source histories and shared clock'});
- field('a.actorLayout','enum',null,'skull3d','actorLayout','ドクロの動き方',{default:'source',values:['source','rows'],sourceMatch:'source keeps original perspective XY; rows is a Web presentation option',effect:'Display only; source motion/rotation/jaw/cook/clock unchanged'});
- field('a.actorPoses','actors',null,'skull3d','actorPoses','六体の固定比較姿勢',{nullable:true,count:6,positionAbsMax:5,rotationAbsMax:360,jawMin:0,jawMax:90});
- function reserved(key,type,range,status,label,reason,extra={}){settings[key]={type,...(range?{min:range[0],max:range[1]}:{}),status,label,reason,default:null,sourceMatch:'unverified',...extra};}
- field('a.fluidNoiseAmplitude','number',[0,2],'skull3d','fluidNoiseAmplitude','流体Noise振幅',{sourceMatch:'source Noise Amp contract; samples independent',default:1.08,effect:'Noise RG before velocity addition, sampled each solver tick'});
- field('a.fluidNoisePeriod','number',[.02,2],'skull3d','fluidNoisePeriod','流体Noise周期',{sourceMatch:'source Noise Period contract; samples independent',default:1.06});
- field('a.dynamicFlow','boolean',null,'skull3d','dynamicFlow','速度場の時間変化',{default:true,sourceMatch:'source absolute Noise tz; per-tick update',effect:'OFF selects the retained v30 tz0 sampled comparison field'});
- field('a.decorationNoise','boolean',null,'skull3d','decorationNoise','背景装飾Noise',{default:true,sourceMatch:'source deco fire input branch',effect:'Quarter-size mono Noise RGBA; multiply blurred light and HSV then behind Over'});
- field('a.motionCross','number',[0,1],'skull3d','motionCross','頭の追従',{sourceMatch:'native-Math-Lag-Feedback-contract',effect:'0..1 → .7..1 → source .2 second Lag → head RGBA Cross; jaw Cross remains .761'});
- field('a.jawPeriod','number',[.01,2],'skull3d','jawPeriod','顎の変化周期',{unit:'Noise period; positive',sourceMatch:'source-effective-bind',effect:'Third row Noise period; independent of head Cross'});
- field('a.jawExponent','number',[.1,8],'skull3d','jawExponent','顎の変化の鋭さ',{unit:'Noise exponent; positive',sourceMatch:'source-effective-bind'});
- for(const [key,range,label] of [['positionNoiseAmplitude',[0,1],'頭の移動幅'],['positionNoisePeriod',[.01,2],'移動の変化周期'],['rotationNoiseAmplitude',[0,1],'頭の揺れ幅'],['rotationNoisePeriod',[.02,3],'揺れの変化周期'],['jawNoiseAmplitude',[0,3],'顎Noise振幅']])field('a.'+key,'number',range,'skull3d',key,label,{sourceMatch:'native-Noise-parameter-contract; stochastic samples differ',applicableWhen:'sixActors and generated poses',controlBoundary:'before RGBA Feedback'});
- field('a.jawManual','boolean',null,'skull3d','jawManual','Manual jaw',{default:false,effect:'Presentation override;original automatic source continues'});
- field('a.jawManualAngle','number',[0,90],'skull3d','jawManualAngle','Manual jaw opening',{default:0,unit:'degrees',effect:'Smoothed presentation goal;selected width and open/closed latch are owned by performance controls'});
- field('a.jawMode','enum',null,'skull3d','jawMode','顎の元3入力',{default:'noise',values:['noise','closed','open'],sourceMatch:'native-Switch-RGBA-contract',effect:'Noise / RGBA0,0,0,1 / RGBA4,4,4,4 before Feedback; source lag6 bypasses jaw channel',applicableWhen:'sixActors and generated poses'});
- field('a.jawActivity','enum',null,'skull3d','jawActivity','顎の動き',{default:'custom',values:['flapping','violent','occasional','stopped','custom'],sourceMatch:'Web convenience combinations of source parameters; not four native modes',effect:'sets jawMode, Period, Exponent and amplitude; manual changes select custom',applicableWhen:'sixActors and generated poses'});
- field('a.foregroundBurst','boolean',null,'skull3d','foregroundBurst','前景発光',{default:false,sourceMatch:'source Cross endpoint coefficients; native Lag response',controlBoundary:'0.2s Lag / 0.1s overshoot',temporalMatch:true,effect:'Cross3 reconstructed operator input; steady strength .48 and gain1.04'});
- field('a.headGlowMix','number',[0,1],'skull3d','headGlowMix','骨Glow',{default:0,sourceMatch:'reconnected source Cross; sampled Catmull spatial comparison',controlBoundary:'0.2s Lag / 0.1s overshoot',temporalMatch:true,applicableWhen:'A composite mode',effect:'Size1..10, Brightness0..2; source Gain remains constant .4; same prepared input supplies fluid and visible head'});
- field('a.backgroundHue','number',[0,1],'skull3d','backgroundHue','流体由来背景の色相',{unit:'normalized *360 degrees',sourceMatch:'native-static-hsv-RGBA8-exact + native Lag response',applicableWhen:'A composite mode',controlBoundary:'0.2s Lag / 0.1s overshoot',temporalMatch:true,effect:'base2/hsvadj3; not an arbitrary tint of every branch'});
- field('text.sizeNormalized','number',[0,1],null,'textSizeNormalized','共有主文字サイズ',{backend:'shared',nullable:true,default:null,unit:'0.3s Gaussian Filter -> Float32*0.25 of layer width',sourceMatch:'native-Filter/static-unit-contract',controlBoundary:'pre-Filter',temporalMatch:true,rasterMatch:false,applicableScenes:['a','b'],effect:'null autoFit; numeric no-fit Arial fraction; clip to explicit Web display bounds'});
- for(const [key,old,label,def] of [['text.width','textWidth','文字表示幅',1],['text.height','textHeight','文字表示高さ',1]])field(key,'number',[.1,1],null,old,label,{backend:'shared',default:def,sourceMatch:'Web layout addition',effect:'centered clip rectangle and autoFit allocation; no claim of an original TD knob',applicableScenes:['a','b']});
- field('text.displayMode','enum',null,null,'displayMode','元2文字構成の確認',{backend:'text-sequence',default:0,values:[0,1],sourceMatch:'Original two-layout supply inspection on operator side',effect:'Operator preview only; InfoLyricLists/BPM/name never enter A/B projection'});field('text.sequenceEnabled','boolean',null,null,'sequenceEnabled','行選択で主文字を表示',{backend:'text-sequence',default:false,sourceMatch:'Web text input to native selected-row boundary',effect:'false retains multiline v31 input; true selects native Count row'});
- field('output.circularMask','boolean',null,null,'circularMask','円マスクを開く',{backend:'output',default:true,sourceMatch:'native Count/Lag(.2s,overshoot0) > phase0/-1 > circular Ramp/Inside',effect:'true Count1/phase-1 shows full frame; false Count0/phase0 closes to black'});
- field('output.transformMode','integer',[1,8],null,'transformMode','共通8状態変形',{backend:'output',default:1,sourceMatch:'native table1 and locked projection UV calibration',effect:'FlipX/FlipY then optional original Remap; applies after selected visual, before mask'});
- const commands={};
- for(const name of ['scene.select','scene.reset','transport.start','transport.pause','transport.resume','transport.stop','transport.togglePause','view.fullscreen','view.hideControls','view.showControls','view.toggleControls','application.end'])commands[name]={status:'implemented',sourceMatch:name.startsWith('transport.')?'web-operation':'web-candidate'};
- for(const name of ['text.nextLine','text.previousLine','text.resetLine'])commands[name]={status:'implemented',sourceMatch:'native forward/back/reset Count and Select row; no tail wrap'};
- for(const name of ['output.resetControls','output.nextTransform','output.toggleMask'])commands[name]={status:'implemented',sourceMatch:'native Count/reset controls'};
- const schema=freeze({version:9,scope:'local-in-process',scene:{values:['a','b','skeleton'],legacy:scenes,initial:'skeleton'},settings,commands,statusLabels:{implemented:'実装済み',unsupported:'未対応','pending-verification':'確認待ち'}});
- function error(code,key,message){const e=new RangeError(message);e.name='ControlError';e.code=code;e.key=key;return e;}
- function descriptor(key){if(typeof key!=='string'||!Object.hasOwn(settings,key))throw error('UNKNOWN_SETTING',key,'Unknown setting');return settings[key];}
- function validateValue(key,value){const d=descriptor(key);if(d.status!=='implemented')throw error('UNAVAILABLE',key,d.reason);if(value===null&&d.nullable)return value;
-  if(d.type==='number'||d.type==='integer'){if(typeof value!=='number'||!Number.isFinite(value)||d.type==='integer'&&!Number.isInteger(value)||value<d.min||value>d.max)throw error('INVALID_VALUE',key,'Finite value outside declared range');}
-  else if(d.type==='enum'){if(!d.values.includes(value))throw error('INVALID_VALUE',key,'Declared enum required');}
-  else if(d.type==='boolean'){if(typeof value!=='boolean')throw error('INVALID_VALUE',key,'Boolean required');}
-  else if(d.type==='string'){if(typeof value!=='string'||value.length>d.maxLength||value.split('\n').length>d.maxLines)throw error('INVALID_VALUE',key,'Text exceeds declared limits');}
-  else if(d.type==='actors'){if(!Array.isArray(value)||value.length!==6||value.some(p=>!p||typeof p!=='object'||Array.isArray(p)||!['position','rotation'].every(k=>Array.isArray(p[k])&&p[k].length===3&&p[k].every(v=>typeof v==='number'&&Number.isFinite(v)&&Math.abs(v)<=(k==='position'?5:360)))||typeof p.jaw!=='number'||!Number.isFinite(p.jaw)||p.jaw<0||p.jaw>90))throw error('INVALID_VALUE',key,'Six finite bounded actor poses required');}
-  return copy(value);
- }
- function normalizeText(text){if(typeof text!=='string')throw new TypeError('Text must be a string');let v=text.slice(0,240),lines=v.split('\n');if(lines.length>8)v=lines.slice(0,7).join('\n')+'\n'+lines.slice(7).join(' ');return v;}
- function create(legacy,source,view){
-  let revision=0,depth=0,disposed=false,last,sourceKeyboard=()=>false,subscriberErrors=0,flushing=false;const subscribers=new Set(),queue=[];
-  function snapshot(){const runtime=view.snapshot(),values={};for(const [key,d] of Object.entries(settings)){if(d.status!=='implemented'){values[key]=null;continue;}const v=d.backend==='text-sequence'?runtime.textSequence[key]:d.backend==='output'?runtime.output[d.legacyKey==='transformMode'?'output.transformMode':'output.circularMask']:d.backend==='shared'?legacy.sharedValues()[d.legacyKey]:d.backend==='source'?source.values()[d.legacyKey]:legacy.values(d.scene)[d.legacyKey];values[key]=d.type==='boolean'?!!v:copy(v);}return {scene:aliases[runtime.selected],transport:{phase:runtime.phase,active:runtime.active,sceneRevision:runtime.revision},view:{projection:runtime.projection,fullscreen:runtime.fullscreen,ended:runtime.destroyed},settings:values};}
-  last=snapshot();
-  const getState=()=>freeze({...snapshot(),revision});
-  function changed(before,after){const out=[];for(const key of Object.keys(settings))if(JSON.stringify(before.settings[key])!==JSON.stringify(after.settings[key]))out.push(key);for(const key of ['scene','transport','view'])if(JSON.stringify(before[key])!==JSON.stringify(after[key]))out.push(key);return out;}
-  function observe(origin='runtime',command=null){if(depth||disposed)return;const next=snapshot(),keys=changed(last,next);if(!keys.length)return;const before=last;last=next;revision++;queue.push(freeze({revision,source:origin,command:copy(command),changed:keys,before:{...before,revision:revision-1},state:{...next,revision}}));if(flushing)return;flushing=true;try{while(queue.length){const event=queue.shift();for(const fn of [...subscribers]){if(!subscribers.has(fn))continue;try{fn(event);}catch{subscriberErrors++;}}}}finally{flushing=false;}}
-  function validated(command){if(!command||typeof command!=='object'||Array.isArray(command)||!Object.hasOwn(command,'type'))throw error('INVALID_COMMAND',null,'Command object with type required');if(command.type==='set')return {type:'set',key:command.key,value:validateValue(command.key,command.value)};if(command.type!=='command'||typeof command.name!=='string'||!Object.hasOwn(commands,command.name))throw error('UNKNOWN_COMMAND',command.name,'Unknown command');const d=commands[command.name];if(d.status!=='implemented')throw error('UNAVAILABLE',command.name,d.reason);const result={type:'command',name:command.name};if(command.name==='scene.select'){if(!Object.hasOwn(scenes,command.scene))throw error('INVALID_VALUE','scene','Select a, b, or skeleton');result.scene=command.scene;}if(command.name==='scene.reset'&&command.scene!==undefined){if(!Object.hasOwn(scenes,command.scene))throw error('INVALID_VALUE','scene','Unknown reset scene');result.scene=command.scene;}return result;}
-  function dispatch(command,{source:origin='api'}={}){if(disposed||view.snapshot().destroyed)throw error('ENDED',null,'Projection has ended');if(typeof origin!=='string')throw error('INVALID_SOURCE',null,'Source label must be a string');const c=validated(command);let result;depth++;try{
-    if(c.type==='set'){const d=settings[c.key];if(d.backend==='text-sequence')view.set(c.key,c.value);else if(d.backend==='output')view.set(c.key,c.value);else if(d.backend==='shared')legacy.setShared(d.legacyKey,c.value);else if(d.backend==='source')source.apply({type:'set',key:d.legacyKey,value:c.value});else if(d.type==='string')legacy.setText(d.scene,c.value);else if(d.type==='actors')legacy.setActors(d.scene,c.value);else legacy.set(d.scene,d.legacyKey,d.type==='boolean'?(c.value?1:0):c.value);}
-    else if(c.name==='scene.select')legacy.select(scenes[c.scene]);
-    else if(c.name==='scene.reset')legacy.reset(scenes[c.scene??snapshot().scene]);
-    else if(c.name==='transport.pause')legacy.pause();
-    else if(c.name==='transport.resume'||c.name==='transport.start')legacy.resume();
-    else if(c.name==='transport.stop')legacy.stop();
-    else if(c.name==='transport.togglePause'){const t=snapshot().transport;if(!t.active||t.phase==='paused')legacy.resume();else legacy.pause();}
-    else result=view.command(c.name);
-   }finally{depth--;observe(origin,c);}if(result&&typeof result.then==='function')return result.then(()=>{observe(origin,c);return getState();},e=>{observe(origin,c);throw e;});return getState();}
-  const find=(id,key)=>{if(!Object.hasOwn(aliases,id))throw error('INVALID_VALUE','scene','Unknown legacy scene');const found=Object.keys(settings).find(k=>settings[k].scene===id&&settings[k].legacyKey===key&&settings[k].backend!=='source');if(!found)throw error('UNKNOWN_SETTING',key,'Unknown legacy setting');return found;};
-  const legacyFacade=Object.freeze({values:legacy.values,sharedValues:legacy.sharedValues,setShared:(key,value)=>{const keys={textSizeNormalized:'text.sizeNormalized',textWidth:'text.width',textHeight:'text.height'};if(!Object.hasOwn(keys,key))throw error('UNKNOWN_SETTING',key,'Unknown shared control');dispatch({type:'set',key:keys[key],value},{source:'legacy-control'});return legacy.status();},status:legacy.status,select:id=>{if(!Object.hasOwn(aliases,id))throw error('INVALID_VALUE','scene','Unknown scene');dispatch({type:'command',name:'scene.select',scene:aliases[id]},{source:'legacy-control'});return legacy.status();},set:(id,key,value)=>{const k=find(id,key),d=settings[k];if(d.type==='boolean'){if(value!==0&&value!==1)throw error('INVALID_VALUE',k,'Legacy toggle requires 0 or 1');value=!!value;}dispatch({type:'set',key:k,value},{source:'legacy-control'});return legacy.status();},setText:(id,text)=>{dispatch({type:'set',key:find(id,'text'),value:normalizeText(text)},{source:'legacy-control'});return legacy.status();},setActors:(id,poses)=>{dispatch({type:'set',key:find(id,'actorPoses'),value:poses},{source:'legacy-control'});return legacy.status();},pause:()=>{dispatch({type:'command',name:'transport.pause'},{source:'legacy-control'});return legacy.status();},resume:()=>{dispatch({type:'command',name:'transport.resume'},{source:'legacy-control'});return legacy.status();},stop:()=>{dispatch({type:'command',name:'transport.stop'},{source:'legacy-control'});return legacy.status();},reset:id=>{if(!Object.hasOwn(aliases,id))throw error('INVALID_VALUE','scene','Unknown scene');dispatch({type:'command',name:'scene.reset',scene:aliases[id]},{source:'legacy-control'});return legacy.status();}});
-  const sourceFacade=Object.freeze({values:source.values,parameters:source.parameters,apply:c=>{if(!c||typeof c!=='object'||Array.isArray(c))throw error('INVALID_COMMAND',null,'Command object required');let next;if(c.type==='set'){if(!['initialSpeed','motionMix'].includes(c.key))throw error('UNKNOWN_SETTING',c.key,'Unknown B input');next={type:'set',key:'b.'+c.key,value:c.value};}else if(c.type==='select'){if(!['bats','inactive'].includes(c.scene))throw error('INVALID_VALUE','scene','Unknown B scene');if(c.scene==='inactive'&&snapshot().scene!=='b')return source.values();next=c.scene==='bats'?{type:'command',name:'scene.select',scene:'b'}:{type:'command',name:'transport.stop'};}else if(c.type==='resume'&&snapshot().scene!=='b')next={type:'command',name:'scene.select',scene:'b'};else if(['pause','reset'].includes(c.type)&&snapshot().scene!=='b')return source.values();else if(['pause','resume','reset'].includes(c.type))next={type:'command',name:c.type==='reset'?'scene.reset':'transport.'+c.type};else throw error('UNKNOWN_COMMAND',c.type,'Unknown B input');dispatch(next,{source:'legacy-vj'});return source.values();},keyboard:e=>sourceKeyboard(e)});
-  return Object.freeze({schema:()=>schema,getSchema:()=>schema,getState,get:key=>key==='scene'?getState().scene:key==='transport.phase'?getState().transport.phase:(descriptor(key),getState().settings[key]),set:(key,value,options)=>dispatch({type:'set',key,value},options),select:(scene,options)=>dispatch({type:'command',name:'scene.select',scene},options),dispatch,validate:command=>{try{validated(command);return {valid:true};}catch(e){return {valid:false,code:e.code,key:e.key,message:e.message};}},subscribe:fn=>{if(disposed)throw error('ENDED',null,'Projection has ended');if(typeof fn!=='function')throw new TypeError('Subscriber function required');subscribers.add(fn);return ()=>subscribers.delete(fn);},observe,legacy:legacyFacade,source:sourceFacade,attachSourceKeyboard:fn=>{sourceKeyboard=fn;},diagnostics:()=>({revision,subscribers:subscribers.size,subscriberErrors,disposed}),dispose(){disposed=true;subscribers.clear();queue.length=0;sourceKeyboard=()=>false;}});
- }
- return Object.freeze({create,schema:()=>schema,normalizeText,sceneAliases:freeze(aliases)});
+window.HalloweenAppControl = (() => {
+  const copy = (value) =>
+    value === undefined ? undefined : JSON.parse(JSON.stringify(value));
+  const freeze = (value) => {
+    if (value && typeof value === 'object') {
+      for (const v of Object.values(value)) freeze(v);
+      Object.freeze(value);
+    }
+    return value;
+  };
+  const scenes = { a: 'skull3d', b: 'bats', skeleton: 'skeleton' },
+    aliases = { skull3d: 'a', bats: 'b', skeleton: 'skeleton' };
+  // Schema metadata uses legacy field names. Runtime defaults also live in
+  // control-api.js; the two-window performance profile is applied afterwards.
+  const defaults = {
+    'speed': 1,
+    'size': 1,
+    'flapRate': 1,
+    'frameLock': null,
+    'motionMix': 0.5,
+    'initialSpeed': 1.3,
+    'emitterX': 0,
+    'emitterY': 0,
+    'headRate': 1,
+    'motionCross': 0.5,
+    'jawPeriod': 0.12,
+    'jawExponent': 4,
+    'jawRate': 1,
+    'jawOpen': 28,
+    'pivotY': -0.75,
+    'pivotZ': -0.12,
+    'headX': 0,
+    'headY': 0,
+    'headZ': 0,
+    'actorPoses': null,
+    'headGlowMix': 0,
+    'backgroundHue': 0.38333333333333336,
+    'colorHue': 0.6666666666666666
+  };
+  Object.assign(defaults, {
+    motionStrength: 1,
+    forceGain: 1,
+    jawMode: 'noise',
+    jawActivity: 'custom',
+    jawNoiseAmplitude: 2,
+    positionNoiseAmplitude: 0.2,
+    positionNoisePeriod: 0.05,
+    rotationNoiseAmplitude: 0.28,
+    rotationNoisePeriod: 1
+  });
+  Object.assign(defaults, {
+    dynamicFlow: 1,
+    fluidNoiseAmplitude: 1.08,
+    fluidNoisePeriod: 1.06,
+    decorationNoise: 1
+  });
+  const settings = {};
+  function field(key, type, range, scene, legacyKey, label, extra = {}) {
+    settings[key] = {
+      type,
+      ...(range ? { min: range[0], max: range[1] } : {}),
+      status: 'implemented',
+      sourceMatch: 'web-candidate',
+      scene,
+      legacyKey,
+      label,
+      default:
+        type === 'boolean'
+          ? false
+          : Object.hasOwn(defaults, legacyKey)
+            ? defaults[legacyKey]
+            : null,
+      ...(type === 'string' ? { defaultFrom: 'initialText' } : {}),
+      ...extra
+    };
+  }
+  for (const [scene, prefix] of [
+    ['skeleton', 'skeleton'],
+    ['bats', 'b']
+  ]) {
+    field(
+      prefix + '.playbackRate',
+      'number',
+      [0.2, 2],
+      scene,
+      'speed',
+      '比較再生倍率'
+    );
+    field(
+      prefix + '.scale',
+      'number',
+      [0.5, 1.5],
+      scene,
+      'size',
+      '映像の大きさ'
+    );
+    field(prefix + '.text', 'string', null, scene, 'text', '文字入力', {
+      maxLength: 240,
+      maxLines: 8
+    });
+  }
+  for (const axis of ['X', 'Y'])
+    field(
+      'b.emitter' + axis,
+      'number',
+      [-1, 1],
+      'bats',
+      'emitter' + axis,
+      '放出中心 ' + axis,
+      {
+        sourceMatch: 'sphere input h/v -> mean position -> metaball center',
+        effect:
+          'move source sphere for new births and current Force center; keep existing particle positions',
+        backend: 'rendered',
+        default: 0
+      }
+    );
+  field(
+    'b.flapRate',
+    'number',
+    [0.25, 2],
+    'bats',
+    'flapRate',
+    '羽ばたき再生倍率'
+  );
+  field(
+    'b.frameLock',
+    'integer',
+    [0, 59],
+    'bats',
+    'frameLock',
+    '図案フレーム固定',
+    { nullable: true }
+  );
+  field('b.colorHue', 'number', [0, 1], 'bats', 'colorHue', 'コウモリの色相', {
+    unit: 'normalized hue',
+    sourceMatch:
+      'new performance colour control;default original blue body retained'
+  });
+  field(
+    'b.motionMix',
+    'number',
+    [0, 1],
+    'bats',
+    'motionMix',
+    '旋回・流れの混合',
+    {
+      backend: 'source',
+      sourceMatch: 'recorded-input-contract',
+      effect:
+        'Vortex/Spiral/rotationCross; independent of playback and birth speed'
+    }
+  );
+  field(
+    'b.forceGain',
+    'number',
+    [0, 1],
+    'bats',
+    'forceGain',
+    '飛行中の力の強度',
+    {
+      sourceMatch:
+        'Web component envelope over verified native Force vector;soften inward center using2*drag/life,fade tangential circulation;full-strength native force retained;not a time multiplier'
+    }
+  );
+  field(
+    'a.motionStrength',
+    'number',
+    [0, 1],
+    'skull3d',
+    'motionStrength',
+    '定位置からの動き',
+    {
+      sourceMatch:
+        'Original locked rest transform to live motion;count-aware presentation adaptation'
+    }
+  );
+  field(
+    'b.initialSpeed',
+    'number',
+    [0, 2.6],
+    'bats',
+    'initialSpeed',
+    '出生時の初速',
+    {
+      backend: 'source',
+      sourceMatch: 'recorded-input-contract',
+      effect:
+        'Birth only; existing particles keep their previous initial velocity'
+    }
+  );
+  field('a.scale', 'number', [0.5, 1.5], 'skull3d', 'size', '映像の大きさ');
+  field('a.text', 'string', null, 'skull3d', 'text', '文字入力', {
+    maxLength: 240,
+    maxLines: 8
+  });
+  for (const [name, old, range, label] of [
+    ['headCycleRate', 'headRate', [0, 2], '頭の候補周期倍率'],
+    ['jawCycleRate', 'jawRate', [0, 2], '顎の候補周期倍率'],
+    ['jawMaxAngle', 'jawOpen', [0, 45], '顎の最大角度'],
+    ['debug.pivotY', 'pivotY', [-1.15, 0.2], '検査用の顎支点Y'],
+    ['debug.pivotZ', 'pivotZ', [-0.3, 0.2], '検査用の顎支点Z'],
+    ['headX', 'headX', [-180, 180], '頭のX角'],
+    ['headY', 'headY', [-180, 180], '頭のY角'],
+    ['headZ', 'headZ', [-180, 180], '頭のZ角']
+  ])
+    field('a.' + name, 'number', range, 'skull3d', old, label);
+  for (const [name, old, label] of [
+    ['debug.jawTint', 'jawTint', '顎の色分け'],
+    ['debug.registration', 'rigMode', '原座標への登録比較'],
+    ['debug.originalJawPivot', 'jawPivotMode', '原登録顎支点比較'],
+    ['compare.fluid', 'fluidMode', '流体比較'],
+    ['compare.blueBranch', 'fluidColor', '青色枝の比較'],
+    ['compare.composite', 'aCompositeMode', '合成比較'],
+    ['compare.sixActors', 'aSceneMode', '六体比較'],
+    ['compare.nativeResolution', 'aNativeResolution', '原描画解像度比較']
+  ])
+    field('a.' + name, 'boolean', null, 'skull3d', old, label, {
+      dependencies:
+        'Composite/six enable fluid+registration; retain selected hinge (registered CC0 default)'
+    });
+  field(
+    'a.actorCount',
+    'integer',
+    [1, 6],
+    'skull3d',
+    'actorCount',
+    'ドクロの数',
+    {
+      default: 3,
+      effect:
+        'enable motionMat actor mode; presentation layout only; retain six source histories and shared clock'
+    }
+  );
+  field(
+    'a.actorLayout',
+    'enum',
+    null,
+    'skull3d',
+    'actorLayout',
+    'ドクロの動き方',
+    {
+      default: 'source',
+      values: ['source', 'rows'],
+      sourceMatch:
+        'source keeps original perspective XY; rows is a Web presentation option',
+      effect: 'Display only; source motion/rotation/jaw/cook/clock unchanged'
+    }
+  );
+  field(
+    'a.actorPoses',
+    'actors',
+    null,
+    'skull3d',
+    'actorPoses',
+    '六体の固定比較姿勢',
+    {
+      nullable: true,
+      count: 6,
+      positionAbsMax: 5,
+      rotationAbsMax: 360,
+      jawMin: 0,
+      jawMax: 90
+    }
+  );
+  function reserved(key, type, range, status, label, reason, extra = {}) {
+    settings[key] = {
+      type,
+      ...(range ? { min: range[0], max: range[1] } : {}),
+      status,
+      label,
+      reason,
+      default: null,
+      sourceMatch: 'unverified',
+      ...extra
+    };
+  }
+  field(
+    'a.fluidNoiseAmplitude',
+    'number',
+    [0, 2],
+    'skull3d',
+    'fluidNoiseAmplitude',
+    '流体Noise振幅',
+    {
+      sourceMatch: 'source Noise Amp contract; samples independent',
+      default: 1.08,
+      effect: 'Noise RG before velocity addition, sampled each solver tick'
+    }
+  );
+  field(
+    'a.fluidNoisePeriod',
+    'number',
+    [0.02, 2],
+    'skull3d',
+    'fluidNoisePeriod',
+    '流体Noise周期',
+    {
+      sourceMatch: 'source Noise Period contract; samples independent',
+      default: 1.06
+    }
+  );
+  field(
+    'a.dynamicFlow',
+    'boolean',
+    null,
+    'skull3d',
+    'dynamicFlow',
+    '速度場の時間変化',
+    {
+      default: true,
+      sourceMatch: 'source absolute Noise tz; per-tick update',
+      effect: 'OFF selects the retained v30 tz0 sampled comparison field'
+    }
+  );
+  field(
+    'a.decorationNoise',
+    'boolean',
+    null,
+    'skull3d',
+    'decorationNoise',
+    '背景装飾Noise',
+    {
+      default: true,
+      sourceMatch: 'source deco fire input branch',
+      effect:
+        'Quarter-size mono Noise RGBA; multiply blurred light and HSV then behind Over'
+    }
+  );
+  field(
+    'a.motionCross',
+    'number',
+    [0, 1],
+    'skull3d',
+    'motionCross',
+    '頭の追従',
+    {
+      sourceMatch: 'native-Math-Lag-Feedback-contract',
+      effect:
+        '0..1 → .7..1 → source .2 second Lag → head RGBA Cross; jaw Cross remains .761'
+    }
+  );
+  field(
+    'a.jawPeriod',
+    'number',
+    [0.01, 2],
+    'skull3d',
+    'jawPeriod',
+    '顎の変化周期',
+    {
+      unit: 'Noise period; positive',
+      sourceMatch: 'source-effective-bind',
+      effect: 'Third row Noise period; independent of head Cross'
+    }
+  );
+  field(
+    'a.jawExponent',
+    'number',
+    [0.1, 8],
+    'skull3d',
+    'jawExponent',
+    '顎の変化の鋭さ',
+    { unit: 'Noise exponent; positive', sourceMatch: 'source-effective-bind' }
+  );
+  for (const [key, range, label] of [
+    ['positionNoiseAmplitude', [0, 1], '頭の移動幅'],
+    ['positionNoisePeriod', [0.01, 2], '移動の変化周期'],
+    ['rotationNoiseAmplitude', [0, 1], '頭の揺れ幅'],
+    ['rotationNoisePeriod', [0.02, 3], '揺れの変化周期'],
+    ['jawNoiseAmplitude', [0, 3], '顎Noise振幅']
+  ])
+    field('a.' + key, 'number', range, 'skull3d', key, label, {
+      sourceMatch: 'native-Noise-parameter-contract; stochastic samples differ',
+      applicableWhen: 'sixActors and generated poses',
+      controlBoundary: 'before RGBA Feedback'
+    });
+  field('a.jawManual', 'boolean', null, 'skull3d', 'jawManual', 'Manual jaw', {
+    default: false,
+    effect: 'Presentation override;original automatic source continues'
+  });
+  field(
+    'a.jawManualAngle',
+    'number',
+    [0, 90],
+    'skull3d',
+    'jawManualAngle',
+    'Manual jaw opening',
+    {
+      default: 0,
+      unit: 'degrees',
+      effect:
+        'Smoothed presentation goal;selected width and open/closed latch are owned by performance controls'
+    }
+  );
+  field('a.jawMode', 'enum', null, 'skull3d', 'jawMode', '顎の元3入力', {
+    default: 'noise',
+    values: ['noise', 'closed', 'open'],
+    sourceMatch: 'native-Switch-RGBA-contract',
+    effect:
+      'Noise / RGBA0,0,0,1 / RGBA4,4,4,4 before Feedback; source lag6 bypasses jaw channel',
+    applicableWhen: 'sixActors and generated poses'
+  });
+  field('a.jawActivity', 'enum', null, 'skull3d', 'jawActivity', '顎の動き', {
+    default: 'custom',
+    values: ['flapping', 'violent', 'occasional', 'stopped', 'custom'],
+    sourceMatch:
+      'Web convenience combinations of source parameters; not four native modes',
+    effect:
+      'sets jawMode, Period, Exponent and amplitude; manual changes select custom',
+    applicableWhen: 'sixActors and generated poses'
+  });
+  field(
+    'a.foregroundBurst',
+    'boolean',
+    null,
+    'skull3d',
+    'foregroundBurst',
+    '前景発光',
+    {
+      default: false,
+      sourceMatch: 'source Cross endpoint coefficients; native Lag response',
+      controlBoundary: '0.2s Lag / 0.1s overshoot',
+      temporalMatch: true,
+      effect:
+        'Cross3 reconstructed operator input; steady strength .48 and gain1.04'
+    }
+  );
+  // The Lag metadata below describes the source response. In the two-window
+  // route app.js responseValues() uses performance-api.js's interpolated hue/glow
+  // directly, so those two controls do not receive this additional Lag.
+  field('a.headGlowMix', 'number', [0, 1], 'skull3d', 'headGlowMix', '骨Glow', {
+    default: 0,
+    sourceMatch: 'reconnected source Cross; sampled Catmull spatial comparison',
+    controlBoundary: '0.2s Lag / 0.1s overshoot',
+    temporalMatch: true,
+    applicableWhen: 'A composite mode',
+    effect:
+      'Size1..10, Brightness0..2; source Gain remains constant .4; same prepared input supplies fluid and visible head'
+  });
+  field(
+    'a.backgroundHue',
+    'number',
+    [0, 1],
+    'skull3d',
+    'backgroundHue',
+    '流体由来背景の色相',
+    {
+      unit: 'normalized *360 degrees',
+      sourceMatch: 'native-static-hsv-RGBA8-exact + native Lag response',
+      applicableWhen: 'A composite mode',
+      controlBoundary: '0.2s Lag / 0.1s overshoot',
+      temporalMatch: true,
+      effect: 'base2/hsvadj3; not an arbitrary tint of every branch'
+    }
+  );
+  field(
+    'text.sizeNormalized',
+    'number',
+    [0, 1],
+    null,
+    'textSizeNormalized',
+    '共有主文字サイズ',
+    {
+      backend: 'shared',
+      nullable: true,
+      default: null,
+      unit: '0.3s Gaussian Filter -> Float32*0.25 of layer width',
+      sourceMatch: 'native-Filter/static-unit-contract',
+      controlBoundary: 'pre-Filter',
+      temporalMatch: true,
+      rasterMatch: false,
+      applicableScenes: ['a', 'b'],
+      effect:
+        'null autoFit; numeric no-fit Arial fraction; clip to explicit Web display bounds'
+    }
+  );
+  for (const [key, old, label, def] of [
+    ['text.width', 'textWidth', '文字表示幅', 1],
+    ['text.height', 'textHeight', '文字表示高さ', 1]
+  ])
+    field(key, 'number', [0.1, 1], null, old, label, {
+      backend: 'shared',
+      default: def,
+      sourceMatch: 'Web layout addition',
+      effect:
+        'centered clip rectangle and autoFit allocation; no claim of an original TD knob',
+      applicableScenes: ['a', 'b']
+    });
+  field(
+    'text.displayMode',
+    'enum',
+    null,
+    null,
+    'displayMode',
+    '元2文字構成の確認',
+    {
+      backend: 'text-sequence',
+      default: 0,
+      values: [0, 1],
+      sourceMatch: 'Original two-layout supply inspection on operator side',
+      effect:
+        'Operator preview only; InfoLyricLists/BPM/name never enter A/B projection'
+    }
+  );
+  field(
+    'text.sequenceEnabled',
+    'boolean',
+    null,
+    null,
+    'sequenceEnabled',
+    '行選択で主文字を表示',
+    {
+      backend: 'text-sequence',
+      default: false,
+      sourceMatch: 'Web text input to native selected-row boundary',
+      effect: 'false retains multiline v31 input; true selects native Count row'
+    }
+  );
+  field(
+    'output.circularMask',
+    'boolean',
+    null,
+    null,
+    'circularMask',
+    '円マスクを開く',
+    {
+      backend: 'output',
+      default: true,
+      sourceMatch:
+        'native Count/Lag(.2s,overshoot0) > phase0/-1 > circular Ramp/Inside',
+      effect:
+        'true Count1/phase-1 shows full frame; false Count0/phase0 closes to black'
+    }
+  );
+  field(
+    'output.transformMode',
+    'integer',
+    [1, 8],
+    null,
+    'transformMode',
+    '共通8状態変形',
+    {
+      backend: 'output',
+      default: 1,
+      sourceMatch: 'native table1 and locked projection UV calibration',
+      effect:
+        'FlipX/FlipY then optional original Remap; applies after selected visual, before mask'
+    }
+  );
+  const commands = {};
+  for (const name of [
+    'scene.select',
+    'scene.reset',
+    'transport.start',
+    'transport.pause',
+    'transport.resume',
+    'transport.stop',
+    'transport.togglePause',
+    'view.fullscreen',
+    'view.hideControls',
+    'view.showControls',
+    'view.toggleControls',
+    'application.end'
+  ])
+    commands[name] = {
+      status: 'implemented',
+      sourceMatch: name.startsWith('transport.')
+        ? 'web-operation'
+        : 'web-candidate'
+    };
+  for (const name of ['text.nextLine', 'text.previousLine', 'text.resetLine'])
+    commands[name] = {
+      status: 'implemented',
+      sourceMatch:
+        'native forward/back/reset Count and Select row; no tail wrap'
+    };
+  for (const name of [
+    'output.resetControls',
+    'output.nextTransform',
+    'output.toggleMask'
+  ])
+    commands[name] = {
+      status: 'implemented',
+      sourceMatch: 'native Count/reset controls'
+    };
+  const schema = freeze({
+    version: 9,
+    scope: 'local-in-process',
+    scene: {
+      values: ['a', 'b', 'skeleton'],
+      legacy: scenes,
+      initial: 'skeleton'
+    },
+    settings,
+    commands,
+    statusLabels: {
+      implemented: '実装済み',
+      unsupported: '未対応',
+      'pending-verification': '確認待ち'
+    }
+  });
+  function error(code, key, message) {
+    const e = new RangeError(message);
+    e.name = 'ControlError';
+    e.code = code;
+    e.key = key;
+    return e;
+  }
+  function descriptor(key) {
+    if (typeof key !== 'string' || !Object.hasOwn(settings, key))
+      throw error('UNKNOWN_SETTING', key, 'Unknown setting');
+    return settings[key];
+  }
+  function validateValue(key, value) {
+    const d = descriptor(key);
+    if (d.status !== 'implemented') throw error('UNAVAILABLE', key, d.reason);
+    if (value === null && d.nullable) return value;
+    if (d.type === 'number' || d.type === 'integer') {
+      if (
+        typeof value !== 'number' ||
+        !Number.isFinite(value) ||
+        (d.type === 'integer' && !Number.isInteger(value)) ||
+        value < d.min ||
+        value > d.max
+      )
+        throw error(
+          'INVALID_VALUE',
+          key,
+          'Finite value outside declared range'
+        );
+    } else if (d.type === 'enum') {
+      if (!d.values.includes(value))
+        throw error('INVALID_VALUE', key, 'Declared enum required');
+    } else if (d.type === 'boolean') {
+      if (typeof value !== 'boolean')
+        throw error('INVALID_VALUE', key, 'Boolean required');
+    } else if (d.type === 'string') {
+      if (
+        typeof value !== 'string' ||
+        value.length > d.maxLength ||
+        value.split('\n').length > d.maxLines
+      )
+        throw error('INVALID_VALUE', key, 'Text exceeds declared limits');
+    } else if (d.type === 'actors') {
+      if (
+        !Array.isArray(value) ||
+        value.length !== 6 ||
+        value.some(
+          (p) =>
+            !p ||
+            typeof p !== 'object' ||
+            Array.isArray(p) ||
+            !['position', 'rotation'].every(
+              (k) =>
+                Array.isArray(p[k]) &&
+                p[k].length === 3 &&
+                p[k].every(
+                  (v) =>
+                    typeof v === 'number' &&
+                    Number.isFinite(v) &&
+                    Math.abs(v) <= (k === 'position' ? 5 : 360)
+                )
+            ) ||
+            typeof p.jaw !== 'number' ||
+            !Number.isFinite(p.jaw) ||
+            p.jaw < 0 ||
+            p.jaw > 90
+        )
+      )
+        throw error(
+          'INVALID_VALUE',
+          key,
+          'Six finite bounded actor poses required'
+        );
+    }
+    return copy(value);
+  }
+  function normalizeText(text) {
+    if (typeof text !== 'string') throw new TypeError('Text must be a string');
+    let v = text.slice(0, 240),
+      lines = v.split('\n');
+    if (lines.length > 8)
+      v = lines.slice(0, 7).join('\n') + '\n' + lines.slice(7).join(' ');
+    return v;
+  }
+  function create(legacy, source, view) {
+    let revision = 0,
+      depth = 0,
+      disposed = false,
+      last,
+      sourceKeyboard = () => false,
+      subscriberErrors = 0,
+      flushing = false;
+    const subscribers = new Set(),
+      queue = [];
+    function snapshot() {
+      const runtime = view.snapshot(),
+        values = {};
+      for (const [key, d] of Object.entries(settings)) {
+        if (d.status !== 'implemented') {
+          values[key] = null;
+          continue;
+        }
+        const v =
+          d.backend === 'text-sequence'
+            ? runtime.textSequence[key]
+            : d.backend === 'output'
+              ? runtime.output[
+                  d.legacyKey === 'transformMode'
+                    ? 'output.transformMode'
+                    : 'output.circularMask'
+                ]
+              : d.backend === 'shared'
+                ? legacy.sharedValues()[d.legacyKey]
+                : d.backend === 'source'
+                  ? source.values()[d.legacyKey]
+                  : legacy.values(d.scene)[d.legacyKey];
+        values[key] = d.type === 'boolean' ? !!v : copy(v);
+      }
+      return {
+        scene: aliases[runtime.selected],
+        transport: {
+          phase: runtime.phase,
+          active: runtime.active,
+          sceneRevision: runtime.revision
+        },
+        view: {
+          projection: runtime.projection,
+          fullscreen: runtime.fullscreen,
+          ended: runtime.destroyed
+        },
+        settings: values
+      };
+    }
+    last = snapshot();
+    const getState = () => freeze({ ...snapshot(), revision });
+    function changed(before, after) {
+      const out = [];
+      for (const key of Object.keys(settings))
+        if (
+          JSON.stringify(before.settings[key]) !==
+          JSON.stringify(after.settings[key])
+        )
+          out.push(key);
+      for (const key of ['scene', 'transport', 'view'])
+        if (JSON.stringify(before[key]) !== JSON.stringify(after[key]))
+          out.push(key);
+      return out;
+    }
+    function observe(origin = 'runtime', command = null) {
+      if (depth || disposed) return;
+      const next = snapshot(),
+        keys = changed(last, next);
+      if (!keys.length) return;
+      const before = last;
+      last = next;
+      revision++;
+      queue.push(
+        freeze({
+          revision,
+          source: origin,
+          command: copy(command),
+          changed: keys,
+          before: { ...before, revision: revision - 1 },
+          state: { ...next, revision }
+        })
+      );
+      if (flushing) return;
+      flushing = true;
+      try {
+        while (queue.length) {
+          const event = queue.shift();
+          for (const fn of [...subscribers]) {
+            if (!subscribers.has(fn)) continue;
+            try {
+              fn(event);
+            } catch {
+              subscriberErrors++;
+            }
+          }
+        }
+      } finally {
+        flushing = false;
+      }
+    }
+    function validated(command) {
+      if (
+        !command ||
+        typeof command !== 'object' ||
+        Array.isArray(command) ||
+        !Object.hasOwn(command, 'type')
+      )
+        throw error(
+          'INVALID_COMMAND',
+          null,
+          'Command object with type required'
+        );
+      if (command.type === 'set')
+        return {
+          type: 'set',
+          key: command.key,
+          value: validateValue(command.key, command.value)
+        };
+      if (
+        command.type !== 'command' ||
+        typeof command.name !== 'string' ||
+        !Object.hasOwn(commands, command.name)
+      )
+        throw error('UNKNOWN_COMMAND', command.name, 'Unknown command');
+      const d = commands[command.name];
+      if (d.status !== 'implemented')
+        throw error('UNAVAILABLE', command.name, d.reason);
+      const result = { type: 'command', name: command.name };
+      if (command.name === 'scene.select') {
+        if (!Object.hasOwn(scenes, command.scene))
+          throw error('INVALID_VALUE', 'scene', 'Select a, b, or skeleton');
+        result.scene = command.scene;
+      }
+      if (command.name === 'scene.reset' && command.scene !== undefined) {
+        if (!Object.hasOwn(scenes, command.scene))
+          throw error('INVALID_VALUE', 'scene', 'Unknown reset scene');
+        result.scene = command.scene;
+      }
+      return result;
+    }
+    function dispatch(command, { source: origin = 'api' } = {}) {
+      if (disposed || view.snapshot().destroyed)
+        throw error('ENDED', null, 'Projection has ended');
+      if (typeof origin !== 'string')
+        throw error('INVALID_SOURCE', null, 'Source label must be a string');
+      const c = validated(command);
+      let result;
+      depth++;
+      try {
+        if (c.type === 'set') {
+          const d = settings[c.key];
+          if (d.backend === 'text-sequence') view.set(c.key, c.value);
+          else if (d.backend === 'output') view.set(c.key, c.value);
+          else if (d.backend === 'shared')
+            legacy.setShared(d.legacyKey, c.value);
+          else if (d.backend === 'source')
+            source.apply({ type: 'set', key: d.legacyKey, value: c.value });
+          else if (d.type === 'string') legacy.setText(d.scene, c.value);
+          else if (d.type === 'actors') legacy.setActors(d.scene, c.value);
+          else
+            legacy.set(
+              d.scene,
+              d.legacyKey,
+              d.type === 'boolean' ? (c.value ? 1 : 0) : c.value
+            );
+        } else if (c.name === 'scene.select') legacy.select(scenes[c.scene]);
+        else if (c.name === 'scene.reset')
+          legacy.reset(scenes[c.scene ?? snapshot().scene]);
+        else if (c.name === 'transport.pause') legacy.pause();
+        else if (c.name === 'transport.resume' || c.name === 'transport.start')
+          legacy.resume();
+        else if (c.name === 'transport.stop') legacy.stop();
+        else if (c.name === 'transport.togglePause') {
+          const t = snapshot().transport;
+          if (!t.active || t.phase === 'paused') legacy.resume();
+          else legacy.pause();
+        } else result = view.command(c.name);
+      } finally {
+        depth--;
+        observe(origin, c);
+      }
+      if (result && typeof result.then === 'function')
+        return result.then(
+          () => {
+            observe(origin, c);
+            return getState();
+          },
+          (e) => {
+            observe(origin, c);
+            throw e;
+          }
+        );
+      return getState();
+    }
+    const find = (id, key) => {
+      if (!Object.hasOwn(aliases, id))
+        throw error('INVALID_VALUE', 'scene', 'Unknown legacy scene');
+      const found = Object.keys(settings).find(
+        (k) =>
+          settings[k].scene === id &&
+          settings[k].legacyKey === key &&
+          settings[k].backend !== 'source'
+      );
+      if (!found) throw error('UNKNOWN_SETTING', key, 'Unknown legacy setting');
+      return found;
+    };
+    const legacyFacade = Object.freeze({
+      values: legacy.values,
+      sharedValues: legacy.sharedValues,
+      setShared: (key, value) => {
+        const keys = {
+          textSizeNormalized: 'text.sizeNormalized',
+          textWidth: 'text.width',
+          textHeight: 'text.height'
+        };
+        if (!Object.hasOwn(keys, key))
+          throw error('UNKNOWN_SETTING', key, 'Unknown shared control');
+        dispatch(
+          { type: 'set', key: keys[key], value },
+          { source: 'legacy-control' }
+        );
+        return legacy.status();
+      },
+      status: legacy.status,
+      select: (id) => {
+        if (!Object.hasOwn(aliases, id))
+          throw error('INVALID_VALUE', 'scene', 'Unknown scene');
+        dispatch(
+          { type: 'command', name: 'scene.select', scene: aliases[id] },
+          { source: 'legacy-control' }
+        );
+        return legacy.status();
+      },
+      set: (id, key, value) => {
+        const k = find(id, key),
+          d = settings[k];
+        if (d.type === 'boolean') {
+          if (value !== 0 && value !== 1)
+            throw error('INVALID_VALUE', k, 'Legacy toggle requires 0 or 1');
+          value = !!value;
+        }
+        dispatch({ type: 'set', key: k, value }, { source: 'legacy-control' });
+        return legacy.status();
+      },
+      setText: (id, text) => {
+        dispatch(
+          { type: 'set', key: find(id, 'text'), value: normalizeText(text) },
+          { source: 'legacy-control' }
+        );
+        return legacy.status();
+      },
+      setActors: (id, poses) => {
+        dispatch(
+          { type: 'set', key: find(id, 'actorPoses'), value: poses },
+          { source: 'legacy-control' }
+        );
+        return legacy.status();
+      },
+      pause: () => {
+        dispatch(
+          { type: 'command', name: 'transport.pause' },
+          { source: 'legacy-control' }
+        );
+        return legacy.status();
+      },
+      resume: () => {
+        dispatch(
+          { type: 'command', name: 'transport.resume' },
+          { source: 'legacy-control' }
+        );
+        return legacy.status();
+      },
+      stop: () => {
+        dispatch(
+          { type: 'command', name: 'transport.stop' },
+          { source: 'legacy-control' }
+        );
+        return legacy.status();
+      },
+      reset: (id) => {
+        if (!Object.hasOwn(aliases, id))
+          throw error('INVALID_VALUE', 'scene', 'Unknown scene');
+        dispatch(
+          { type: 'command', name: 'scene.reset', scene: aliases[id] },
+          { source: 'legacy-control' }
+        );
+        return legacy.status();
+      }
+    });
+    const sourceFacade = Object.freeze({
+      values: source.values,
+      parameters: source.parameters,
+      apply: (c) => {
+        if (!c || typeof c !== 'object' || Array.isArray(c))
+          throw error('INVALID_COMMAND', null, 'Command object required');
+        let next;
+        if (c.type === 'set') {
+          if (!['initialSpeed', 'motionMix'].includes(c.key))
+            throw error('UNKNOWN_SETTING', c.key, 'Unknown B input');
+          next = { type: 'set', key: 'b.' + c.key, value: c.value };
+        } else if (c.type === 'select') {
+          if (!['bats', 'inactive'].includes(c.scene))
+            throw error('INVALID_VALUE', 'scene', 'Unknown B scene');
+          if (c.scene === 'inactive' && snapshot().scene !== 'b')
+            return source.values();
+          next =
+            c.scene === 'bats'
+              ? { type: 'command', name: 'scene.select', scene: 'b' }
+              : { type: 'command', name: 'transport.stop' };
+        } else if (c.type === 'resume' && snapshot().scene !== 'b')
+          next = { type: 'command', name: 'scene.select', scene: 'b' };
+        else if (
+          ['pause', 'reset'].includes(c.type) &&
+          snapshot().scene !== 'b'
+        )
+          return source.values();
+        else if (['pause', 'resume', 'reset'].includes(c.type))
+          next = {
+            type: 'command',
+            name: c.type === 'reset' ? 'scene.reset' : 'transport.' + c.type
+          };
+        else throw error('UNKNOWN_COMMAND', c.type, 'Unknown B input');
+        dispatch(next, { source: 'legacy-vj' });
+        return source.values();
+      },
+      keyboard: (e) => sourceKeyboard(e)
+    });
+    return Object.freeze({
+      schema: () => schema,
+      getSchema: () => schema,
+      getState,
+      get: (key) =>
+        key === 'scene'
+          ? getState().scene
+          : key === 'transport.phase'
+            ? getState().transport.phase
+            : (descriptor(key), getState().settings[key]),
+      set: (key, value, options) =>
+        dispatch({ type: 'set', key, value }, options),
+      select: (scene, options) =>
+        dispatch({ type: 'command', name: 'scene.select', scene }, options),
+      dispatch,
+      validate: (command) => {
+        try {
+          validated(command);
+          return { valid: true };
+        } catch (e) {
+          return { valid: false, code: e.code, key: e.key, message: e.message };
+        }
+      },
+      subscribe: (fn) => {
+        if (disposed) throw error('ENDED', null, 'Projection has ended');
+        if (typeof fn !== 'function')
+          throw new TypeError('Subscriber function required');
+        subscribers.add(fn);
+        return () => subscribers.delete(fn);
+      },
+      observe,
+      legacy: legacyFacade,
+      source: sourceFacade,
+      attachSourceKeyboard: (fn) => {
+        sourceKeyboard = fn;
+      },
+      diagnostics: () => ({
+        revision,
+        subscribers: subscribers.size,
+        subscriberErrors,
+        disposed
+      }),
+      dispose() {
+        disposed = true;
+        subscribers.clear();
+        queue.length = 0;
+        sourceKeyboard = () => false;
+      }
+    });
+  }
+  return Object.freeze({
+    create,
+    schema: () => schema,
+    normalizeText,
+    sceneAliases: freeze(aliases)
+  });
 })();

@@ -1,0 +1,4 @@
+output/
+dist/
+web/sw.js
+web/bat-atlas-data.js
