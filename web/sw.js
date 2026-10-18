@@ -1,16 +1,16 @@
 'use strict';
-const BUILD = "0.1.55-jaw-edge-preview-452e2bb99a64";
+const BUILD = "0.1.55-jaw-edge-preview-58f7a663b8ba";
 const HASHES = {
-  "index.html": "f6962c20bbbf8e0e2e076dc10f381d094ce54613c3cd395c36c8c68295f6b1cd",
-  "styles.css": "f22326303cfde63790650c60acd7c1d576bcb3c0177412887b9f47d000f93d7c",
+  "index.html": "d13848b48319d7ada5a042306fe94c9e055dc871313083df256efbc1da1fe4ba",
+  "styles.css": "5fc046edbb40ba1bacc7e155e2d7632936101e59a0c0b07c53ae6af78c477fa9",
   "app.js": "1a3b3632ef36ce97405884fd8763766f71b3a86961eae08072dde5f7a9afdd46",
-  "offline.js": "6e1875ea2feab8a8907add195906eae18bbb9fc67fa1622a82fae79ffc236707",
+  "offline.js": "fcd8a98bb8c7fc8e9a44105806499991d357bc84c28d10b7da70a4f45fe66781",
   "README.txt": "b7492bf5db78c8ada95bd4296d7862f03981e96f4d2abe809f6e284e82dd8b9f",
   "console.html": "e9878dac44217d5d48339840255793b86481b62abbe0046bbaccdc218d01b87e",
   "console.css": "1ef68b02708f001a9eb90fc12342f1edb7aae6f0a3a6fa03dd12684ff08e525b",
   "console.js": "2c866d3b1259e624cb8d159eea932b4bd99d0ee25447f0015f9902cdf6121b72",
   "stage-role.js": "2324a1b5784ac08a949953760c70bf07bfe2d17eb1be3656fbfdd98f5a5f8f67",
-  "stage-receiver.js": "0a426e1ec4985f124236e5cb69b93ddfde30d11a7ab42250d2c7f2a6deecd9b9",
+  "stage-receiver.js": "99f25ec814bb4c18492279fb16619a393b7d82a627dde3c670a2ff8eb5f77bae",
   "performance-api.js": "ef2b6df74264b0addf9e71151f7431050e7cd341c44531e53e4f0833d4beb67d",
   "keyboard-performance.js": "9688bfe67be12c44f2852c3b0bb4dfb2db88e08ada94e36af26613bbb783ce50",
   "window-safety.js": "08e04346e0bed71048ca73b23a06d7b1f92fa09faf7e3f9204b4427e117b1d83",
@@ -19,7 +19,7 @@ const HASHES = {
   "PERFORMANCE-PLAN.html": "93fb5bbfadea1afee19e8245566d26a609bd2a03fcc8e5b1beea9fecae8d4444",
   "guide.css": "9861e7bbf26008b78bba20406f7176ffbb1d2b61224cbf6913b053b6933ec440",
   "LICENSE.txt": "a643b7235f6eeb00fdf602e729cb4b88a8f7984e7dab0bc3f5993dd5c25a95bd",
-  "RIGHTS.txt": "24067c71371f6edf714591a71bd11f02e874d27a4280ea283a05e21382fb8aaf",
+  "RIGHTS.txt": "4f2411ab8ea330db12cb95269cfe7df38ecf01da0cdaa906b4b88a5dd7cc6d6d",
   "motion-clock.js": "52fcea2e517c25c89a9b525843d43f088f1f9ffcae0b94d6b83b21f3faf5083c",
   "control-response.js": "a6c1cc00d6d4a0eafbb0ea2af6a7a1ea0a6273e285c7014721694fa6a2e9a954",
   "a-source-blur.js": "321d86574d83503fdc4431813de60de8fe67647663a52da574fcf6788d95ba49",
@@ -47,7 +47,10 @@ const HASHES = {
   "a-fluid.js": "19ec098262d7f9c1dd660fa10314bb66da42cbfc80df60e5b6c76333a2b6cb48",
   "a-composite.js": "4deef40d4d63f60241a361cc8e58a4d5b89a4b8824d92dd8d6dbd13723a9769a",
   "assets/owner-bat-atlas.png": "9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a",
-  "assets/OWNER-BAT-ASSET.txt": "44fff898cae99a8e4d8f13184708754df07deda56b58220e0ffd05f6ca570873"
+  "assets/OWNER-BAT-ASSET.txt": "44fff898cae99a8e4d8f13184708754df07deda56b58220e0ffd05f6ca570873",
+  "projection-startup.js": "17b8cf8128ffdb919400fae661bb08277a993868fbcbb335ae0d0059639d0daa",
+  "assets/mamo-profile.jpg": "c2595149cd55991248d4a3ab733d26d1edb0b6179493c53fbb6e7154ddec0a7e",
+  "assets/MAMO-ICON-SOURCE.txt": "18aa01d0d0f23a01ede2801289ac58825fcf82dbd7af033c0ee19b8babdad8ee"
 };
 const SCOPE = self.registration.scope;
 const PREFIX = 'halloween-projection:' + SCOPE + ':';

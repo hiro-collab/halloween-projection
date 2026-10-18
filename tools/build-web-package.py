@@ -7,7 +7,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / 'web'
 APP_VERSION = '0.1.55-jaw-edge-preview'
-ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt','console.html','console.css','console.js','stage-role.js','stage-receiver.js','performance-api.js','keyboard-performance.js','window-safety.js', 'START-HERE.html', 'GUIDE.html', 'PERFORMANCE-PLAN.html', 'guide.css', 'LICENSE.txt', 'RIGHTS.txt', 'motion-clock.js','control-response.js','a-source-blur.js','a-motion-lag.js','a-motion.js','a-actor-layout.js','a-return-motion.js','a-jaw-control.js','i18n.js','a-skull-raster.js','control-api.js','text-operators.js', 'app-control-api.js', 'control-adapters.js', 'bat-motion.js','bat-phase.js','b-motion-runtime.js', 'bat-art.js', 'bat-atlas-data.js', 'bat-fire.js', 'text-sequence.js','output-uv.js','output-operators.js','a-source-noise.js','a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt']
+ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt','console.html','console.css','console.js','stage-role.js','stage-receiver.js','performance-api.js','keyboard-performance.js','window-safety.js', 'START-HERE.html', 'GUIDE.html', 'PERFORMANCE-PLAN.html', 'guide.css', 'LICENSE.txt', 'RIGHTS.txt', 'motion-clock.js','control-response.js','a-source-blur.js','a-motion-lag.js','a-motion.js','a-actor-layout.js','a-return-motion.js','a-jaw-control.js','i18n.js','a-skull-raster.js','control-api.js','text-operators.js', 'app-control-api.js', 'control-adapters.js', 'bat-motion.js','bat-phase.js','b-motion-runtime.js', 'bat-art.js', 'bat-atlas-data.js', 'bat-fire.js', 'text-sequence.js','output-uv.js','output-operators.js','a-source-noise.js','a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt', 'projection-startup.js', 'assets/mamo-profile.jpg', 'assets/MAMO-ICON-SOURCE.txt']
 # The local-file route uses the same MIT-licensed owner image bytes, without file fetch/CORS.
 import base64
 atlas = (WEB / 'assets/owner-bat-atlas.png').read_bytes()
@@ -16,7 +16,7 @@ if hashlib.sha256(atlas).hexdigest() != '9da78cbc8d5721f136f3385354ea94345f9fe5b
 local_data = "/* Copyright (c) 2026 hiro-collab. MIT; see LICENSE.txt. Generated owner-created PNG payload, identical to assets/owner-bat-atlas.png. */\n'use strict';\n(() => {\n  if(location.protocol!=='file:')return;\n  let data='" + base64.b64encode(atlas).decode('ascii') + "';\n  window.HalloweenBatAtlasData=Object.freeze({read(){if(!data)throw Error('Packaged image data released');const raw=atob(data),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return bytes;},release(){data='';},diagnostics:()=>({encodedChars:data.length})});\n})();\n"
 (WEB / 'bat-atlas-data.js').write_text(local_data, encoding='utf-8', newline='\n')
 for name in ASSETS:
-    if name.endswith('.png'):
+    if name.endswith(('.png', '.jpg')):
         continue
     raw = (WEB / name).read_bytes()
     canonical = raw.decode('utf-8-sig').replace('\r\n', '\n').encode('utf-8')

@@ -1,7 +1,8 @@
 'use strict';
 (()=>{
  const role=window.HalloweenStageRole;if(!role?.remote)return;
- const api=window.halloweenControls,perf=HalloweenPerformance.create(api,{batch:window.halloweenRenderBatch,requestUpdate:()=>window.halloweenRequestPresentation?.()===true}),limits=HalloweenWindowSafety;window.halloweenPerformance=perf;
+ const api=window.halloweenControls;if(!api)return; // A failed core load is reported by the preparation screen.
+ const perf=HalloweenPerformance.create(api,{batch:window.halloweenRenderBatch,requestUpdate:()=>window.halloweenRequestPresentation?.()===true}),limits=HalloweenWindowSafety;window.halloweenPerformance=perf;
  let port=null,last=Date.now(),connected=false,ended=false,started=false,accepted=0,rejected=0,ownerArmed=false,lastSequence=-1;
  let lastCuePost=0;let armGeneration=0;let requiresArm=true,reason='演奏開始を押してください',epoch=0,trips=0,accentCaps=0,lastFrame=Date.now(),accentUntil=0,holdUntil=0,holdGesture=-1,checking=false;
  const start=document.getElementById('stage-start');
@@ -42,4 +43,6 @@
  const timer=setInterval(()=>{check();if(connected)post(snapshot());},250);
  function cleanup(){trip('投影窓を終了');perf.dispose();ended=true;clearInterval(timer);window.halloweenBeforeRender=null;window.halloweenAdvancePerformance=null;window.removeEventListener('message',connect);window.removeEventListener('resize',visibility);document.removeEventListener('visibilitychange',visibility);document.removeEventListener('fullscreenchange',visibility);port?.close();port=null;}
  window.addEventListener('pagehide',cleanup,{once:true});window.halloweenStageLink=Object.freeze({status:()=>({connected:connected&&Date.now()-last<=limits.heartbeatMs,lastAge:Date.now()-last,ownerArmed,accepted,rejected,started,ended,rendererOwners:1,safety:snapshot().safety}),snapshot,disconnect});
+ // The initial A frame has been composed during Performance initialization.
+ window.HalloweenProjectionStartup?.ready();
 })();

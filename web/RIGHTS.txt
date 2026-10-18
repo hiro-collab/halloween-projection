@@ -40,3 +40,10 @@ Converted SHA256: bb38451e202e30ce2d84cdc224433ac27aafd43539ed362e6127a980b35387
 No third-party JS runtime library, CDN, bundled font, TD/NVIDIA runtime, original TOE/TOG, original TD mesh, music, lyrics, video or private log is included.
 
 Source repository: https://github.com/hiro-collab/halloween-projection
+
+■ 起動時のブランド画像 / Startup branding
+assets/mamo-profile.jpg は、本人が指定・確認し、本アプリの準備画面への同梱表示を承認したQiita/Twitterアイコンです。
+359×359 JPEGの配信画像を変更せず使用します。制作時の高解像度原本とはしていません。
+このブランド写真の一般的な独立再利用ライセンスは、MITのプログラムライセンスから推定しません。
+The owner approved bundled startup display of this branding photograph. It is separate from the MIT code license.
+Source and byte identity: assets/MAMO-ICON-SOURCE.txt

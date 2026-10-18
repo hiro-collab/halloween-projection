@@ -51,3 +51,6 @@ coverage/
 !docs/images/td-projection-gallery-mobile-ja.jpg
 !docs/images/td-projection-gallery-desktop-en.jpg
 !docs/images/td-projection-gallery-mobile-en.jpg
+
+# User-confirmed startup branding photograph only.
+!web/assets/mamo-profile.jpg

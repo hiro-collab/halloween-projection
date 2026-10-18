@@ -1,0 +1,8 @@
+mamo startup branding photograph
+User selected the Qiita/Twitter author icon and approved bundling it for this application's preparation screen.
+Source profile: https://qiita.com/moma42105016
+Distribution image: https://pbs.twimg.com/profile_images/993467405685866496/DEsw1QTv.jpg
+JPEG, 359 x 359, 12302 bytes; unchanged image bytes.
+SHA256: c2595149cd55991248d4a3ab733d26d1edb0b6179493c53fbb6e7154ddec0a7e
+This is the saved distribution image, not a claimed high-resolution camera original.
+The owner's startup-display permission is recorded separately from the MIT code license. A general independent-reuse license for this branding photograph is not inferred.
