@@ -1,5 +1,11 @@
 利用条件 / Terms
 
+【改変・サポートと投影時のお願い】
+ご自身での改変も歓迎です。個別の改修依頼や操作サポートには対応していません。動作は保証していないため、使用する機材で事前にお試しください。投影場所の許可を取り、光を人の目や車両に向けず、点滅や明るい映像が苦手な方にもご配慮ください。
+
+Modifications, support and projection precautions
+You are welcome to make your own modifications. I do not take on individual modification requests or provide help with operating the app. Operation is not guaranteed, so please test it with the equipment you plan to use. Obtain permission for the projection location, keep the light away from people's eyes and vehicles, and consider people who are sensitive to flashing or bright imagery.
+
 はじめに_START-HERE.htmlをChromeで開き、アプリ本体フォルダーを一緒に保持してください。
 Open はじめに_START-HERE.html in Chrome and keep the アプリ本体 folder with it.
 

@@ -1,0 +1,24 @@
+{
+  "version": "0.1.57-notice-update",
+  "tag": "v0.1.57",
+  "build": "0.1.57-notice-update-88d4a7b17286",
+  "zip": "halloween-projection-web-v0.1.57-notice-update.zip",
+  "bytes": 558004,
+  "sha256": "147145f79b31551dfc610868e416ae53e789ab62b08671bd943f950b4928b7f7",
+  "entryCount": 53,
+  "offlineAssetCount": 50,
+  "scope": "Approved Japanese/English documentation, translation dictionary entries and version metadata only.",
+  "base": "33c14e0fc04b13bdba739866293916e41d0b22e5",
+  "MITLicenseUnchanged": true,
+  "visualAndControlLogicUnchanged": true,
+  "oldReleasesRetained": [
+    "v0.1.56",
+    "v0.1.55"
+  ],
+  "checks": {
+    "noticeLanguageLayout": 56,
+    "normalStartup": 25,
+    "offlineCache": 15,
+    "failed": 0
+  }
+}

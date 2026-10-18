@@ -4,7 +4,7 @@
 
 Project skulls and bats onto walls or floors, and change motion, color and text with your keyboard.
 
-**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
+**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.57/halloween-projection-web-v0.1.57-notice-update.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
 
 *The photos show projections made with the TouchDesigner version, adapted for each setting. You can use this app in the same way to project skulls and bats onto the walls and floors around you.*
 
@@ -49,9 +49,9 @@ About 20 seconds, without audio: rotating skulls → **Z** to switch → bat mot
 <details>
 <summary>Download and start projecting in three steps</summary>
 
-**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
+**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.57/halloween-projection-web-v0.1.57-notice-update.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
 
-<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip -->
+<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.57/halloween-projection-web-v0.1.57-notice-update.zip -->
 
 ### Start in three steps
 
@@ -117,6 +117,10 @@ For the equipment and assembly, see [mamo's portable outdoor projector setup gui
 <img src="docs/images/portable-projection.jpg" width="760" alt="Illustration of a silver suitcase, folded tripod and projector used while stationary at a nighttime venue.">
 
 *An illustrative use scene with a portable setup placed at a venue. It is not an assembly guide or an exact view of how equipment is packed.*
+
+## Modifications, support and projection precautions
+
+You are welcome to make your own modifications. I do not take on individual modification requests or provide help with operating the app. Operation is not guaranteed, so please test it with the equipment you plan to use. Obtain permission for the projection location, keep the light away from people's eyes and vehicles, and consider people who are sensitive to flashing or bright imagery.
 
 ## License and personal changes
 

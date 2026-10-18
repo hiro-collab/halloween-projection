@@ -4,7 +4,7 @@
 
 PCとプロジェクターで、壁や床にドクロやコウモリを投影。手元のキーボードで、動き・色・文字を変えられます。
 
-**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
+**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.57/halloween-projection-web-v0.1.57-notice-update.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
 
 *写真は、TouchDesigner版を場面に合わせてアレンジして投影した例です。このソフトでも同じように、ドクロやコウモリの映像を周囲の壁や床へ投影して楽しめます。*
 
@@ -49,9 +49,9 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 <details>
 <summary>ダウンロードと、投影を始める3手順</summary>
 
-**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
+**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.57/halloween-projection-web-v0.1.57-notice-update.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
 
-<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip -->
+<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.57/halloween-projection-web-v0.1.57-notice-update.zip -->
 
 ### 3手順で投影する
 
@@ -117,6 +117,10 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 <img src="docs/images/portable-projection.jpg" width="760" alt="銀色のスーツケース、畳んだ三脚、投影機を組み合わせ、夜の会場で立ち止まって映像を映す使用イメージ。">
 
 *持ち運べる投影セットを会場に設置して使うイメージです。組立手順や収納状態を示す図ではありません。*
+
+## 改変・サポートと投影時のお願い
+
+ご自身での改変も歓迎です。個別の改修依頼や操作サポートには対応していません。動作は保証していないため、使用する機材で事前にお試しください。投影場所の許可を取り、光を人の目や車両に向けず、点滅や明るい映像が苦手な方にもご配慮ください。
 
 ## 利用条件と、自分用の変更
 

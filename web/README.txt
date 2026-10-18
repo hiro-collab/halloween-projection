@@ -1,4 +1,4 @@
-ハロウィン投影 0.1.56 / Halloween Projection
+ハロウィン投影 0.1.57 / Halloween Projection
 
 【始め方】
 1. 配布ZIPを右クリックして「すべて展開」。フォルダー全体を一緒に保持してください。
@@ -29,6 +29,9 @@ Space：映像全体の一時停止・再開 / Esc：キーボード操作を止
 動きを止めるときはSpace。黒い画面で中断するには「投影の補正・中断・終了」→「停止・解放」、戻すときは「再開」です。Escはキー操作だけを止めます。
 詳しくは同じフォルダーのGUIDE.htmlをご覧ください。日本語 / Englishは案内だけを切り替え、投影する文字は翻訳しません。
 
+【改変・サポートと投影時のお願い】
+ご自身での改変も歓迎です。個別の改修依頼や操作サポートには対応していません。動作は保証していないため、使用する機材で事前にお試しください。投影場所の許可を取り、光を人の目や車両に向けず、点滅や明るい映像が苦手な方にもご配慮ください。
+
 【利用条件と編集】
 プログラム・コウモリ画像・動きや表示のデータはMIT、CDmir様のHuman SkullはCC0 1.0です。
 LICENSE.txtとRIGHTS.txtに利用条件と出所を記載しています。
@@ -49,6 +52,9 @@ Keys work while the console has focus. After editing text, using an input method
 Space pauses motion. To blank the image, open Output, stop & exit and choose Stop & release; choose Resume to return. Esc stops keyboard controls only.
 See GUIDE.html for every key, saved appearance settings and recovery steps. Changing the UI language does not translate your projected text.
 Closing the projection window clears text and settings. See LICENSE.txt and RIGHTS.txt for the MIT code/artwork/data and CDmir's CC0 model.
+
+Modifications, support and projection precautions
+You are welcome to make your own modifications. I do not take on individual modification requests or provide help with operating the app. Operation is not guaranteed, so please test it with the equipment you plan to use. Obtain permission for the projection location, keep the light away from people's eyes and vehicles, and consider people who are sensitive to flashing or bright imagery.
 
 Editing
 The package includes readable HTML, CSS and JavaScript. Ordinary text and style edits need only an editor and reload.

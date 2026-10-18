@@ -6,7 +6,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / 'web'
-APP_VERSION = '0.1.56-startup-preview'
+APP_VERSION = '0.1.57-notice-update'
 ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt','console.html','console.css','console.js','stage-role.js','stage-receiver.js','performance-api.js','keyboard-performance.js','window-safety.js', 'START-HERE.html', 'GUIDE.html', 'PERFORMANCE-PLAN.html', 'guide.css', 'LICENSE.txt', 'RIGHTS.txt', 'motion-clock.js','control-response.js','a-source-blur.js','a-motion-lag.js','a-motion.js','a-actor-layout.js','a-return-motion.js','a-jaw-control.js','i18n.js','a-skull-raster.js','control-api.js','text-operators.js', 'app-control-api.js', 'control-adapters.js', 'bat-motion.js','bat-phase.js','b-motion-runtime.js', 'bat-art.js', 'bat-atlas-data.js', 'bat-fire.js', 'text-sequence.js','output-uv.js','output-operators.js','a-source-noise.js','a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt', 'projection-startup.js', 'assets/mamo-profile.jpg', 'assets/MAMO-ICON-SOURCE.txt']
 # The local-file route uses the same MIT-licensed owner image bytes, without file fetch/CORS.
 import base64
@@ -103,7 +103,7 @@ worker = worker_template.replace('__BUILD__', json.dumps(build)).replace('__HASH
 (WEB / 'sw.js').write_text(worker, encoding='utf-8', newline='\n')
 out = ROOT / 'dist'
 out.mkdir(exist_ok=True)
-dest = out / 'halloween-projection-web-v0.1.56-startup-preview.zip'
+dest = out / 'halloween-projection-web-v0.1.57-notice-update.zip'
 names = ASSETS + ['sw.js']
 prefix = 'アプリ本体/'
 entry = (WEB / 'START-HERE.html').read_text(encoding='utf-8').replace('href="./', 'href="./' + prefix).replace('src="./', 'src="./' + prefix).encode('utf-8')
