@@ -88,11 +88,13 @@
 
 構成と作り方は、作者mamoの記事「[屋外プロジェクターを3分で設営する方法：ポータブルバッテリーと三脚で持ち運ぶ](https://qiita.com/moma42105016/items/85e66a60eb7b656c819c)」をご覧ください。
 
-<!-- PORTABLE_SETUP_ILLUSTRATION: Add only after the separately prepared concept illustration is received and reviewed; portable equipment is optional. -->
+<img src="docs/images/portable-projection.jpg" width="760" alt="銀色のスーツケース、畳んだ三脚、投影機を組み合わせ、夜の会場で立ち止まって映像を映す使用イメージ。">
+
+*持ち運べる投影セットを会場に設置して使うイメージです。組立手順や収納状態を示す図ではありません。*
 
 ## 利用条件と改変
 
-冒頭の使用イメージは本README用の生成イラストです。第三者模型や実投影写真とは別の素材として扱います。
+冒頭と持ち運び例の使用イメージは、本README用の生成イラストです。第三者模型や実投影写真とは別の素材として扱います。
 
 自作コード・本人作成のコウモリ画像・採取値と検証値は **MITライセンス**。第三者模型 **CDmir / Human Skull** は **CC0 1.0** を保持します。[LICENSE](LICENSE) と [素材の利用条件](web/RIGHTS.txt)を確認してください。
 

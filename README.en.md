@@ -88,11 +88,13 @@ Outdoor use depends on sufficient darkness, a suitable projection surface, venue
 
 For the equipment and assembly, see [mamo's portable outdoor projector setup guide on Qiita (in Japanese)](https://qiita.com/moma42105016/items/85e66a60eb7b656c819c).
 
-<!-- PORTABLE_SETUP_ILLUSTRATION: Add only after the separately prepared concept illustration is received and reviewed; portable equipment is optional. -->
+<img src="docs/images/portable-projection.jpg" width="760" alt="Illustration of a silver suitcase, folded tripod and projector used while stationary at a nighttime venue.">
+
+*An illustrative use scene with a portable setup placed at a venue. It is not an assembly guide or an exact view of how equipment is packed.*
 
 ## License and editing
 
-The opening usage illustration was generated for this README. It is a separate asset from the third-party model and real projection photographs.
+The opening and portable-setup illustrations were generated for this README. They are separate assets from the third-party model and real projection photographs.
 
 Own code, the owner-created bat artwork and sampled/validation values are **MIT licensed**. The third-party **CDmir / Human Skull** model retains **CC0 1.0**. See [LICENSE](LICENSE) and the [asset notices](web/RIGHTS.txt).
 

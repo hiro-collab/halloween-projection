@@ -35,3 +35,6 @@ coverage/
 
 # Reviewed README usage illustration only.
 !docs/images/how-it-works.jpg
+
+# Reviewed optional portable-setup illustration only.
+!docs/images/portable-projection.jpg
