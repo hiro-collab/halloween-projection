@@ -1,0 +1,37 @@
+{
+  "version": "0.1.59-readability-cleanup",
+  "tag": "v0.1.59",
+  "build": "0.1.59-readability-cleanup-5f15b9414c9c",
+  "zip": "halloween-projection-web-v0.1.59-readability-cleanup.zip",
+  "bytes": 580914,
+  "sha256": "581b798f5d5f3f93dc6c359d960e1a6184ba745eb3aaf6652ca88eb702bcb1de",
+  "entryCount": 54,
+  "offlineAssetCount": 51,
+  "scope": "Formatting, intent comments, developer guide, validation tooling and release version metadata. No key, colour conversion, motion or performance change.",
+  "readabilityCommit": "69b0bff4fad658c6c5c29429d94a0af02acef53b",
+  "readabilityMainMerge": "7b2973e11363ceaeaa07541523655db62fe9203b",
+  "comparisonBaseline": "df9573325d0952f6b1b73b24cf8b0d13349190c1",
+  "oldReleasesRetained": [
+    "v0.1.58",
+    "v0.1.57",
+    "v0.1.56",
+    "v0.1.55"
+  ],
+  "checks": {
+    "unitSuites": 17,
+    "fixedRenderChecks": 13,
+    "fixedImages": 12,
+    "visibleImages": 11,
+    "changedPixels": 0,
+    "operatorChecks": 53,
+    "colourTextOrientationChecks": 13,
+    "packagedStartupChecks": 7,
+    "zipEntries": 54,
+    "assetHashes": 51,
+    "failed": 0
+  },
+  "browserProtocol": "loopback HTTP",
+  "fileProtocolTested": false,
+  "physicalProjectionTested": false,
+  "longDurationTested": false
+}

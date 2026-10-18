@@ -525,7 +525,7 @@
       keyboard: keyboard.status(),
       pending: pending.size,
       rendererOwners: 0,
-      version: '0.1.58-performance-update'
+      version: '0.1.59-readability-cleanup'
     }),
     intent: sendIntent,
     request,
