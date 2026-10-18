@@ -46,6 +46,31 @@ About 20 seconds, without audio: rotating skulls → **Z** to switch → bat mot
 
 ## Try it
 
+### What you need
+
+- A PC and projector, a video cable between them (HDMI in the illustration), and an adapter if their ports require one.
+- Power for the PC and projector, plus a wall or screen suitable for projection.
+- An external keyboard is optional; the PC's built-in keyboard also works. A portable battery and suitcase are optional too.
+
+To try it with just a PC, arrange the console and projection windows side by side on the same screen and choose **Start windowed** in the projection window.
+
+### Set up the PC and projector
+
+Keep the laptop lid open. The **PC shows the console; the projector shows the separate projection window**.
+
+<img src="docs/images/pc-projector-setup.png" width="760" alt="An open laptop shows the operator console. An HDMI cable connects the PC to a projector showing separate visuals. An optional external keyboard connects to the PC. The displays use extended desktop.">
+
+*An illustration of connections and window placement; the controls and visuals are illustrative. Windows display numbers and main/secondary roles do not need to be fixed.*
+
+1. Connect the projector to the PC. Press **Win + P** and choose **Extend**. Connect any external keyboard to the same PC.
+2. **Extract All** from the application ZIP. Open `はじめに_START-HERE.html` in Chrome, choose **English**, then **Start the projection**.
+3. On the PC console, click **Open projection window**. Drag the new window by its top title bar onto the projector display; leave the console on the PC.
+4. When preparation finishes, click **Start fullscreen** in the projection window's central **Prepare projection window** panel. Then return to the PC console, prepare the text and click **Enable keys**. Keep that console selected while playing.
+
+**Fullscreen and key input:** Use the app's button for fullscreen; Chrome's F11 is a different control. To leave fullscreen, click the projection window and press `Esc`. In the console, `Esc` disables performance keys while visuals continue. Switching apps/windows or selecting a text field also disables keys. Return to the PC console and click **Enable keys** again.
+
+**Power and lid:** Check Windows power settings beforehand so sleep or screen-off does not interrupt use. Closing the lid may cause sleep or a display change. Closed-lid operation depends on the laptop, power settings and display configuration. It is untested and not guaranteed for this app.
+
 <details>
 <summary>Download and start projecting in three steps</summary>
 
@@ -117,6 +142,18 @@ For the equipment and assembly, see [mamo's portable outdoor projector setup gui
 <img src="docs/images/portable-projection.jpg" width="760" alt="Illustration of a silver suitcase, folded tripod and projector used while stationary at a nighttime venue.">
 
 *An illustrative use scene with a portable setup placed at a venue. It is not an assembly guide or an exact view of how equipment is packed.*
+
+## Tested and required environment
+
+| Item | Tested scope and conditions |
+| --- | --- |
+| Tested | Application-ZIP startup, controls and offline saving have been checked with **Windows and Chrome**. This does not guarantee operation on every PC or physical projector. |
+| Standard skull rendering | **WebGL2** and `OES_texture_float_linear` (floating-point texture filtering) must be available to the browser. GPU fluid processing also uses `EXT_color_buffer_float` (floating-point render targets). Availability depends on the GPU, driver and browser combination. |
+| Fallback | The fluid implementation can switch to CPU processing when GPU fluid is unavailable, but identical appearance or speed is not guaranteed. |
+| Untested | Ubuntu/Linux, macOS and other operating systems, and Edge, Firefox and Safari, are untested. On Ubuntu/Linux the entry HTML is also intended to be opened in a browser, without a Windows-only launcher, but it has not been tested on a physical Linux machine. |
+| GPU and memory baseline | No minimum GPU model or memory capacity has been measured. Try it with your own equipment and resolution beforehand. |
+
+For equipment, extended desktop, the PC-side console and open-lid operation, see **What you need** and **Set up the PC and projector** above.
 
 ## Modifications, support and projection precautions
 

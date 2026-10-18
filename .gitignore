@@ -54,3 +54,6 @@ coverage/
 
 # User-confirmed startup branding photograph only.
 !web/assets/mamo-profile.jpg
+
+# Approved README PC/projector connection illustration.
+!docs/images/pc-projector-setup.png
