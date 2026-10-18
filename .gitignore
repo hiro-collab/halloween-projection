@@ -38,3 +38,7 @@ coverage/
 
 # Reviewed optional portable-setup illustration only.
 !docs/images/portable-projection.jpg
+
+# Reviewed actual browser scene capture and private README demo.
+!docs/images/bats-preview.jpg
+!docs/media/halloween-demo.mp4

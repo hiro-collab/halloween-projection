@@ -10,17 +10,14 @@
 - **Change motion and color live** — use your keyboard to match the mood.
 - **Add your own words** — put a greeting or event name into the visuals.
 
-<!-- DEMO_VIDEO_URL: Add only a video verified as playable on GitHub. Never use a private Library URL or local path. -->
-<!-- TD_PROJECTION_EXAMPLE: Label approved footage "Projection example made with the TouchDesigner version", distinct from browser captures. -->
 
 ## Try it
 
 <details>
 <summary>Download and start projecting in three steps</summary>
 
-**The application ZIP is being prepared for release. There is no published Release or public download link yet.**
+**The download ZIP is being prepared. Its link will appear here when it is published.**
 
-The verified package is named `halloween-projection-web-v0.1.55-jaw-edge-preview.zip`. Its download link will go here after publication.
 <!-- RELEASE_DOWNLOAD_URL: After publishing an approved Release with the verified application ZIP attached, replace the notice above with its actual link. The automatic Source code ZIP is a different package. -->
 
 ### Start in three steps
@@ -35,11 +32,11 @@ Keep both windows open. Once extracted, the complete folder can run offline.
 
 </details>
 
-## Play from the keyboard
+## Control it with your keyboard
 
 <img src="docs/images/keyboard-keys-en.svg" width="440" alt="Motion: 1 to 8. Color: Q W E R T Y U I. Text size: A S D F G H J K.">
 
-Use Latin keys without Shift while the console has focus.
+Choose **Enable keys**, then keep the console selected. Use Latin keys without Shift.
 
 | Key | Action |
 | --- | --- |
@@ -66,13 +63,29 @@ Edit the words in the console text box. `9` / `0` selects 1–6 skulls; `C` retu
 
 </details>
 
-## The browser visuals
+## Switch between two visuals
 
-Switch between skulls and bats.
+Press **Z** to switch between skulls and bats.
 
-![Browser demo showing animated skulls, flowing light and Halloween text.](docs/images/halloween-preview.jpg)
+### Skulls: three heads turning independently
 
-*A browser demo capture, not a photograph of a physical projection.*
+![Actual browser capture with strong motion: three skulls face forward, sideways and at an angle.](docs/images/halloween-preview.jpg)
+
+A capture with motion set high. Each skull turns independently, revealing the model from the side and at different angles.
+
+The skull uses CDmir’s “[Human Skull](https://opengameart.org/content/human-skull-0)” 3D model. Thank you for making it available.
+
+### Bats: change their motion and color
+
+![Actual browser capture of pink bats flying around Halloween text.](docs/images/bats-preview.jpg)
+
+Change the movement and color of the flapping bats while projecting. Both images above are captures of the browser app.
+
+### A keyboard demonstration
+
+![Real-time demo: rotating skulls, Z switches to bats, and T and I change their color.](docs/media/halloween-demo.gif)
+
+About 20 seconds, without audio: rotating skulls → **Z** to switch → bat motion and **T / I** color changes. Recorded at its actual speed. The GIF loops. [View or save the higher-quality MP4](docs/media/halloween-demo.mp4).
 
 ## Before projecting
 
@@ -92,21 +105,19 @@ For the equipment and assembly, see [mamo's portable outdoor projector setup gui
 
 *An illustrative use scene with a portable setup placed at a venue. It is not an assembly guide or an exact view of how equipment is packed.*
 
-## License and editing
+## License and personal changes
 
-The opening and portable-setup illustrations were generated for this README. They are separate assets from the third-party model and real projection photographs.
+The author’s code, bat artwork and data used to reproduce movement and appearance use the **MIT license**. CDmir’s “Human Skull” 3D model uses **CC0 1.0**. See [LICENSE](LICENSE) and the [asset-specific terms](web/RIGHTS.txt).
 
-Own code, the owner-created bat artwork and sampled/validation values are **MIT licensed**. The third-party **CDmir / Human Skull** model retains **CC0 1.0**. See [LICENSE](LICENSE) and the [asset notices](web/RIGHTS.txt).
+The opening and portable-setup illustrations were generated to explain this README. They are separate from the browser captures and CDmir’s 3D model.
 
 <details>
-<summary>Edit the application or work from source</summary>
+<summary>Change the appearance or wording</summary>
 
-The ZIP contains editable HTML, CSS and JavaScript. In `アプリ本体/`, edit `console.html` / `console.css` for the console, `GUIDE.html` / `guide.css` for help, and `i18n.js` for UI translations. Ordinary text and style changes need an editor and reload.
+The ZIP includes editable HTML, CSS and JavaScript. In `アプリ本体/`, `console.html` / `console.css` control the console, and `GUIDE.html` / `guide.css` provide the guide. Edit the text or styles and reload to check ordinary changes.
 
-Images are also embedded and hash-checked; replacing only the PNG is insufficient. See the [editing notes](web/README.txt) and [asset provenance](docs/PUBLIC-READINESS.md).
+Replacing an image also requires updating its embedded image data. See the [editing guide](web/README.txt).
 
-GitHub's **Code → Download ZIP** downloads the source repository, which has a different layout. Extract it and open its root `START-HERE.html`; normal use still needs no build. Packaging tools and historical validation records are developer material; `app/` is an older Windows prototype.
-
-Current verification: [v55 release record](releases/v55.json). Earlier development notes remain under `docs/` and `releases/`.
+GitHub’s **Code → Download ZIP** provides the source tree with a different layout. Extract it and open the root `START-HERE.html` to try it.
 
 </details>
