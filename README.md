@@ -1,100 +1,82 @@
-# Halloween Projection v55
+[English](README.en.md)
 
-配布ZIPをすべて展開し、はじめに_START-HERE.html をChromeで開きます。追加ソフトやコマンド入力は不要です。
-入口・操作席・ガイドは日本語 / Englishを再読込みせず切替できます。投影する本人の文字は翻訳しません。
+# Halloween Projection
 
-Lで顎の幅15°/30°/60°/90°、Mで開閉、Cで自動に復帰。閉じても幅は保持します。
-Bの原PNG、動き、位相は保持し、表示サンプリングとalpha処理で輪郭を改善しました。
+プロジェクター向けの黒背景で、投影中に手元のキーボードから動き・色・文字を変えられるハロウィン映像エフェクトです。
 
-- Package: dist/halloween-projection-web-v0.1.55-jaw-edge-preview.zip
-- Release evidence: [releases/v55.json](releases/v55.json)
-- Editing and asset replacement: [web/README.txt](web/README.txt)
-- Own code, owner-created bat and owner-scene sampled/validation data: standard MIT. Third-party skull: CC0. [provenance / public-readiness facts](docs/PUBLIC-READINESS.md)
+流れる背景とドクロ、文字の周りを飛ぶコウモリを切り替えて使えます。操作画面はPCに残し、別の投影窓をプロジェクターへ表示します。
 
-Extract the curated ZIP and open はじめに_START-HERE.html in Chrome. Choose English; no extra software, commands or build step are needed.
-L selects jaw width, M opens/closes, C restores automatic motion. Original artwork and accepted motion/phase are preserved.
-The following version notes are history. The curated v55 ZIP uses its top-level Japanese entry plus アプリ本体/ and 利用条件.txt.
-GitHub automatic Source code ZIP remains a repository snapshot; its root START-HERE.html links into web/ and also runs without a build.
+![ブラウザ版の画面例。左は流れる背景とドクロ、右は文字の周りを飛ぶコウモリ。](docs/images/halloween-preview.jpg)
 
-# v54 history: Skull size and inertial return
+*ブラウザ版の画面キャプチャです。実際に投影した壁面の写真ではありません。*
+<!-- DEMO_VIDEO_URL: GitHub上で再生確認できた動画だけを追加する。私的Library URLやPCの絶対パスは使わない。 -->
+<!-- TD_PROJECTION_EXAMPLE: 許可と素材確認後に追加する場合は「TouchDesigner版での投影例」と明示し、ブラウザ版の画像と区別する。 -->
 
-The latest private preview keeps skull scale independent of movement strength and removes the fixed arrival deadline. Quiet returns to the full-size row through a small position/velocity feedback loop; travel time depends on distance and initial velocity. The accepted bats, original model and 6% appearance animation are preserved.
+## ダウンロード
 
-- Details and source distinctions: `docs/SKULL-REST-V54.md`.
-- Package: `dist/halloween-projection-web-v0.1.54-inertial-rest-preview.zip`.
-- Release evidence: `releases/v54.json`.
+**配布用ZIPは公開準備中です。現在、公開済みReleaseや一般向けダウンロードリンクはありません。**
 
-# v53 Motion, input and skull surface
+検証済みパッケージ名は `halloween-projection-web-v0.1.55-jaw-edge-preview.zip` です。公開後、ここへダウンロードリンクを掲載します。
+<!-- RELEASE_DOWNLOAD_URL: 承認されたReleaseへ検証済み配布ZIPを添付してから、上の案内を実際のリンクへ差し替える。自動生成のSource code ZIPとは別。 -->
 
-The latest private preview fixes V long holds, the skull rest row at low strength, live bat-force strength/C modes, and internal triangle seams together. Open the extracted START-HERE.html in Chrome. Digits1..8 move from quiet to strong; A quiet returns the body to a fixed row, B quiet keeps flutter and central flight. V caps its accent after3seconds while key performance remains armed; release before a new accent.
+## はじめるまでの3手順
 
-- Details and source distinctions: `docs/MOTION-SURFACE-V53.md`.
-- Package: `dist/halloween-projection-web-v0.1.53-motion-surface-preview.zip`.
-- Release evidence: `releases/v53.json`.
+動作確認環境は **Windows・Chrome**。PCとプロジェクターの接続・画面配置は、先にWindows側で設定してください。追加ソフトやコマンド入力は不要です。
 
-# v52 導入説明の修正
+1. **ZIPをすべて展開する。** ZIPを右クリックして「すべて展開」。フォルダー全体を一緒に保持します。
+2. **はじめにHTMLを開く。** 展開先の `はじめに_START-HERE.html` をChromeで開き、「映像をはじめる」を押します。
+3. **投影を開始する。** 「投影窓を開く」→その窓を投影先へ移動→「ウィンドウで始める」または「全画面で始める」。操作画面へ戻って文字を準備し、「演奏開始」を押します。
 
-配布ZIPを新しく展開してChromeでSTART-HERE.htmlから起動できます。準備段階は画面ボタン、キー操作は「演奏開始」の後という順番を明記しました。導入・ヘルプの版表示と終了・再起動の説明を更新しています。v51の描画、モデル、画像、動き、キー動作は維持します。
+操作画面と投影窓の両方を開いたまま使います。展開した一式があれば、ネット接続なしでも動作します。
 
-- `docs/INSTALLATION-V52.md`: 実配布ZIPからの導入確認と検証範囲。
-- 配布物: `dist/halloween-projection-web-v0.1.52-install-guide-preview.zip`。
+## 手元で演奏する
 
-# Halloween Projection v51
+半角英数・Shiftなしで使います。キーは操作画面にフォーカスがある間だけ有効です。
 
-Windows・Chrome向けの本人用導入確認版。既定は3体の回遊、出現6％・0.2秒です。
+| キー | 操作 |
+| --- | --- |
+| `1`〜`8` | 動きの激しさを8段階から選ぶ |
+| `Q W E R T Y U I` | 色相を選ぶ |
+| `A S D F G H J K` | 文字サイズを選ぶ |
+| `Z` | ドクロ／コウモリを切り替える |
+| `X` | 通常／左右反転／上下反転／上下左右反転 |
+| `L` / `M` | 顎の開き幅を選ぶ／開閉する |
+| `Space` | 映像全体の一時停止・再開 |
+| `Esc` | キー演奏を解除する。映像は続く |
 
-## 導入
+文字の内容は入力欄で編集します。ドクロは `9` / `0` で1〜6体、手動の顎は `C` で自動へ戻せます。全キーの説明は、展開先の `アプリ本体/GUIDE.html` にあります。
 
-1. 配布ZIPを「すべて展開」。
-2. 展開フォルダーのSTART-HERE.htmlをChromeで開く。
-3. 「操作窓を開く」→「投影窓を開く」。
-4. 投影窓で「ウィンドウで始める」または「全画面で始める」。
-5. 操作窓で文字と見えを準備し、「演奏開始」。
+<details>
+<summary>詳しい操作・困ったとき・終了</summary>
 
-コマンド入力・追加ソフトは不要。展開フォルダー内の全ファイルを保持するとネット接続なしで起動できます。文字・設定は投影窓を閉じると初期化されます。詳しくはweb/GUIDE.html。
+- 入力欄・IME・別窓へ移るとキー演奏を解除します。戻ったら、もう一度「演奏開始」を押してください。
+- 接続が切れたら「既存の投影窓へ再接続」。投影窓を閉じていたら、新しく開き直します。
+- `N` を0.6秒長押しすると、文字・設定を保って映像計算をResetします。保存した基準へ戻すときは `B` を0.6秒長押しです。
+- 動きの0%ではドクロの頭部は定位置へ戻ります。コウモリは羽ばたきを続けるため、全体を止めるときは `Space` です。
+- 終了は「投影の補正・中断・終了」→「投影を終了」。投影窓を閉じると文字・設定・基準は初期化されます。
+- 画面の言語切替は案内文だけを変え、投影する文字は翻訳しません。
 
-GitHubの「Code → Download ZIP」で取得したソースZIPの場合も、展開後に一番上のSTART-HERE.htmlをChromeで開けます。現在のweb/への入口です。app/は旧Windows試作の履歴で、通常の導入には使いません。
+</details>
 
-## キー配置
+## 投影する前に
 
-| キー | 操作 | 押し方 |
-|---|---|---|
-| 1 2 3 4 5 6 7 8 | 動きの激しさを8位置から指定 | 1押下で目標へ |
-| Q W E R T Y U I | 色相を8位置から指定 | 1押下で目標へ |
-| A S D F G H J K | 文字サイズを8位置から指定 | 1押下で目標へ |
-| 9 / 0 | ドクロ数を減らす / 増やす（1〜6体） | 1押下ずつ |
-| Z | ドクロ / コウモリを交互に切替 | 単発 |
-| X | 通常→左右→上下→上下左右→通常 | 単発 |
-| C | 動き方を3状態で切替 | 単発 |
-| V | 一時アクセント | 押している間・最大3秒 |
-| B | 準備した基準へ戻す | 0.6秒長押し |
-| N | 映像計算をReset（文字・設定は保持） | 0.6秒長押し |
-| L / M | 顎の開き幅4段階 / 開閉（Aのみ、Cで自動） | 押し直すたび1回 |
-| Space | 一時停止・再開 | 単発 |
-| Esc | キー演奏を解除（映像は続く） | いつでも |
+最初はプロジェクターの明るさを控えめにし、小さいウィンドウで試してください。投影光を人の目へ向けず、明るく変化する映像が苦手な人にも配慮してください。設置・排熱はプロジェクターの説明書に従います。
 
-```text
-1 2 3 4 5 6 7 8  9 0   動き8位置 / 体数−＋
-Q W E R T Y U I  O P   色8位置
- A S D F G H J K  L    文字サイズ8位置
-  Z X C V B N M         映像 / 向き / 動き方 / 一時 / 基準 / Reset
-```
+黒背景の沈み方や明るさは、プロジェクター・投影面・周囲の光で変わります。自動画面配置・台形補正・スマホ操作はありません。実プロジェクターや別PCでは、使用前の確認が必要です。
 
-目標指定は8段階、実値は約0.15秒の時間基準で線形移行。途中の再指定は現在値から連続。色相は短い円周経路。正確な中間値は各スライダーで指定できます。「演奏開始」を押し、操作窓にフォーカスがある間だけ有効。半角英数・Shiftなしで使います。入力欄・選択欄・IME・修飾キー・別窓への移動でキー演奏を解除し、戻っても自動再開しません。数字や文字を入力中に演奏キーを奪いません。
+## 利用条件と改変
 
-向きは通常→左右→上下→上下左右→通常で、文字とエフェクトを含む最終出力だけを反転します。UIは正位置、映像切替でも向きを保持。台形補正・90度回転は追加していません。
+自作コード・本人作成のコウモリ画像・採取値と検証値は **MITライセンス**。第三者模型 **CDmir / Human Skull** は **CC0 1.0** を保持します。[LICENSE](LICENSE) と [素材の利用条件](web/RIGHTS.txt)を確認してください。
 
-## 開発者向け
+<details>
+<summary>ソースを編集する方へ</summary>
 
-ビルド: `python tools/build-web-package.py`。検証: `node tests/app-control-api.qa.cjs`、`node tests/actor-presence.qa.cjs`、`node tests/presence-lag.qa.cjs`。既存Playwright CLIのJSパスをPLAYWRIGHT_CLIへ設定して `python tests/run-browser-qa.py keyboard-lifecycle offline-unpacked`。Python/Node.jsは保守作業用で、利用者の導入には不要です。
+ZIPには編集可能なHTML・CSS・JavaScriptが入っています。`アプリ本体/` の `console.html` / `console.css` は操作画面、`GUIDE.html` / `guide.css` は案内、`i18n.js` は表示言語です。通常の文章やスタイル変更は、テキスト編集と再読込みで確認できます。
 
-自作コード・本人bat素材・本人作品由来の採取値/検証値はMIT。第三者模型はCC0。RIGHTS.txtとdocs/PRIVATE-ASSET-BOUNDARIES.mdを確認してください。本人承認の既存private GitHubへのコード/同梱素材の通常pushだけが許可され、公開化・公開Releaseは含みません。実投影/別端末は未検収です。ZIP/動画/ログはGitへ含めません。
+画像は埋込みデータとハッシュも照合するため、PNGだけを交換しても反映できません。[編集案内](web/README.txt) と [素材の由来・区分](docs/PUBLIC-READINESS.md)を参照してください。
 
+GitHubの「Code → Download ZIP」は配布用ZIPと構成の違うソース一式です。展開後、一番上の `START-HERE.html` から試せます。通常利用にビルドは不要です。ビルダーや過去の検証記録は開発者向けで、`app/` は旧Windows試作の保存先です。
 
-v51では、通常の顎支点を使用モデルの登録済み関節位置に揃えました。開口時に顎が頭の内部へ入り込む問題を修正しています。頭の動き・顎の独立開閉・閉じた姿・3段キーは保持しています。詳しくはdocs/JAW-HINGE-V51.md。
+現行の確認記録は [v55リリース記録](releases/v55.json)。過去の開発・検証経緯は `docs/` と `releases/` に保持しています。
 
-## v55 編集と配布
-
-配布ZIPは入口HTML・アプリ本体・利用条件の3項目です。展開した入口をChromeで開きます。日本語/Englishは再読込みせず切替できます。
-通常のHTML/CSS/JS編集にビルドは不要です。配布ソースはweb/のまま。埋込み画像・模型・数値データとService Worker再生成は[編集案内](web/README.txt)を参照。
-自作コード・本人コウモリ・本人作品由来の採取値/検証値は標準MIT、Copyright (c) 2026 hiro-collab。CC0模型の条件を保持し、素材の区分は[権利台帳](docs/PUBLIC-READINESS.md)で区分します。公開操作は今回行っていません。
+</details>

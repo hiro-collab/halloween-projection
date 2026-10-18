@@ -29,3 +29,6 @@ auth.json
 *.npz
 *.log
 coverage/
+
+# Approved README screenshot only; raw capture files stay ignored.
+!docs/images/halloween-preview.jpg
