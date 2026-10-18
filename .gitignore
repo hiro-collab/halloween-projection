@@ -32,3 +32,6 @@ coverage/
 
 # Approved README screenshot only; raw capture files stay ignored.
 !docs/images/halloween-preview.jpg
+
+# Reviewed README usage illustration only.
+!docs/images/how-it-works.jpg

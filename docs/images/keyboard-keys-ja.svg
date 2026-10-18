@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="134" viewBox="0 0 440 134" role="img" aria-labelledby="title desc">
+<title id="title">PCキーボードの主なキー</title>
+<desc id="desc">強さは1から8、色はQ W E R T Y U I、文字サイズはA S D F G H J K。</desc>
+<rect x=".5" y=".5" width="439" height="133" rx="12" fill="#f6f8fa" stroke="#d1d9e0"/>
+<text x="16" y="22" fill="#1f2328" font-family="system-ui,Segoe UI,Yu Gothic,sans-serif" font-size="16" font-weight="600">PCキーボードの主なキー</text>
+<text x="16" y="52" fill="#1f2328" font-family="system-ui,Segoe UI,Yu Gothic,sans-serif" font-size="14">強さ</text>
+<rect x="108" y="34" width="30" height="24" rx="4" fill="#fff3df" stroke="#ad6800"/>
+<text x="123" y="51" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">1</text>
+<rect x="143" y="34" width="30" height="24" rx="4" fill="#fff3df" stroke="#ad6800"/>
+<text x="158" y="51" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">2</text>
+<rect x="178" y="34" width="30" height="24" rx="4" fill="#fff3df" stroke="#ad6800"/>
+<text x="193" y="51" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">3</text>
+<rect x="213" y="34" width="30" height="24" rx="4" fill="#fff3df" stroke="#ad6800"/>
+<text x="228" y="51" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">4</text>
+<rect x="248" y="34" width="30" height="24" rx="4" fill="#fff3df" stroke="#ad6800"/>
+<text x="263" y="51" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">5</text>
+<rect x="283" y="34" width="30" height="24" rx="4" fill="#fff3df" stroke="#ad6800"/>
+<text x="298" y="51" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">6</text>
+<rect x="318" y="34" width="30" height="24" rx="4" fill="#fff3df" stroke="#ad6800"/>
+<text x="333" y="51" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">7</text>
+<rect x="353" y="34" width="30" height="24" rx="4" fill="#fff3df" stroke="#ad6800"/>
+<text x="368" y="51" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">8</text>
+<text x="16" y="82" fill="#1f2328" font-family="system-ui,Segoe UI,Yu Gothic,sans-serif" font-size="14">色</text>
+<rect x="115" y="64" width="30" height="24" rx="4" fill="#f8edff" stroke="#8957a7"/>
+<text x="130" y="81" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">Q</text>
+<rect x="150" y="64" width="30" height="24" rx="4" fill="#f8edff" stroke="#8957a7"/>
+<text x="165" y="81" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">W</text>
+<rect x="185" y="64" width="30" height="24" rx="4" fill="#f8edff" stroke="#8957a7"/>
+<text x="200" y="81" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">E</text>
+<rect x="220" y="64" width="30" height="24" rx="4" fill="#f8edff" stroke="#8957a7"/>
+<text x="235" y="81" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">R</text>
+<rect x="255" y="64" width="30" height="24" rx="4" fill="#f8edff" stroke="#8957a7"/>
+<text x="270" y="81" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">T</text>
+<rect x="290" y="64" width="30" height="24" rx="4" fill="#f8edff" stroke="#8957a7"/>
+<text x="305" y="81" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">Y</text>
+<rect x="325" y="64" width="30" height="24" rx="4" fill="#f8edff" stroke="#8957a7"/>
+<text x="340" y="81" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">U</text>
+<rect x="360" y="64" width="30" height="24" rx="4" fill="#f8edff" stroke="#8957a7"/>
+<text x="375" y="81" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">I</text>
+<text x="16" y="112" fill="#1f2328" font-family="system-ui,Segoe UI,Yu Gothic,sans-serif" font-size="14">文字サイズ</text>
+<rect x="122" y="94" width="30" height="24" rx="4" fill="#e8f2ff" stroke="#356ab7"/>
+<text x="137" y="111" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">A</text>
+<rect x="157" y="94" width="30" height="24" rx="4" fill="#e8f2ff" stroke="#356ab7"/>
+<text x="172" y="111" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">S</text>
+<rect x="192" y="94" width="30" height="24" rx="4" fill="#e8f2ff" stroke="#356ab7"/>
+<text x="207" y="111" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">D</text>
+<rect x="227" y="94" width="30" height="24" rx="4" fill="#e8f2ff" stroke="#356ab7"/>
+<text x="242" y="111" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">F</text>
+<rect x="262" y="94" width="30" height="24" rx="4" fill="#e8f2ff" stroke="#356ab7"/>
+<text x="277" y="111" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">G</text>
+<rect x="297" y="94" width="30" height="24" rx="4" fill="#e8f2ff" stroke="#356ab7"/>
+<text x="312" y="111" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">H</text>
+<rect x="332" y="94" width="30" height="24" rx="4" fill="#e8f2ff" stroke="#356ab7"/>
+<text x="347" y="111" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">J</text>
+<rect x="367" y="94" width="30" height="24" rx="4" fill="#e8f2ff" stroke="#356ab7"/>
+<text x="382" y="111" text-anchor="middle" fill="#24292f" font-family="ui-monospace,Consolas,monospace" font-size="16">K</text>
+</svg>

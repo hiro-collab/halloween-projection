@@ -2,9 +2,9 @@
 
 # Bring Halloween to walls and floors with your keyboard
 
-![Browser demo showing animated skulls, flowing light and Halloween text.](docs/images/halloween-preview.jpg)
+<img src="docs/images/how-it-works.jpg" width="760" alt="Illustration of a person using an ordinary PC keyboard, a projector, and skulls and bats projected onto a wall.">
 
-*A browser demo capture, not a photograph of a physical projection.*
+*Using a keyboard to control the projection. This is an explanatory illustration; see the browser captures below for the actual visuals.*
 
 - **Project skulls and bats** — turn walls and floors into a Halloween scene.
 - **Change motion and color live** — use your keyboard to match the mood.
@@ -37,6 +37,8 @@ Keep both windows open. Once extracted, the complete folder can run offline.
 
 ## Play from the keyboard
 
+<img src="docs/images/keyboard-keys-en.svg" width="440" alt="Motion: 1 to 8. Color: Q W E R T Y U I. Text size: A S D F G H J K.">
+
 Use Latin keys without Shift while the console has focus.
 
 | Key | Action |
@@ -64,6 +66,14 @@ Edit the words in the console text box. `9` / `0` selects 1–6 skulls; `C` retu
 
 </details>
 
+## The browser visuals
+
+Switch between skulls and bats.
+
+![Browser demo showing animated skulls, flowing light and Halloween text.](docs/images/halloween-preview.jpg)
+
+*A browser demo capture, not a photograph of a physical projection.*
+
 ## Before projecting
 
 Start with reduced projector brightness and a small window. Avoid directing the beam into people's eyes, and consider viewers sensitive to bright, rapidly changing imagery. Follow your projector's placement and ventilation instructions.
@@ -71,6 +81,8 @@ Start with reduced projector brightness and a small window. Avoid directing the 
 How dark the black background appears depends on the projector, surface and ambient light. Automatic display placement, keystone correction and phone control are not provided. Check physical projector setups and other computers before use.
 
 ## License and editing
+
+The opening usage illustration was generated for this README. It is a separate asset from the third-party model and real projection photographs.
 
 Own code, the owner-created bat artwork and sampled/validation values are **MIT licensed**. The third-party **CDmir / Human Skull** model retains **CC0 1.0**. See [LICENSE](LICENSE) and the [asset notices](web/RIGHTS.txt).
 
