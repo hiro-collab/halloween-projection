@@ -4,9 +4,12 @@
 
 PCとプロジェクターで、壁や床にドクロやコウモリを投影。手元のキーボードで、動き・色・文字を変えられます。
 
-<img src="docs/images/td-projection-bigsight.jpg" width="440" alt="東京ビッグサイトの会場風景。スーツケースに取り付けた投影機から、床へ青白いドクロを投影している。旧TouchDesigner版の実写。">
+*旧TouchDesigner版の投影例です。配布ブラウザ版の実写ではありません。*
 
-*東京ビッグサイトでの投影例（旧TouchDesigner版）。配布ブラウザ版の実写ではありません。*
+<picture>
+  <source media="(max-width: 600px)" srcset="docs/images/td-projection-gallery-mobile-ja.jpg">
+  <img src="docs/images/td-projection-gallery-desktop-ja.jpg" width="960" alt="旧TouchDesigner版の実投影3例。渋谷・青の洞窟のサンタ帽ドクロ、撮影場所未確認の床面ドクロ近景、大崎駅のコウモリ。床や周囲の風景も写っている。">
+</picture>
 
 ## キーボードひとつで、映像に変化を
 
@@ -116,7 +119,7 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 
 作者が作成したプログラム・コウモリ画像・動きや表示を再現するためのデータは **MITライセンス**です。CDmir様のドクロの3Dモデル「Human Skull」は **CC0 1.0** です。[LICENSE](LICENSE) と [素材ごとの利用条件](web/RIGHTS.txt)をご確認ください。
 
-キーボード操作と持ち運び例は、このREADME向けに生成した説明用イラストです。冒頭の会場写真、ブラウザの画面キャプチャ、CDmir様の3Dモデルは、それぞれ別の素材です。会場写真と説明用イラストは、上記のMIT・CC0の対象には含めていません。
+キーボード操作と持ち運び例は、このREADME向けに生成した説明用イラストです。冒頭の投影写真、ブラウザの画面キャプチャ、CDmir様の3Dモデルは、それぞれ別の素材です。投影写真と説明用イラストは、上記のMIT・CC0の対象には含めていません。
 
 <details>
 <summary>自分用に見た目や文章を変える方へ</summary>

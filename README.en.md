@@ -2,11 +2,14 @@
 
 # Bring Halloween to walls and floors with your keyboard
 
-Use a PC and projector to bring skulls and bats to walls or floors. Change their motion, color and accompanying text with your keyboard.
+Project skulls and bats onto walls or floors, and change motion, color and text with your keyboard.
 
-<img src="docs/images/td-projection-bigsight.jpg" width="440" alt="A real projection at Tokyo Big Sight: a projector mounted above a suitcase casts blue-white skulls onto the floor, with the venue visible around it. Earlier TouchDesigner version.">
+*Earlier TouchDesigner projections; not footage of this browser app.*
 
-*Tokyo Big Sight — earlier TouchDesigner version, not the distributed browser version.*
+<picture>
+  <source media="(max-width: 600px)" srcset="docs/images/td-projection-gallery-mobile-en.jpg">
+  <img src="docs/images/td-projection-gallery-desktop-en.jpg" width="960" alt="Three real projections from the earlier TouchDesigner version: Santa-hat skulls at Shibuya Blue Cave, skulls close up at an unconfirmed location, and bats at Osaki Station, with the ground and surroundings visible.">
+</picture>
 
 ## Shape the scene with your keyboard
 
@@ -116,7 +119,7 @@ For the equipment and assembly, see [mamo's portable outdoor projector setup gui
 
 The author’s code, bat artwork and data used to reproduce movement and appearance use the **MIT license**. CDmir’s “Human Skull” 3D model uses **CC0 1.0**. See [LICENSE](LICENSE) and the [asset-specific terms](web/RIGHTS.txt).
 
-The keyboard-use and portable-setup illustrations were generated for this README. The opening venue photograph, browser captures and CDmir’s 3D model are separate materials. The venue photograph and explanatory illustrations are not included under the MIT or CC0 grants above.
+The keyboard-use and portable-setup illustrations were generated for this README. The opening projection photographs, browser captures and CDmir’s 3D model are separate materials. The projection photographs and explanatory illustrations are not included under the MIT or CC0 grants above.
 
 <details>
 <summary>Change the appearance or wording</summary>

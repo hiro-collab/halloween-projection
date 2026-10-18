@@ -45,3 +45,9 @@ coverage/
 
 # Reviewed historical TouchDesigner venue photograph for the private README.
 !docs/images/td-projection-bigsight.jpg
+
+# Reviewed full-frame historical projection gallery, responsive JA/EN layouts.
+!docs/images/td-projection-gallery-desktop-ja.jpg
+!docs/images/td-projection-gallery-mobile-ja.jpg
+!docs/images/td-projection-gallery-desktop-en.jpg
+!docs/images/td-projection-gallery-mobile-en.jpg
