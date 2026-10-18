@@ -1,25 +1,29 @@
 [日本語](README.md)
 
-# Halloween Projection
+# Bring Halloween to walls and floors with your keyboard
 
-Halloween visual effects on a black background for a projector. Change motion, color and text from your keyboard while the projection runs.
+![Browser demo showing animated skulls, flowing light and Halloween text.](docs/images/halloween-preview.jpg)
 
-Switch between animated skulls with a flowing background and a flock of bats around your text. Keep the controls on your computer and send a separate window to the projector.
+*A browser demo capture, not a photograph of a physical projection.*
 
-![Browser version screenshots: a skull with a flowing background on the left, and bats with Halloween text on the right.](docs/images/halloween-preview.jpg)
+- **Project skulls and bats** — turn walls and floors into a Halloween scene.
+- **Change motion and color live** — use your keyboard to match the mood.
+- **Add your own words** — put a greeting or event name into the visuals.
 
-*Browser version screenshots, not a photograph of a physical projection.*
-<!-- DEMO_VIDEO_URL: Add only after playback is verified on GitHub. Do not use a private Library URL or a local path. -->
-<!-- TD_PROJECTION_EXAMPLE: If approved footage is added later, label it "Projection example made with the TouchDesigner version" and distinguish it from browser screenshots. -->
+<!-- DEMO_VIDEO_URL: Add only a video verified as playable on GitHub. Never use a private Library URL or local path. -->
+<!-- TD_PROJECTION_EXAMPLE: Label approved footage "Projection example made with the TouchDesigner version", distinct from browser captures. -->
 
-## Download
+## Try it
+
+<details>
+<summary>Download and start projecting in three steps</summary>
 
 **The application ZIP is being prepared for release. There is no published Release or public download link yet.**
 
 The verified package is named `halloween-projection-web-v0.1.55-jaw-edge-preview.zip`. Its download link will go here after publication.
 <!-- RELEASE_DOWNLOAD_URL: After publishing an approved Release with the verified application ZIP attached, replace the notice above with its actual link. The automatic Source code ZIP is a different package. -->
 
-## Start in three steps
+### Start in three steps
 
 Tested with **Windows and Chrome**. Prepare the projector connection and display arrangement in Windows first. No extra software or command-line setup is needed.
 
@@ -28,6 +32,8 @@ Tested with **Windows and Chrome**. Prepare the projector connection and display
 3. **Start the projection window.** Choose **Open projection window**, move that window to the projector display, and click **Start windowed** or **Start fullscreen**. Return to the console, prepare your text, then choose **Enable keys**.
 
 Keep both windows open. Once extracted, the complete folder can run offline.
+
+</details>
 
 ## Play from the keyboard
 
