@@ -2,7 +2,7 @@
 
 # Bring Halloween to walls and floors with your keyboard
 
-<img src="docs/images/how-it-works.jpg" width="760" alt="Illustration of a person using an ordinary PC keyboard, a projector, and skulls and bats projected onto a wall.">
+<img src="docs/images/how-it-works.jpg" width="760" alt="Illustration of a standing party guest using a compact wireless keyboard, holding a drink and talking with friends while Halloween visuals are projected onto a wall.">
 
 *Using a keyboard to control the projection. This is an explanatory illustration; see the browser captures below for the actual visuals.*
 
@@ -79,6 +79,16 @@ Switch between skulls and bats.
 Start with reduced projector brightness and a small window. Avoid directing the beam into people's eyes, and consider viewers sensitive to bright, rapidly changing imagery. Follow your projector's placement and ventilation instructions.
 
 How dark the black background appears depends on the projector, surface and ambient light. Automatic display placement, keystone correction and phone control are not provided. Check physical projector setups and other computers before use.
+
+## Pair it with a portable projection setup
+
+A PC and projector on a table are enough for the standard setup. For travel, a suitcase, portable power supply, tripod and projector can form a portable setup for an outdoor party, band performance or Halloween event. A suitcase or dedicated portable kit is optional for this app.
+
+Outdoor use depends on sufficient darkness, a suitable projection surface, venue permission and a safe place to secure the equipment and keep walking routes clear.
+
+For the equipment and assembly, see [mamo's portable outdoor projector setup guide on Qiita (in Japanese)](https://qiita.com/moma42105016/items/85e66a60eb7b656c819c).
+
+<!-- PORTABLE_SETUP_ILLUSTRATION: Add only after the separately prepared concept illustration is received and reviewed; portable equipment is optional. -->
 
 ## License and editing
 
