@@ -1,0 +1,30 @@
+{
+  "version": "0.1.58-performance-update",
+  "tag": "v0.1.58",
+  "build": "0.1.58-performance-update-b82f5f2b848b",
+  "zip": "halloween-projection-web-v0.1.58-performance-update.zip",
+  "bytes": 564192,
+  "sha256": "f1176134eae6b133955b8ea866dd7d448a9d4c9ece7d6fb2512c5ceca992e650",
+  "entryCount": 54,
+  "offlineAssetCount": 51,
+  "scope": "Reviewed GPU texture/program optimization and operator guidance, with skull-only colour label/swatch correction and version metadata.",
+  "MITLicenseUnchanged": true,
+  "colourConversionUnchanged": true,
+  "batColourGuidanceUnchanged": true,
+  "oldReleasesRetained": [
+    "v0.1.57",
+    "v0.1.56",
+    "v0.1.55"
+  ],
+  "checks": {
+    "skullShaderSamples": 8,
+    "batGuidanceComparisons": 361,
+    "operatorContract": 19,
+    "appControlAPI": 18,
+    "fluidSampling": 280,
+    "zipEntries": 54,
+    "assetHashes": 51,
+    "failed": 0,
+    "skullKeyboardInputs": 8
+  }
+}
