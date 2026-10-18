@@ -1,105 +1,1126 @@
 /* MIT implementation of source A operator order. Continuous independent Noise samples preserve source operator controls and connections. */
 'use strict';
-window.HalloweenAComposite=(()=>{
- function fitText(ctx,text,width,height,{widthFraction=.82,heightFraction=.48}={}){
-  const lines=text.split('\n'),maxWidth=width*widthFraction,maxHeight=height*heightFraction,base=width*.15625;
-  const measure=size=>{ctx.font=size+'px Arial';let widest=0,ascent=0,descent=0;for(const line of lines){const m=ctx.measureText(line||'M');widest=Math.max(widest,line?m.width:0);ascent=Math.max(ascent,m.actualBoundingBoxAscent||size*.8);descent=Math.max(descent,m.actualBoundingBoxDescent||size*.2);}const lineHeight=size,total=(lines.length-1)*lineHeight+ascent+descent;return {fontSize:size,lineHeight,width:widest,height:total,ascent,descent};};
-  let lo=.1,hi=base;for(let i=0;i<16;i++){const mid=(lo+hi)/2,m=measure(mid);if(m.width<=maxWidth&&m.height<=maxHeight)lo=mid;else hi=mid;}
-  const m=measure(Math.floor(lo*100)/100),top=(height-m.height)/2;return {...m,firstBaseline:top+m.ascent,bounds:{left:(width-m.width)/2,right:(width+m.width)/2,top,bottom:top+m.height},lines:lines.length,maxWidth,maxHeight};
- }
-  const counts={created:0,disposed:0,liveScopes:0,programs:0,textures:0,samplers:0,framebuffers:0,gpuBytes:0,bufferBytes:0,draws:0,maxLive:0,failures:0};
- const vertex=`#version 300 es
- out vec2 uv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.-1.,0.,1.);}`;
- const fragment=`#version 300 es
- precision highp float;uniform sampler2D t0,t1,t2,t3,t4;uniform vec2 resolution,axis;uniform int stage;uniform float brightness,gammaValue,contrastValue,gain,strength,hueValue,noiseSeconds;uniform float blurWeights[12];uniform vec2 center;in vec2 uv;out vec4 outputColor;
- ${window.HalloweenASourceNoise.glsl}
- float lum(vec3 c){return dot(c,vec3(.2126,.7152,.0722));}
- vec4 over(vec4 a,vec4 b){return a+b*(1.-a.a);}
- vec4 level(vec4 a,float b,float g,float c){a.rgb=(pow(max(a.rgb*b,vec3(0)),vec3(1./g))-.5)*c+.5;return a;}
- vec3 hue(vec3 c,float angle,float saturation,float value){float hi=max(c.r,max(c.g,c.b)),lo=min(c.r,min(c.g,c.b)),d=hi-lo;if(d<1.e-7)return c*value;float h=hi==c.r?(c.g-c.b)/d:hi==c.g?2.+(c.b-c.r)/d:4.+(c.r-c.g)/d;h=fract(h/6.+angle/360.);float s=clamp(d/hi*saturation,0.,1.);vec3 rgb=clamp(abs(fract(h+vec3(0.,2./3.,1./3.))*6.-3.)-1.,0.,1.);return hi*value*mix(vec3(1),rgb,s);}
- vec4 sample0(vec2 p){return any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1)))?vec4(0):texture(t0,p);}
- vec4 edge(float scale,float black){vec2 p=1./vec2(textureSize(t0,0));float a=lum(sample0(uv+vec2(-p.x,-p.y)).rgb),b=lum(sample0(uv+vec2(0,-p.y)).rgb),c=lum(sample0(uv+vec2(p.x,-p.y)).rgb),d=lum(sample0(uv+vec2(-p.x,0)).rgb),e=lum(sample0(uv+vec2(p.x,0)).rgb),f=lum(sample0(uv+vec2(-p.x,p.y)).rgb),g=lum(sample0(uv+vec2(0,p.y)).rgb),h=lum(sample0(uv+p).rgb);float x=-a-2.*d-f+c+2.*e+h,y=-a-2.*b-c+f+2.*g+h;float value=clamp(sqrt(x*x+y*y)*scale-black,0.,1.);return vec4(value);}
- void main(){vec4 a=texture(t0,uv),b=texture(t1,uv);vec4 c=a;
-  if(stage==0)c=a*gain;
-  else if(stage==1)c=level(a,brightness,gammaValue,contrastValue);
-  else if(stage==2){c=vec4(0);float total=0.;for(int i=-12;i<=12;i++){float x=float(i),weight=exp(-.5*x*x/(strength*strength));c+=sample0(uv+x*axis/resolution)*weight;total+=weight;}c/=total;}
-  else if(stage==3)c=edge(strength,brightness);
-  else if(stage==4){a.a=lum(a.rgb);c=over(over(a,b),texture(t2,uv));}
-  else if(stage==5){float r=round(clamp(texture(t0,uv).r*.96,0.,1.)*255.)/255.;float er=round(edge(5.31,0.).r*255.)/255.;vec4 body=vec4(hue(vec3(r,0,0),224.,1.,1.),round(clamp(.2126*r,0.,1.)*255.)/255.);vec4 rim=vec4(hue(vec3(er,0,0),172.,1.66,9.),er);c=clamp(body,0.,1.)+clamp(rim,0.,1.);}
-  else if(stage==6){a.rgb=hue(a.rgb,hueValue,brightness,gain);c=a;}
-  else if(stage==7)c=over(a,b);
-  else if(stage==8){float mask=lum((a*b).rgb)>=.544?1.:0.;c=b*(1.-mask);}
-  else if(stage==9)c=over(a,b);
-  else if(stage==10){vec4 glyph=texture(t2,uv);vec4 text=level(min(b,glyph),5.,2.02,1.);c=over(a,text);}
-  else if(stage==11)c=mix(a+b,over(a,b),.824);
-  else if(stage==12){a.rgb=mix(a.rgb,vec3(1)-a.rgb,.098);c=level(a,2.,.86,4.38);float mask=1.-smoothstep(.2-.062,.2+.062,length(uv-center));c*=mask;}
-  else if(stage==13){vec2 dir=uv-center;c=vec4(0);for(int i=0;i<134;i++)c+=sample0(uv-float(i)/134.*dir*strength);c/=134.;}
-  else if(stage==14){c=level(over(a*gain,b),1.03,1.1,1.);c.a=1.;}
-  else if(stage==15){c=sample0(uv)*blurWeights[0];for(int i=1;i<12;i++){vec2 delta=float(i)*axis/resolution;c+=(sample0(uv+delta)+sample0(uv-delta))*blurWeights[i];}}
-  else if(stage==16)c=vec4(sourceDecoration(uv,resolution.x/resolution.y,noiseSeconds));
-  else if(stage==17){c=a;c.a=lum(a.rgb);}
-  else if(stage==18)c=a*b;
-  outputColor=c;
- }`;
- // A borrowed context and dye texture are never deleted or lost by this controller.
- function create({context=null}={}){
-  counts.created++;counts.liveScopes++;counts.maxLive=Math.max(counts.maxLive,counts.liveScopes);
-  const sharedContext=!!context,canvas=context?.canvas??document.createElement('canvas');let gl=null,program=null,fbo=null,linearSampler=null,dyeSource=null,textureHandoffs=0,disposed=false,error='',w=0,h=0,gpuBytes=0,draws=0,lastMs=0,totalMs=0,maxMs=0,lastForeground=null,lastBackgroundHueDegrees=138,lastHeadGlowMix=0,lastForegroundEnabled=false,lastNoiseSeconds=0,lastDecorationEnabled=false;
-  const uniforms=new Map(),validatedTargets=new WeakMap(),programVariants=new Map();let activeProgram=null;
-  const textures=new Map(),sizes=new Map();let dyeBuffer=new Float32Array(640*360),lastGlyph=null,lastGlyphSource=null,lastGlyphWidth=0,lastGlyphHeight=0,noiseWasProvided=false;counts.bufferBytes+=dyeBuffer.byteLength;
-  function compile(code,type){const shader=gl.createShader(type);gl.shaderSource(shader,code);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){const e=gl.getShaderInfoLog(shader);gl.deleteShader(shader);throw Error(e);}return shader;}
-  function texture(name){if(textures.has(name))return textures.get(name);const t=gl.createTexture();textures.set(name,t);counts.textures++;gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return t;}
-  function account(name,width,height,bytes=4){const old=sizes.get(name)?.bytes||0,next=width*height*bytes;sizes.set(name,{width,height,bytes:next});gpuBytes+=next-old;counts.gpuBytes+=next-old;}
-  // Program locations and an unchanged texture allocation are immutable. Keep
-  // first-use/allocation validation and context-loss detection, without a
-  // synchronous framebuffer query for every operator pass.
-  function uniform(name){const owner=activeProgram??program;let locations=uniforms.get(owner);if(!locations){locations=new Map();uniforms.set(owner,locations);}if(!locations.has(name))locations.set(name,gl.getUniformLocation(owner,name));return locations.get(name);}
-  function useProgram(stage){activeProgram=programVariants.get(stage)??program;gl.useProgram(activeProgram);}
-  function validateTarget(name){if(gl.isContextLost())throw Error('A framebuffer unavailable');const texture=textures.get(name),size=sizes.get(name),known=validatedTargets.get(texture);if(!known||known[0]!==size.width||known[1]!==size.height){if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('A framebuffer unavailable');validatedTargets.set(texture,[size.width,size.height]);}}
-  function allocate(name,width=w,height=h){if(!Number.isInteger(width)||!Number.isInteger(height)||width<1||height<1)throw Error('Invalid A target '+name);if(sizes.get(name)?.width===width&&sizes.get(name)?.height===height)return;validatedTargets.delete(texture(name));gl.bindTexture(gl.TEXTURE_2D,texture(name));gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,null);account(name,width,height);}
-  function upload(name,source){validatedTargets.delete(texture(name));gl.bindTexture(gl.TEXTURE_2D,texture(name));gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,source);account(name,source.width,source.height);}
-  // A pass cannot sample its output texture; use a scratch target and swap handles to avoid feedback.
-  function pass(target,stage,inputs,options={}){const requested=target;if(inputs.includes(target)){target=requested+'Scratch';const size=sizes.get(requested);if(sizes.get(target)?.width!==size.width||sizes.get(target)?.height!==size.height)allocate(target,size.width,size.height);}const size=sizes.get(target);gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,textures.get(target),0);validateTarget(target);gl.viewport(0,0,size.width,size.height);useProgram(stage);
-   gl.bindVertexArray(null);gl.disable(gl.BLEND);gl.disable(gl.DEPTH_TEST);for(let i=0;i<5;i++){const input=inputs[i]||'empty',borrowed=input==='dye'&&dyeSource;gl.activeTexture(gl.TEXTURE0+i);gl.bindSampler(i,borrowed?linearSampler:null);gl.bindTexture(gl.TEXTURE_2D,borrowed?dyeSource.texture:textures.get(input));gl.uniform1i(uniform('t'+i),i);}gl.uniform1i(uniform('stage'),stage);gl.uniform2f(uniform('resolution'),...(options.sampleResolution||[size.width,size.height]));gl.uniform2f(uniform('axis'),...(options.axis||[1,0]));if(options.weights)gl.uniform1fv(uniform('blurWeights[0]'),options.weights);gl.uniform2f(uniform('center'),...(options.center||[.5,.5]));gl.uniform1f(uniform('noiseSeconds'),options.noiseSeconds??0);for(const key of ['brightness','gammaValue','contrastValue','gain','strength','hueValue'])gl.uniform1f(uniform(key),options[key]??1);gl.drawArrays(gl.TRIANGLES,0,3);if(target!==requested){const original=textures.get(requested);textures.set(requested,textures.get(target));textures.set(target,original);}
+window.HalloweenAComposite = (() => {
+  function fitText(
+    ctx,
+    text,
+    width,
+    height,
+    { widthFraction = 0.82, heightFraction = 0.48 } = {}
+  ) {
+    const lines = text.split('\n'),
+      maxWidth = width * widthFraction,
+      maxHeight = height * heightFraction,
+      base = width * 0.15625;
+    const measure = (size) => {
+      ctx.font = size + 'px Arial';
+      let widest = 0,
+        ascent = 0,
+        descent = 0;
+      for (const line of lines) {
+        const m = ctx.measureText(line || 'M');
+        widest = Math.max(widest, line ? m.width : 0);
+        ascent = Math.max(ascent, m.actualBoundingBoxAscent || size * 0.8);
+        descent = Math.max(descent, m.actualBoundingBoxDescent || size * 0.2);
+      }
+      const lineHeight = size,
+        total = (lines.length - 1) * lineHeight + ascent + descent;
+      return {
+        fontSize: size,
+        lineHeight,
+        width: widest,
+        height: total,
+        ascent,
+        descent
+      };
+    };
+    let lo = 0.1,
+      hi = base;
+    for (let i = 0; i < 16; i++) {
+      const mid = (lo + hi) / 2,
+        m = measure(mid);
+      if (m.width <= maxWidth && m.height <= maxHeight) lo = mid;
+      else hi = mid;
+    }
+    const m = measure(Math.floor(lo * 100) / 100),
+      top = (height - m.height) / 2;
+    return {
+      ...m,
+      firstBaseline: top + m.ascent,
+      bounds: {
+        left: (width - m.width) / 2,
+        right: (width + m.width) / 2,
+        top,
+        bottom: top + m.height
+      },
+      lines: lines.length,
+      maxWidth,
+      maxHeight
+    };
   }
- function sourceGlow(input,target,size){const iw=Math.max(1,Math.floor(w/8)),ih=Math.max(1,Math.floor(h/8)),sw=Math.max(1,Math.floor(iw/3)),sh=Math.max(1,Math.floor(ih/3)),tw=Math.max(1,Math.round(iw/2)),th=Math.max(1,Math.round(ih/2));allocate('glowEighth',iw,ih);allocate('glowPreshrink',sw,sh);allocate('glowHorizontal',tw,sh);allocate('glowVertical',tw,th);allocate(target,tw,th);pass('glowEighth',0,[input]);pass('glowPreshrink',0,['glowEighth']);const weights=HalloweenASourceBlur.kernel(size);pass('glowHorizontal',15,['glowPreshrink'],{weights,axis:[1,0],sampleResolution:[sw,sh]});pass('glowVertical',15,['glowHorizontal'],{weights,axis:[0,1],sampleResolution:[sw,sh]});pass(target,0,['glowVertical']);}
- function secondaryGlow(input,target){const sw=Math.max(1,Math.floor(w/2)),sh=Math.max(1,Math.floor(h/2)),weights=HalloweenASourceBlur.secondaryKernel;allocate('secondarySmall',sw,sh);allocate('secondaryH',sw,sh);allocate('secondaryV',sw,sh);pass('secondarySmall',0,[input]);pass('secondaryH',15,['secondarySmall'],{weights,axis:[1,0]});pass('secondaryV',15,['secondaryH'],{weights,axis:[0,1]});pass(target,0,['secondaryV']);}
- const decorKernel=new Float32Array([0.43156139561711365,0.25437714358979274,0.03339174217578514,-0.004397184379876544,0.0008818692582008448,8.99673461011004e-05,3.9007404821900293e-05,-0.0003711981290005492,0.00025420126032202,-4.62463347035875e-05,0,0]);
- function sourceDecoration(input,target,seconds,enabled,providedNoise=null){if(!Number.isFinite(seconds)||seconds<0||typeof enabled!=='boolean')throw Error('Finite source clock and decoration boolean required');lastNoiseSeconds=seconds;lastDecorationEnabled=enabled;allocate('decorFront');pass('decorFront',17,[input]);
-  if(enabled){const qw=Math.max(1,Math.floor(w/4)),qh=Math.max(1,Math.floor(h/4)),sw=Math.max(1,Math.floor(qw/3)),sh=Math.max(1,Math.floor(qh/3));for(const name of ['decorQuarter','decorBlur','decorLevel','decorNoise','decorProduct','decorHSV'])allocate(name,qw,qh);allocate('decorPreshrink',sw,sh);allocate('decorHorizontal',qw,sh);pass('decorQuarter',0,['decorFront']);pass('decorPreshrink',0,['decorQuarter']);pass('decorHorizontal',15,['decorPreshrink'],{weights:decorKernel,axis:[1,0],sampleResolution:[sw,sh]});pass('decorBlur',15,['decorHorizontal'],{weights:decorKernel,axis:[0,1],sampleResolution:[sw,sh]});pass('decorLevel',1,['decorBlur'],{brightness:2,contrastValue:1.71});
-   if(providedNoise){upload('noise',providedNoise);pass('decorNoise',0,['noise']);}else pass('decorNoise',16,['empty'],{noiseSeconds:seconds});pass('decorProduct',18,['decorNoise','decorLevel']);pass('decorHSV',6,['decorProduct'],{hueValue:-284});pass(target,9,['decorFront','decorHSV']);
-  }else pass(target,0,['decorFront']);
- }
- function blur(input,target,scale,sigma){const tw=Math.max(1,Math.round(w/scale)),th=Math.max(1,Math.round(h/scale)),a='blur'+scale+'A',b='blur'+scale+'B';allocate(a,tw,th);allocate(b,tw,th);pass(a,2,[input],{axis:[1,0],strength:sigma});pass(b,2,[a],{axis:[0,1],strength:sigma});pass(target,0,[b]);}
-  try{gl=context??canvas.getContext('webgl2',{alpha:false,preserveDrawingBuffer:true,antialias:false,depth:false,stencil:false});if(!gl||!gl.getExtension('OES_texture_float_linear'))throw Error('A requires WebGL2 float sampling');if(sharedContext){linearSampler=gl.createSampler();counts.samplers++;for(const [key,value]of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]])gl.samplerParameteri(linearSampler,key,value);}const v=compile(vertex,gl.VERTEX_SHADER),f=compile(fragment,gl.FRAGMENT_SHADER);program=gl.createProgram();counts.programs++;gl.attachShader(program,v);gl.attachShader(program,f);gl.linkProgram(program);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));// The same fragment source with only its operation selector made constant.
-   // Keep every target, quantization boundary and operator in the same order.
-   // Full-size passes use constant selectors so unused operators can be discarded.
-   const stages=new URLSearchParams(location.search).get('aPrograms')==='uniform'?[0,1]:[0,1,3,4,5,6,7,8,9,10,11,14,17];
-   for(const stage of stages){const v=compile(vertex,gl.VERTEX_SHADER),f=compile(fragment.replace('uniform int stage;','const int stage='+stage+';'),gl.FRAGMENT_SHADER),p=gl.createProgram();counts.programs++;programVariants.set(stage,p);gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(p));}
-   fbo=gl.createFramebuffer();counts.framebuffers++;gl.disable(gl.BLEND);gl.disable(gl.DEPTH_TEST);allocate('empty',1,1);
-  }catch(e){error=String(e.message||e);counts.failures++;}
-  // Keep head-only preprocessing separate so live fluid and text can update without rerasterizing the head.
-  function prepare(head,{headGlowMix=0,present=true}={}){if(disposed||error)return head;const start=performance.now();try{
-   if(w!==head.width||h!==head.height){w=head.width;h=head.height;canvas.width=w;canvas.height=h;for(const name of ['headGain','headStrong','headGlow','headEdge','headInput','displayInput','effectiveHeadGlow','effectiveHeadBlur','flowColor','flowHue','headGamma','headHSV','headBlur','headOverlay','headBright','outside','decor','textBlur','textComposite','behind','frontLevel','radial','final'])allocate(name);allocate('headGlow',Math.max(1,Math.round(Math.floor(w/8)/2)),Math.max(1,Math.round(Math.floor(h/8)/2)));allocate('effectiveHeadGlow',Math.max(1,Math.round(Math.floor(w/8)/2)),Math.max(1,Math.round(Math.floor(h/8)/2)));allocate('flowColor',640,360);allocate('frontLevel',Math.max(1,Math.round(w/4)),Math.max(1,Math.round(h/4)));allocate('radial',Math.max(1,Math.round(w/4)),Math.max(1,Math.round(h/4)));}
-   if(!Number.isFinite(headGlowMix))throw Error('Finite Glow required');lastHeadGlowMix=Math.min(1,Math.max(0,headGlowMix));upload('head',head);pass('headGain',0,['head'],{gain:.4});pass('headStrong',1,['headGain'],{brightness:1.36,gammaValue:1,contrastValue:2.18});if(lastHeadGlowMix>1e-8){sourceGlow('headGain','headGlow',1+9*lastHeadGlowMix);pass('headGlow',1,['headGlow'],{brightness:2*lastHeadGlowMix});}else pass('headGlow',0,['empty'],{gain:0});pass('headEdge',3,['head'],{strength:1.65,brightness:.17});pass('headInput',4,['headGlow','headStrong','headEdge']);
-   if(present){gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,w,h);useProgram(0);gl.uniform1i(uniform('stage'),0);gl.uniform1f(uniform('gain'),1);gl.activeTexture(gl.TEXTURE0);gl.bindSampler(0,null);gl.bindTexture(gl.TEXTURE_2D,textures.get('headInput'));gl.drawArrays(gl.TRIANGLES,0,3);}const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('A prepare GL error '+code);lastMs=performance.now()-start;return present?canvas:{context:gl,texture:textures.get('headInput'),width:w,height:h,channel:'rgba',flipY:false};
-  }catch(e){error=String(e.message||e);counts.failures++;return head;}}
-  // Preserve the pass order: dye color, head glow, text and foreground have different alpha/color roles.
-  function draw(head,dye,text,{noise=null,foreground=null,textRevision=null,backgroundHueDegrees=138,headGlowMix=0,foregroundEnabled=false,foregroundMix=foregroundEnabled?1:0,noiseSeconds=0,decorationEnabled=true}={}){if(disposed||error)return head;const start=performance.now();try{
-   if(w!==head.width||h!==head.height)prepare(head);
-   if(dye?.texture){if(!sharedContext||dye.context!==gl||dye.width!==640||dye.height!==360||dye.channel!=='r'||dye.flipY!==false)throw Error('A dye must be a same-context bottom-up 640x360 R texture');dyeSource=dye;textureHandoffs++;}else{dyeSource=null;if(dye.length!==dyeBuffer.length)throw Error('A scalar grid mismatch');const scalar=dye instanceof Float32Array?dye:(dyeBuffer.set(dye),dyeBuffer);gl.activeTexture(gl.TEXTURE0);gl.bindSampler(0,null);gl.bindTexture(gl.TEXTURE_2D,texture('dye'));gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);if(!sizes.has('dye')){gl.texImage2D(gl.TEXTURE_2D,0,gl.R32F,640,360,0,gl.RED,gl.FLOAT,null);account('dye',640,360,4);}gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,640,360,gl.RED,gl.FLOAT,scalar);}if(textRevision===null||lastGlyph!==textRevision||lastGlyphSource!==text||lastGlyphWidth!==text.width||lastGlyphHeight!==text.height){upload('glyph',text);lastGlyph=textRevision;lastGlyphSource=text;lastGlyphWidth=text.width;lastGlyphHeight=text.height;}
-   pass('flowColor',5,['dye']);if(!Number.isFinite(backgroundHueDegrees)||Math.abs(backgroundHueDegrees)>720)throw Error('Finite background hue0..360 required');lastBackgroundHueDegrees=backgroundHueDegrees;pass('flowHue',6,['flowColor'],{hueValue:backgroundHueDegrees,gain:1.42});if(!Number.isFinite(headGlowMix)||Math.abs(headGlowMix)>2||!Number.isFinite(foregroundMix)||typeof foregroundEnabled!=='boolean')throw Error('Explicit Glow0..1/foreground boolean required');lastHeadGlowMix=Math.min(1,Math.max(0,headGlowMix));foregroundMix=Math.min(1,Math.max(0,foregroundMix));lastForegroundEnabled=foregroundEnabled;pass('effectiveHeadGlow',0,['headGlow']);pass('displayInput',4,['effectiveHeadGlow','headStrong','headEdge']);pass('headGamma',1,['displayInput'],{brightness:.96,gammaValue:1.02});pass('headHSV',1,['headGamma'],{gammaValue:1.06});pass('headHSV',6,['headHSV'],{hueValue:0,brightness:1.32});if(lastHeadGlowMix>0){secondaryGlow('headGamma','headBlur');pass('headBlur',1,['headBlur'],{gammaValue:.79});pass('effectiveHeadBlur',0,['headBlur'],{gain:lastHeadGlowMix});}else pass('effectiveHeadBlur',0,['empty'],{gain:0});pass('headOverlay',7,['headHSV','effectiveHeadBlur']);pass('headBright',1,['headOverlay'],{brightness:1.26,gammaValue:.32,contrastValue:1.34});pass('outside',8,['headOverlay','flowHue']);
-   sourceDecoration('outside','decor',noiseSeconds,decorationEnabled,noise);blur('decor','textBlur',32,21/6);pass('textComposite',10,['decor','textBlur','glyph']);pass('behind',11,['headBright','textComposite']);
-   const branches=['front1','front2','front3','radial1','radial2','radial3','radialPair'];
-   if(foregroundEnabled&&foreground){if(foreground.length<1||foreground.length>3||foreground.some(p=>[...p.circle,...p.radial].some(v=>!Number.isFinite(v))))throw Error('Expected one to three finite foreground centers');const tw=Math.max(1,Math.round(w/4)),th=Math.max(1,Math.round(h/4));for(const name of branches){const active=name==='radialPair'?foreground.length===3:Number(name.slice(-1))<=foreground.length;if(active){if(sizes.get(name)?.width!==tw||sizes.get(name)?.height!==th)allocate(name,tw,th);}else if(textures.has(name)){gl.deleteTexture(textures.get(name));textures.delete(name);counts.textures--;const bytes=sizes.get(name).bytes;counts.gpuBytes-=bytes;gpuBytes-=bytes;sizes.delete(name);}}for(let i=0;i<foreground.length;i++){pass('front'+(i+1),12,['headStrong'],{center:foreground[i].circle});pass('radial'+(i+1),13,['front'+(i+1)],{center:foreground[i].radial,strength:.48*foregroundMix});}if(foreground.length===3){pass('radialPair',7,['radial1','radial2']);pass('radial',7,['radialPair','radial3']);}else if(foreground.length===2)pass('radial',7,['radial1','radial2']);else pass('radial',0,['radial1']);lastForeground=foreground.map(p=>({...p,circle:[...p.circle],radial:[...p.radial]}));}
-   else{for(const name of branches)if(textures.has(name)){gl.deleteTexture(textures.get(name));textures.delete(name);counts.textures--;const bytes=sizes.get(name).bytes;counts.gpuBytes-=bytes;gpuBytes-=bytes;sizes.delete(name);}lastForeground=foreground?foreground.map(p=>({...p,circle:[...p.circle],radial:[...p.radial]})):null;if(foregroundEnabled){pass('frontLevel',12,['headStrong']);pass('radial',13,['frontLevel'],{strength:.48*foregroundMix});}else pass('radial',0,['empty'],{gain:0});}
-   pass('final',14,['radial','behind'],{gain:foregroundEnabled?1.04*foregroundMix:0});
-   gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,w,h);useProgram(0);gl.uniform1i(uniform('stage'),0);gl.uniform1f(uniform('gain'),1);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,textures.get('final'));gl.drawArrays(gl.TRIANGLES,0,3);const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('A composite GL error '+code);draws++;counts.draws++;lastMs+=performance.now()-start;totalMs+=lastMs;maxMs=Math.max(maxMs,lastMs);return canvas;
-  }catch(e){error=String(e.message||e);counts.failures++;return head;}}
-  return {prepare,prepareTexture(head,options){if(!sharedContext)throw Error('Texture preparation requires a borrowed context');return prepare(head,{...options,present:false});},draw,diagnosticHSV(input,degrees){
-   if(disposed||error)throw Error('HSV comparison backend unavailable');if(!input||!(input.data instanceof Uint8Array)||!Number.isInteger(input.width)||!Number.isInteger(input.height)||input.width<1||input.height<1||input.data.length!==input.width*input.height*4||!Number.isFinite(degrees))throw Error('Explicit finite RGBA8 comparison input required');
-   allocate('hsvProbeIn',input.width,input.height);allocate('hsvProbeOut',input.width,input.height);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,textures.get('hsvProbeIn'));gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,input.width,input.height,gl.RGBA,gl.UNSIGNED_BYTE,input.data);pass('hsvProbeOut',6,['hsvProbeIn'],{hueValue:degrees,gain:1.42});const data=new Uint8Array(input.data.length);gl.readPixels(0,0,input.width,input.height,gl.RGBA,gl.UNSIGNED_BYTE,data);if(gl.getError()!==gl.NO_ERROR)throw Error('HSV comparison GL error');return {width:input.width,height:input.height,data};
-  },read(name='final'){if(disposed||error||!sizes.has(name))return null;const s=sizes.get(name),data=new Uint8Array(s.width*s.height*4);gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,textures.get(name),0);gl.readPixels(0,0,s.width,s.height,gl.RGBA,gl.UNSIGNED_BYTE,data);return {width:s.width,height:s.height,data};},status:()=>({ready:!disposed&&!error,error,draws,sharedContext,textureHandoffs,constantStagePrograms:[...programVariants.keys()],resolution:[w,h],gpuBytes,bufferBytes:disposed?0:dyeBuffer.byteLength,averageMs:draws?totalMs/draws:0,maxMs,backgroundHueDegrees:lastBackgroundHueDegrees,backgroundHueStage:'base2/hsvadj3 after source Lag',headGlowMix:lastHeadGlowMix,headGlowContributions:['effectiveHeadGlow','effectiveHeadBlur'],headGlowOffPreservesSimulationInput:false,headGlowSize:1+9*lastHeadGlowMix,headGlowBrightness:2*lastHeadGlowMix,headGain:.4,headGlowSpatial:HalloweenASourceBlur.contract,foregroundEnabled:lastForegroundEnabled,foregroundStrength:lastForegroundEnabled?.48:0,foregroundGain:lastForegroundEnabled?1.04:0,foregroundBranches:lastForegroundEnabled?(lastForeground?lastForeground.length:1):0,foreground:lastForeground,noiseGenerator:true,decorationNoise:{enabled:lastDecorationEnabled,sourceSeconds:lastNoiseSeconds,profile:HalloweenASourceNoise.profiles.decor,hueDegrees:-284,order:'luma-alpha > quarter > Catmull4 preshrink3 > Level2/1.71 > NoiseRGBA > MultiplyRGBA > HSV-284 > Over',sampling:'independent simplex; fixed native Catmull calibration, individual pixels not matched'},targets:Object.fromEntries([...sizes].map(([name,s])=>[name,[s.width,s.height]])),headGlowInputResize:'constant2 eighth, then Blur preshrink3/half',blur:'primary/decoration calibrated Catmull; secondary native Catmull9; final text blur remains approximate',mode:'source-A-integrated-comparison'}),dispose(){if(disposed)return;disposed=true;if(gl){for(const t of textures.values()){gl.deleteTexture(t);counts.textures--;}if(program){gl.deleteProgram(program);counts.programs--;}for(const p of programVariants.values()){gl.deleteProgram(p);counts.programs--;}programVariants.clear();activeProgram=null;if(fbo){gl.deleteFramebuffer(fbo);counts.framebuffers--;}if(linearSampler){for(let i=0;i<5;i++)gl.bindSampler(i,null);gl.deleteSampler(linearSampler);linearSampler=null;counts.samplers--;}}dyeSource=null;uniforms.clear();textures.clear();sizes.clear();counts.gpuBytes-=gpuBytes;gpuBytes=0;counts.bufferBytes-=dyeBuffer.byteLength;dyeBuffer=null;lastGlyphSource=null;if(!sharedContext){canvas.width=canvas.height=1;gl?.getExtension('WEBGL_lose_context')?.loseContext();}counts.disposed++;counts.liveScopes--;}};
- }
- return Object.freeze({create,fitText,diagnostics:()=>({...counts}),release(){}});
+  const counts = {
+    created: 0,
+    disposed: 0,
+    liveScopes: 0,
+    programs: 0,
+    textures: 0,
+    samplers: 0,
+    framebuffers: 0,
+    gpuBytes: 0,
+    bufferBytes: 0,
+    draws: 0,
+    maxLive: 0,
+    failures: 0
+  };
+  const vertex = `#version 300 es
+out vec2 uv;
+void main() {
+  vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+  uv = p;
+  gl_Position = vec4(p * 2. - 1., 0., 1.);
+}
+`;
+  // Stage IDs are shared by this shader, pass() calls and programVariants:
+  // 0 copy/gain, 1 Level, 2 Gaussian, 3 edge, 4 head input, 5 fluid colour,
+  // 6 HSV, 7/9 Over, 8 outside mask, 10 text, 11 behind mix, 12 foreground,
+  // 13 radial, 14 final, 15 weighted blur, 16 noise, 17 luminance alpha, 18 multiply.
+  // Keep coefficient values, operation order and RGBA8 boundaries unchanged when formatting.
+  const fragment = `#version 300 es
+precision highp float;
+uniform sampler2D t0, t1, t2, t3, t4;
+uniform vec2 resolution, axis;
+uniform int stage;
+uniform float brightness, gammaValue, contrastValue, gain, strength, hueValue, noiseSeconds;
+uniform float blurWeights[12];
+uniform vec2 center;
+in vec2 uv;
+out vec4 outputColor;
+${window.HalloweenASourceNoise.glsl}
+float lum(vec3 c) {
+  return dot(c, vec3(.2126, .7152, .0722));
+}
+vec4 over(vec4 a, vec4 b) {
+  return a + b * (1. - a.a);
+}
+vec4 level(vec4 a, float b, float g, float c) {
+  a.rgb = (pow(max(a.rgb * b, vec3(0)), vec3(1. / g)) - .5) * c + .5;
+  return a;
+}
+vec3 hue(vec3 c, float angle, float saturation, float value) {
+  float hi = max(c.r, max(c.g, c.b)), lo = min(c.r, min(c.g, c.b)), d = hi - lo;
+  if (d < 1.e-7) return c * value;
+  float h = hi == c.r ? (c.g - c.b) / d : hi == c.g ? 2. + (c.b - c.r) / d : 4. + (c.r - c.g) / d;
+  h = fract(h / 6. + angle / 360.);
+  float s = clamp(d / hi * saturation, 0., 1.);
+  vec3 rgb = clamp(abs(fract(h + vec3(0., 2. / 3., 1. / 3.)) * 6. - 3.) - 1., 0., 1.);
+  return hi * value * mix(vec3(1), rgb, s);
+}
+vec4 sample0(vec2 p) {
+  return any(lessThan(p, vec2(0))) || any(greaterThan(p, vec2(1))) ? vec4(0) : texture(t0, p);
+}
+vec4 edge(float scale, float black) {
+  vec2 p = 1. / vec2(textureSize(t0, 0));
+  float a = lum(sample0(uv + vec2( -p.x, -p.y)).rgb), b = lum(sample0(uv + vec2(0, -p.y)).rgb), c = lum(sample0(uv + vec2(p.x, -p.y)).rgb), d = lum(sample0(uv + vec2( -p.x, 0)).rgb), e = lum(sample0(uv + vec2(p.x, 0)).rgb), f = lum(sample0(uv + vec2( -p.x, p.y)).rgb), g = lum(sample0(uv + vec2(0, p.y)).rgb), h = lum(sample0(uv + p).rgb);
+  float x = -a - 2. * d - f + c + 2. * e + h, y = -a - 2. * b - c + f + 2. * g + h;
+  float value = clamp(sqrt(x * x + y * y) * scale - black, 0., 1.);
+  return vec4(value);
+}
+void main() {
+  vec4 a = texture(t0, uv), b = texture(t1, uv);
+  vec4 c = a;
+  if (stage == 0) c = a * gain;
+  else if (stage == 1) c = level(a, brightness, gammaValue, contrastValue);
+  else if (stage == 2) {
+    c = vec4(0);
+    float total = 0.;
+    for (int i = -12; i <= 12; i++) {
+      float x = float(i), weight = exp( -.5 * x * x / (strength * strength));
+      c += sample0(uv + x * axis / resolution) * weight;
+      total += weight;
+    }
+    c /= total;
+  }
+  else if (stage == 3) c = edge(strength, brightness);
+  else if (stage == 4) {
+    a.a = lum(a.rgb);
+    c = over(over(a, b), texture(t2, uv));
+  }
+  else if (stage == 5) {
+    float r = round(clamp(texture(t0, uv).r * .96, 0., 1.) * 255.) / 255.;
+    float er = round(edge(5.31, 0.).r * 255.) / 255.;
+    vec4 body = vec4(hue(vec3(r, 0, 0), 224., 1., 1.), round(clamp(.2126 * r, 0., 1.) * 255.) / 255.);
+    vec4 rim = vec4(hue(vec3(er, 0, 0), 172., 1.66, 9.), er);
+    c = clamp(body, 0., 1.) + clamp(rim, 0., 1.);
+  }
+  else if (stage == 6) {
+    a.rgb = hue(a.rgb, hueValue, brightness, gain);
+    c = a;
+  }
+  else if (stage == 7) c = over(a, b);
+  else if (stage == 8) {
+    float mask = lum((a * b).rgb) >= .544 ? 1. : 0.;
+    c = b * (1. - mask);
+  }
+  else if (stage == 9) c = over(a, b);
+  else if (stage == 10) {
+    vec4 glyph = texture(t2, uv);
+    vec4 text = level(min(b, glyph), 5., 2.02, 1.);
+    c = over(a, text);
+  }
+  else if (stage == 11) c = mix(a + b, over(a, b), .824);
+  else if (stage == 12) {
+    a.rgb = mix(a.rgb, vec3(1) - a.rgb, .098);
+    c = level(a, 2., .86, 4.38);
+    float mask = 1. - smoothstep(.2 - .062, .2 + .062, length(uv - center));
+    c *= mask;
+  }
+  else if (stage == 13) {
+    vec2 dir = uv - center;
+    c = vec4(0);
+    for (int i = 0; i < 134; i++) c += sample0(uv - float(i) / 134. * dir * strength);
+    c /= 134.;
+  }
+  else if (stage == 14) {
+    c = level(over(a * gain, b), 1.03, 1.1, 1.);
+    c.a = 1.;
+  }
+  else if (stage == 15) {
+    c = sample0(uv) * blurWeights[0];
+    for (int i = 1; i < 12; i++) {
+      vec2 delta = float(i) * axis / resolution;
+      c += (sample0(uv + delta) + sample0(uv - delta)) * blurWeights[i];
+    }
+  }
+  else if (stage == 16) c = vec4(sourceDecoration(uv, resolution.x / resolution.y, noiseSeconds));
+  else if (stage == 17) {
+    c = a;
+    c.a = lum(a.rgb);
+  }
+  else if (stage == 18) c = a * b;
+  outputColor = c;
+}
+`;
+  // A borrowed context and dye texture are never deleted or lost by this controller.
+  function create({ context = null } = {}) {
+    counts.created++;
+    counts.liveScopes++;
+    counts.maxLive = Math.max(counts.maxLive, counts.liveScopes);
+    const sharedContext = !!context,
+      canvas = context?.canvas ?? document.createElement('canvas');
+    let gl = null,
+      program = null,
+      fbo = null,
+      linearSampler = null,
+      dyeSource = null,
+      textureHandoffs = 0,
+      disposed = false,
+      error = '',
+      w = 0,
+      h = 0,
+      gpuBytes = 0,
+      draws = 0,
+      lastMs = 0,
+      totalMs = 0,
+      maxMs = 0,
+      lastForeground = null,
+      lastBackgroundHueDegrees = 138,
+      lastHeadGlowMix = 0,
+      lastForegroundEnabled = false,
+      lastNoiseSeconds = 0,
+      lastDecorationEnabled = false;
+    const uniforms = new Map(),
+      validatedTargets = new WeakMap(),
+      programVariants = new Map();
+    let activeProgram = null;
+    const textures = new Map(),
+      sizes = new Map();
+    let dyeBuffer = new Float32Array(640 * 360),
+      lastGlyph = null,
+      lastGlyphSource = null,
+      lastGlyphWidth = 0,
+      lastGlyphHeight = 0,
+      noiseWasProvided = false;
+    counts.bufferBytes += dyeBuffer.byteLength;
+    function compile(code, type) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, code);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        const e = gl.getShaderInfoLog(shader);
+        gl.deleteShader(shader);
+        throw Error(e);
+      }
+      return shader;
+    }
+    function texture(name) {
+      if (textures.has(name)) return textures.get(name);
+      const t = gl.createTexture();
+      textures.set(name, t);
+      counts.textures++;
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      return t;
+    }
+    function account(name, width, height, bytes = 4) {
+      const old = sizes.get(name)?.bytes || 0,
+        next = width * height * bytes;
+      sizes.set(name, { width, height, bytes: next });
+      gpuBytes += next - old;
+      counts.gpuBytes += next - old;
+    }
+    // Program locations and an unchanged texture allocation are immutable. Keep
+    // first-use/allocation validation and context-loss detection, without a
+    // synchronous framebuffer query for every operator pass.
+    function uniform(name) {
+      const owner = activeProgram ?? program;
+      let locations = uniforms.get(owner);
+      if (!locations) {
+        locations = new Map();
+        uniforms.set(owner, locations);
+      }
+      if (!locations.has(name))
+        locations.set(name, gl.getUniformLocation(owner, name));
+      return locations.get(name);
+    }
+    function useProgram(stage) {
+      activeProgram = programVariants.get(stage) ?? program;
+      gl.useProgram(activeProgram);
+    }
+    function validateTarget(name) {
+      if (gl.isContextLost()) throw Error('A framebuffer unavailable');
+      const texture = textures.get(name),
+        size = sizes.get(name),
+        known = validatedTargets.get(texture);
+      if (!known || known[0] !== size.width || known[1] !== size.height) {
+        if (
+          gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE
+        )
+          throw Error('A framebuffer unavailable');
+        validatedTargets.set(texture, [size.width, size.height]);
+      }
+    }
+    function allocate(name, width = w, height = h) {
+      if (
+        !Number.isInteger(width) ||
+        !Number.isInteger(height) ||
+        width < 1 ||
+        height < 1
+      )
+        throw Error('Invalid A target ' + name);
+      if (
+        sizes.get(name)?.width === width &&
+        sizes.get(name)?.height === height
+      )
+        return;
+      validatedTargets.delete(texture(name));
+      gl.bindTexture(gl.TEXTURE_2D, texture(name));
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        width,
+        height,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        null
+      );
+      account(name, width, height);
+    }
+    function upload(name, source) {
+      validatedTargets.delete(texture(name));
+      gl.bindTexture(gl.TEXTURE_2D, texture(name));
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        source
+      );
+      account(name, source.width, source.height);
+    }
+    // A pass cannot sample its output texture; use a scratch target and swap handles to avoid feedback.
+    function pass(target, stage, inputs, options = {}) {
+      const requested = target;
+      if (inputs.includes(target)) {
+        target = requested + 'Scratch';
+        const size = sizes.get(requested);
+        if (
+          sizes.get(target)?.width !== size.width ||
+          sizes.get(target)?.height !== size.height
+        )
+          allocate(target, size.width, size.height);
+      }
+      const size = sizes.get(target);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.framebufferTexture2D(
+        gl.FRAMEBUFFER,
+        gl.COLOR_ATTACHMENT0,
+        gl.TEXTURE_2D,
+        textures.get(target),
+        0
+      );
+      validateTarget(target);
+      gl.viewport(0, 0, size.width, size.height);
+      useProgram(stage);
+      gl.bindVertexArray(null);
+      gl.disable(gl.BLEND);
+      gl.disable(gl.DEPTH_TEST);
+      for (let i = 0; i < 5; i++) {
+        const input = inputs[i] || 'empty',
+          borrowed = input === 'dye' && dyeSource;
+        gl.activeTexture(gl.TEXTURE0 + i);
+        gl.bindSampler(i, borrowed ? linearSampler : null);
+        gl.bindTexture(
+          gl.TEXTURE_2D,
+          borrowed ? dyeSource.texture : textures.get(input)
+        );
+        gl.uniform1i(uniform('t' + i), i);
+      }
+      gl.uniform1i(uniform('stage'), stage);
+      gl.uniform2f(
+        uniform('resolution'),
+        ...(options.sampleResolution || [size.width, size.height])
+      );
+      gl.uniform2f(uniform('axis'), ...(options.axis || [1, 0]));
+      if (options.weights)
+        gl.uniform1fv(uniform('blurWeights[0]'), options.weights);
+      gl.uniform2f(uniform('center'), ...(options.center || [0.5, 0.5]));
+      gl.uniform1f(uniform('noiseSeconds'), options.noiseSeconds ?? 0);
+      for (const key of [
+        'brightness',
+        'gammaValue',
+        'contrastValue',
+        'gain',
+        'strength',
+        'hueValue'
+      ])
+        gl.uniform1f(uniform(key), options[key] ?? 1);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (target !== requested) {
+        const original = textures.get(requested);
+        textures.set(requested, textures.get(target));
+        textures.set(target, original);
+      }
+    }
+    function sourceGlow(input, target, size) {
+      const iw = Math.max(1, Math.floor(w / 8)),
+        ih = Math.max(1, Math.floor(h / 8)),
+        sw = Math.max(1, Math.floor(iw / 3)),
+        sh = Math.max(1, Math.floor(ih / 3)),
+        tw = Math.max(1, Math.round(iw / 2)),
+        th = Math.max(1, Math.round(ih / 2));
+      allocate('glowEighth', iw, ih);
+      allocate('glowPreshrink', sw, sh);
+      allocate('glowHorizontal', tw, sh);
+      allocate('glowVertical', tw, th);
+      allocate(target, tw, th);
+      pass('glowEighth', 0, [input]);
+      pass('glowPreshrink', 0, ['glowEighth']);
+      const weights = HalloweenASourceBlur.kernel(size);
+      pass('glowHorizontal', 15, ['glowPreshrink'], {
+        weights,
+        axis: [1, 0],
+        sampleResolution: [sw, sh]
+      });
+      pass('glowVertical', 15, ['glowHorizontal'], {
+        weights,
+        axis: [0, 1],
+        sampleResolution: [sw, sh]
+      });
+      pass(target, 0, ['glowVertical']);
+    }
+    function secondaryGlow(input, target) {
+      const sw = Math.max(1, Math.floor(w / 2)),
+        sh = Math.max(1, Math.floor(h / 2)),
+        weights = HalloweenASourceBlur.secondaryKernel;
+      allocate('secondarySmall', sw, sh);
+      allocate('secondaryH', sw, sh);
+      allocate('secondaryV', sw, sh);
+      pass('secondarySmall', 0, [input]);
+      pass('secondaryH', 15, ['secondarySmall'], { weights, axis: [1, 0] });
+      pass('secondaryV', 15, ['secondaryH'], { weights, axis: [0, 1] });
+      pass(target, 0, ['secondaryV']);
+    }
+    const decorKernel = new Float32Array([
+      0.43156139561711365, 0.25437714358979274, 0.03339174217578514,
+      -0.004397184379876544, 0.0008818692582008448, 8.99673461011004e-5,
+      3.9007404821900293e-5, -0.0003711981290005492, 0.00025420126032202,
+      -4.62463347035875e-5, 0, 0
+    ]);
+    function sourceDecoration(
+      input,
+      target,
+      seconds,
+      enabled,
+      providedNoise = null
+    ) {
+      if (
+        !Number.isFinite(seconds) ||
+        seconds < 0 ||
+        typeof enabled !== 'boolean'
+      )
+        throw Error('Finite source clock and decoration boolean required');
+      lastNoiseSeconds = seconds;
+      lastDecorationEnabled = enabled;
+      allocate('decorFront');
+      pass('decorFront', 17, [input]);
+      if (enabled) {
+        const qw = Math.max(1, Math.floor(w / 4)),
+          qh = Math.max(1, Math.floor(h / 4)),
+          sw = Math.max(1, Math.floor(qw / 3)),
+          sh = Math.max(1, Math.floor(qh / 3));
+        for (const name of [
+          'decorQuarter',
+          'decorBlur',
+          'decorLevel',
+          'decorNoise',
+          'decorProduct',
+          'decorHSV'
+        ])
+          allocate(name, qw, qh);
+        allocate('decorPreshrink', sw, sh);
+        allocate('decorHorizontal', qw, sh);
+        pass('decorQuarter', 0, ['decorFront']);
+        pass('decorPreshrink', 0, ['decorQuarter']);
+        pass('decorHorizontal', 15, ['decorPreshrink'], {
+          weights: decorKernel,
+          axis: [1, 0],
+          sampleResolution: [sw, sh]
+        });
+        pass('decorBlur', 15, ['decorHorizontal'], {
+          weights: decorKernel,
+          axis: [0, 1],
+          sampleResolution: [sw, sh]
+        });
+        pass('decorLevel', 1, ['decorBlur'], {
+          brightness: 2,
+          contrastValue: 1.71
+        });
+        if (providedNoise) {
+          upload('noise', providedNoise);
+          pass('decorNoise', 0, ['noise']);
+        } else pass('decorNoise', 16, ['empty'], { noiseSeconds: seconds });
+        pass('decorProduct', 18, ['decorNoise', 'decorLevel']);
+        pass('decorHSV', 6, ['decorProduct'], { hueValue: -284 });
+        pass(target, 9, ['decorFront', 'decorHSV']);
+      } else pass(target, 0, ['decorFront']);
+    }
+    function blur(input, target, scale, sigma) {
+      const tw = Math.max(1, Math.round(w / scale)),
+        th = Math.max(1, Math.round(h / scale)),
+        a = 'blur' + scale + 'A',
+        b = 'blur' + scale + 'B';
+      allocate(a, tw, th);
+      allocate(b, tw, th);
+      pass(a, 2, [input], { axis: [1, 0], strength: sigma });
+      pass(b, 2, [a], { axis: [0, 1], strength: sigma });
+      pass(target, 0, [b]);
+    }
+    try {
+      gl =
+        context ??
+        canvas.getContext('webgl2', {
+          alpha: false,
+          preserveDrawingBuffer: true,
+          antialias: false,
+          depth: false,
+          stencil: false
+        });
+      if (!gl || !gl.getExtension('OES_texture_float_linear'))
+        throw Error('A requires WebGL2 float sampling');
+      if (sharedContext) {
+        linearSampler = gl.createSampler();
+        counts.samplers++;
+        for (const [key, value] of [
+          [gl.TEXTURE_MIN_FILTER, gl.LINEAR],
+          [gl.TEXTURE_MAG_FILTER, gl.LINEAR],
+          [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE],
+          [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]
+        ])
+          gl.samplerParameteri(linearSampler, key, value);
+      }
+      const v = compile(vertex, gl.VERTEX_SHADER),
+        f = compile(fragment, gl.FRAGMENT_SHADER);
+      program = gl.createProgram();
+      counts.programs++;
+      gl.attachShader(program, v);
+      gl.attachShader(program, f);
+      gl.linkProgram(program);
+      gl.deleteShader(v);
+      gl.deleteShader(f);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS))
+        throw Error(gl.getProgramInfoLog(program));
+      // The same fragment source with only its operation selector made constant.
+      // Keep every target, quantization boundary and operator in the same order.
+      // Full-size passes use constant selectors so unused operators can be discarded.
+      const stages =
+        new URLSearchParams(location.search).get('aPrograms') === 'uniform'
+          ? [0, 1]
+          : [0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 17];
+      for (const stage of stages) {
+        const v = compile(vertex, gl.VERTEX_SHADER),
+          f = compile(
+            fragment.replace(
+              'uniform int stage;',
+              'const int stage=' + stage + ';'
+            ),
+            gl.FRAGMENT_SHADER
+          ),
+          p = gl.createProgram();
+        counts.programs++;
+        programVariants.set(stage, p);
+        gl.attachShader(p, v);
+        gl.attachShader(p, f);
+        gl.linkProgram(p);
+        gl.deleteShader(v);
+        gl.deleteShader(f);
+        if (!gl.getProgramParameter(p, gl.LINK_STATUS))
+          throw Error(gl.getProgramInfoLog(p));
+      }
+      fbo = gl.createFramebuffer();
+      counts.framebuffers++;
+      gl.disable(gl.BLEND);
+      gl.disable(gl.DEPTH_TEST);
+      allocate('empty', 1, 1);
+    } catch (e) {
+      error = String(e.message || e);
+      counts.failures++;
+    }
+    // This function performs head preprocessing; draw() performs fluid/text composition.
+    // The app currently calls prepare on each composite draw; this split is not a head cache.
+    function prepare(head, { headGlowMix = 0, present = true } = {}) {
+      if (disposed || error) return head;
+      const start = performance.now();
+      try {
+        if (w !== head.width || h !== head.height) {
+          w = head.width;
+          h = head.height;
+          canvas.width = w;
+          canvas.height = h;
+          for (const name of [
+            'headGain',
+            'headStrong',
+            'headGlow',
+            'headEdge',
+            'headInput',
+            'displayInput',
+            'effectiveHeadGlow',
+            'effectiveHeadBlur',
+            'flowColor',
+            'flowHue',
+            'headGamma',
+            'headHSV',
+            'headBlur',
+            'headOverlay',
+            'headBright',
+            'outside',
+            'decor',
+            'textBlur',
+            'textComposite',
+            'behind',
+            'frontLevel',
+            'radial',
+            'final'
+          ])
+            allocate(name);
+          allocate(
+            'headGlow',
+            Math.max(1, Math.round(Math.floor(w / 8) / 2)),
+            Math.max(1, Math.round(Math.floor(h / 8) / 2))
+          );
+          allocate(
+            'effectiveHeadGlow',
+            Math.max(1, Math.round(Math.floor(w / 8) / 2)),
+            Math.max(1, Math.round(Math.floor(h / 8) / 2))
+          );
+          allocate('flowColor', 640, 360);
+          allocate(
+            'frontLevel',
+            Math.max(1, Math.round(w / 4)),
+            Math.max(1, Math.round(h / 4))
+          );
+          allocate(
+            'radial',
+            Math.max(1, Math.round(w / 4)),
+            Math.max(1, Math.round(h / 4))
+          );
+        }
+        if (!Number.isFinite(headGlowMix)) throw Error('Finite Glow required');
+        lastHeadGlowMix = Math.min(1, Math.max(0, headGlowMix));
+        upload('head', head);
+        pass('headGain', 0, ['head'], { gain: 0.4 });
+        pass('headStrong', 1, ['headGain'], {
+          brightness: 1.36,
+          gammaValue: 1,
+          contrastValue: 2.18
+        });
+        if (lastHeadGlowMix > 1e-8) {
+          sourceGlow('headGain', 'headGlow', 1 + 9 * lastHeadGlowMix);
+          pass('headGlow', 1, ['headGlow'], {
+            brightness: 2 * lastHeadGlowMix
+          });
+        } else pass('headGlow', 0, ['empty'], { gain: 0 });
+        pass('headEdge', 3, ['head'], { strength: 1.65, brightness: 0.17 });
+        pass('headInput', 4, ['headGlow', 'headStrong', 'headEdge']);
+        if (present) {
+          gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+          gl.viewport(0, 0, w, h);
+          useProgram(0);
+          gl.uniform1i(uniform('stage'), 0);
+          gl.uniform1f(uniform('gain'), 1);
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindSampler(0, null);
+          gl.bindTexture(gl.TEXTURE_2D, textures.get('headInput'));
+          gl.drawArrays(gl.TRIANGLES, 0, 3);
+        }
+        const code = gl.getError();
+        if (code !== gl.NO_ERROR) throw Error('A prepare GL error ' + code);
+        lastMs = performance.now() - start;
+        return present
+          ? canvas
+          : {
+              context: gl,
+              texture: textures.get('headInput'),
+              width: w,
+              height: h,
+              channel: 'rgba',
+              flipY: false
+            };
+      } catch (e) {
+        error = String(e.message || e);
+        counts.failures++;
+        return head;
+      }
+    }
+    // Preserve the pass order: dye color, head glow, text and foreground have different alpha/color roles.
+    function draw(
+      head,
+      dye,
+      text,
+      {
+        noise = null,
+        foreground = null,
+        textRevision = null,
+        backgroundHueDegrees = 138,
+        headGlowMix = 0,
+        foregroundEnabled = false,
+        foregroundMix = foregroundEnabled ? 1 : 0,
+        noiseSeconds = 0,
+        decorationEnabled = true
+      } = {}
+    ) {
+      if (disposed || error) return head;
+      const start = performance.now();
+      try {
+        if (w !== head.width || h !== head.height) prepare(head);
+        if (dye?.texture) {
+          if (
+            !sharedContext ||
+            dye.context !== gl ||
+            dye.width !== 640 ||
+            dye.height !== 360 ||
+            dye.channel !== 'r' ||
+            dye.flipY !== false
+          )
+            throw Error(
+              'A dye must be a same-context bottom-up 640x360 R texture'
+            );
+          dyeSource = dye;
+          textureHandoffs++;
+        } else {
+          dyeSource = null;
+          if (dye.length !== dyeBuffer.length)
+            throw Error('A scalar grid mismatch');
+          const scalar =
+            dye instanceof Float32Array ? dye : (dyeBuffer.set(dye), dyeBuffer);
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindSampler(0, null);
+          gl.bindTexture(gl.TEXTURE_2D, texture('dye'));
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+          gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+          if (!sizes.has('dye')) {
+            gl.texImage2D(
+              gl.TEXTURE_2D,
+              0,
+              gl.R32F,
+              640,
+              360,
+              0,
+              gl.RED,
+              gl.FLOAT,
+              null
+            );
+            account('dye', 640, 360, 4);
+          }
+          gl.texSubImage2D(
+            gl.TEXTURE_2D,
+            0,
+            0,
+            0,
+            640,
+            360,
+            gl.RED,
+            gl.FLOAT,
+            scalar
+          );
+        }
+        if (
+          textRevision === null ||
+          lastGlyph !== textRevision ||
+          lastGlyphSource !== text ||
+          lastGlyphWidth !== text.width ||
+          lastGlyphHeight !== text.height
+        ) {
+          upload('glyph', text);
+          lastGlyph = textRevision;
+          lastGlyphSource = text;
+          lastGlyphWidth = text.width;
+          lastGlyphHeight = text.height;
+        }
+        pass('flowColor', 5, ['dye']);
+        if (
+          !Number.isFinite(backgroundHueDegrees) ||
+          Math.abs(backgroundHueDegrees) > 720
+        )
+          throw Error('Finite background hue0..360 required');
+        lastBackgroundHueDegrees = backgroundHueDegrees;
+        pass('flowHue', 6, ['flowColor'], {
+          hueValue: backgroundHueDegrees,
+          gain: 1.42
+        });
+        if (
+          !Number.isFinite(headGlowMix) ||
+          Math.abs(headGlowMix) > 2 ||
+          !Number.isFinite(foregroundMix) ||
+          typeof foregroundEnabled !== 'boolean'
+        )
+          throw Error('Explicit Glow0..1/foreground boolean required');
+        lastHeadGlowMix = Math.min(1, Math.max(0, headGlowMix));
+        foregroundMix = Math.min(1, Math.max(0, foregroundMix));
+        lastForegroundEnabled = foregroundEnabled;
+        pass('effectiveHeadGlow', 0, ['headGlow']);
+        pass('displayInput', 4, [
+          'effectiveHeadGlow',
+          'headStrong',
+          'headEdge'
+        ]);
+        pass('headGamma', 1, ['displayInput'], {
+          brightness: 0.96,
+          gammaValue: 1.02
+        });
+        pass('headHSV', 1, ['headGamma'], { gammaValue: 1.06 });
+        pass('headHSV', 6, ['headHSV'], { hueValue: 0, brightness: 1.32 });
+        if (lastHeadGlowMix > 0) {
+          secondaryGlow('headGamma', 'headBlur');
+          pass('headBlur', 1, ['headBlur'], { gammaValue: 0.79 });
+          pass('effectiveHeadBlur', 0, ['headBlur'], { gain: lastHeadGlowMix });
+        } else pass('effectiveHeadBlur', 0, ['empty'], { gain: 0 });
+        pass('headOverlay', 7, ['headHSV', 'effectiveHeadBlur']);
+        pass('headBright', 1, ['headOverlay'], {
+          brightness: 1.26,
+          gammaValue: 0.32,
+          contrastValue: 1.34
+        });
+        pass('outside', 8, ['headOverlay', 'flowHue']);
+        sourceDecoration(
+          'outside',
+          'decor',
+          noiseSeconds,
+          decorationEnabled,
+          noise
+        );
+        blur('decor', 'textBlur', 32, 21 / 6);
+        pass('textComposite', 10, ['decor', 'textBlur', 'glyph']);
+        pass('behind', 11, ['headBright', 'textComposite']);
+        const branches = [
+          'front1',
+          'front2',
+          'front3',
+          'radial1',
+          'radial2',
+          'radial3',
+          'radialPair'
+        ];
+        if (foregroundEnabled && foreground) {
+          if (
+            foreground.length < 1 ||
+            foreground.length > 3 ||
+            foreground.some((p) =>
+              [...p.circle, ...p.radial].some((v) => !Number.isFinite(v))
+            )
+          )
+            throw Error('Expected one to three finite foreground centers');
+          const tw = Math.max(1, Math.round(w / 4)),
+            th = Math.max(1, Math.round(h / 4));
+          for (const name of branches) {
+            const active =
+              name === 'radialPair'
+                ? foreground.length === 3
+                : Number(name.slice(-1)) <= foreground.length;
+            if (active) {
+              if (
+                sizes.get(name)?.width !== tw ||
+                sizes.get(name)?.height !== th
+              )
+                allocate(name, tw, th);
+            } else if (textures.has(name)) {
+              gl.deleteTexture(textures.get(name));
+              textures.delete(name);
+              counts.textures--;
+              const bytes = sizes.get(name).bytes;
+              counts.gpuBytes -= bytes;
+              gpuBytes -= bytes;
+              sizes.delete(name);
+            }
+          }
+          for (let i = 0; i < foreground.length; i++) {
+            pass('front' + (i + 1), 12, ['headStrong'], {
+              center: foreground[i].circle
+            });
+            pass('radial' + (i + 1), 13, ['front' + (i + 1)], {
+              center: foreground[i].radial,
+              strength: 0.48 * foregroundMix
+            });
+          }
+          if (foreground.length === 3) {
+            pass('radialPair', 7, ['radial1', 'radial2']);
+            pass('radial', 7, ['radialPair', 'radial3']);
+          } else if (foreground.length === 2)
+            pass('radial', 7, ['radial1', 'radial2']);
+          else pass('radial', 0, ['radial1']);
+          lastForeground = foreground.map((p) => ({
+            ...p,
+            circle: [...p.circle],
+            radial: [...p.radial]
+          }));
+        } else {
+          for (const name of branches)
+            if (textures.has(name)) {
+              gl.deleteTexture(textures.get(name));
+              textures.delete(name);
+              counts.textures--;
+              const bytes = sizes.get(name).bytes;
+              counts.gpuBytes -= bytes;
+              gpuBytes -= bytes;
+              sizes.delete(name);
+            }
+          lastForeground = foreground
+            ? foreground.map((p) => ({
+                ...p,
+                circle: [...p.circle],
+                radial: [...p.radial]
+              }))
+            : null;
+          if (foregroundEnabled) {
+            pass('frontLevel', 12, ['headStrong']);
+            pass('radial', 13, ['frontLevel'], {
+              strength: 0.48 * foregroundMix
+            });
+          } else pass('radial', 0, ['empty'], { gain: 0 });
+        }
+        pass('final', 14, ['radial', 'behind'], {
+          gain: foregroundEnabled ? 1.04 * foregroundMix : 0
+        });
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, w, h);
+        useProgram(0);
+        gl.uniform1i(uniform('stage'), 0);
+        gl.uniform1f(uniform('gain'), 1);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, textures.get('final'));
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        const code = gl.getError();
+        if (code !== gl.NO_ERROR) throw Error('A composite GL error ' + code);
+        draws++;
+        counts.draws++;
+        lastMs += performance.now() - start;
+        totalMs += lastMs;
+        maxMs = Math.max(maxMs, lastMs);
+        return canvas;
+      } catch (e) {
+        error = String(e.message || e);
+        counts.failures++;
+        return head;
+      }
+    }
+    return {
+      prepare,
+      prepareTexture(head, options) {
+        if (!sharedContext)
+          throw Error('Texture preparation requires a borrowed context');
+        return prepare(head, { ...options, present: false });
+      },
+      draw,
+      diagnosticHSV(input, degrees) {
+        if (disposed || error)
+          throw Error('HSV comparison backend unavailable');
+        if (
+          !input ||
+          !(input.data instanceof Uint8Array) ||
+          !Number.isInteger(input.width) ||
+          !Number.isInteger(input.height) ||
+          input.width < 1 ||
+          input.height < 1 ||
+          input.data.length !== input.width * input.height * 4 ||
+          !Number.isFinite(degrees)
+        )
+          throw Error('Explicit finite RGBA8 comparison input required');
+        allocate('hsvProbeIn', input.width, input.height);
+        allocate('hsvProbeOut', input.width, input.height);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, textures.get('hsvProbeIn'));
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+        gl.texSubImage2D(
+          gl.TEXTURE_2D,
+          0,
+          0,
+          0,
+          input.width,
+          input.height,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          input.data
+        );
+        pass('hsvProbeOut', 6, ['hsvProbeIn'], {
+          hueValue: degrees,
+          gain: 1.42
+        });
+        const data = new Uint8Array(input.data.length);
+        gl.readPixels(
+          0,
+          0,
+          input.width,
+          input.height,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          data
+        );
+        if (gl.getError() !== gl.NO_ERROR)
+          throw Error('HSV comparison GL error');
+        return { width: input.width, height: input.height, data };
+      },
+      read(name = 'final') {
+        if (disposed || error || !sizes.has(name)) return null;
+        const s = sizes.get(name),
+          data = new Uint8Array(s.width * s.height * 4);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+        gl.framebufferTexture2D(
+          gl.FRAMEBUFFER,
+          gl.COLOR_ATTACHMENT0,
+          gl.TEXTURE_2D,
+          textures.get(name),
+          0
+        );
+        gl.readPixels(0, 0, s.width, s.height, gl.RGBA, gl.UNSIGNED_BYTE, data);
+        return { width: s.width, height: s.height, data };
+      },
+      status: () => ({
+        ready: !disposed && !error,
+        error,
+        draws,
+        sharedContext,
+        textureHandoffs,
+        constantStagePrograms: [...programVariants.keys()],
+        resolution: [w, h],
+        gpuBytes,
+        bufferBytes: disposed ? 0 : dyeBuffer.byteLength,
+        averageMs: draws ? totalMs / draws : 0,
+        maxMs,
+        backgroundHueDegrees: lastBackgroundHueDegrees,
+        backgroundHueStage: 'base2/hsvadj3 after source Lag',
+        headGlowMix: lastHeadGlowMix,
+        headGlowContributions: ['effectiveHeadGlow', 'effectiveHeadBlur'],
+        headGlowOffPreservesSimulationInput: false,
+        headGlowSize: 1 + 9 * lastHeadGlowMix,
+        headGlowBrightness: 2 * lastHeadGlowMix,
+        headGain: 0.4,
+        headGlowSpatial: HalloweenASourceBlur.contract,
+        foregroundEnabled: lastForegroundEnabled,
+        foregroundStrength: lastForegroundEnabled ? 0.48 : 0,
+        foregroundGain: lastForegroundEnabled ? 1.04 : 0,
+        foregroundBranches: lastForegroundEnabled
+          ? lastForeground
+            ? lastForeground.length
+            : 1
+          : 0,
+        foreground: lastForeground,
+        noiseGenerator: true,
+        decorationNoise: {
+          enabled: lastDecorationEnabled,
+          sourceSeconds: lastNoiseSeconds,
+          profile: HalloweenASourceNoise.profiles.decor,
+          hueDegrees: -284,
+          order:
+            'luma-alpha > quarter > Catmull4 preshrink3 > Level2/1.71 > NoiseRGBA > MultiplyRGBA > HSV-284 > Over',
+          sampling:
+            'independent simplex; fixed native Catmull calibration, individual pixels not matched'
+        },
+        targets: Object.fromEntries(
+          [...sizes].map(([name, s]) => [name, [s.width, s.height]])
+        ),
+        headGlowInputResize: 'constant2 eighth, then Blur preshrink3/half',
+        blur: 'primary/decoration calibrated Catmull; secondary native Catmull9; final text blur remains approximate',
+        mode: 'source-A-integrated-comparison'
+      }),
+      dispose() {
+        if (disposed) return;
+        disposed = true;
+        if (gl) {
+          for (const t of textures.values()) {
+            gl.deleteTexture(t);
+            counts.textures--;
+          }
+          if (program) {
+            gl.deleteProgram(program);
+            counts.programs--;
+          }
+          for (const p of programVariants.values()) {
+            gl.deleteProgram(p);
+            counts.programs--;
+          }
+          programVariants.clear();
+          activeProgram = null;
+          if (fbo) {
+            gl.deleteFramebuffer(fbo);
+            counts.framebuffers--;
+          }
+          if (linearSampler) {
+            for (let i = 0; i < 5; i++) gl.bindSampler(i, null);
+            gl.deleteSampler(linearSampler);
+            linearSampler = null;
+            counts.samplers--;
+          }
+        }
+        dyeSource = null;
+        uniforms.clear();
+        textures.clear();
+        sizes.clear();
+        counts.gpuBytes -= gpuBytes;
+        gpuBytes = 0;
+        counts.bufferBytes -= dyeBuffer.byteLength;
+        dyeBuffer = null;
+        lastGlyphSource = null;
+        if (!sharedContext) {
+          canvas.width = canvas.height = 1;
+          gl?.getExtension('WEBGL_lose_context')?.loseContext();
+        }
+        counts.disposed++;
+        counts.liveScopes--;
+      }
+    };
+  }
+  return Object.freeze({
+    create,
+    fitText,
+    diagnostics: () => ({ ...counts }),
+    release() {}
+  });
 })();

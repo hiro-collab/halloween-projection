@@ -178,6 +178,8 @@ The keyboard-use and portable-setup illustrations were generated for this README
 <details>
 <summary>Change the appearance or wording</summary>
 
+See the [developer guide (Japanese)](docs/DEVELOPMENT.md) for the code map, value flow, packaging and validation steps.
+
 The ZIP includes editable HTML, CSS and JavaScript. In `アプリ本体/`, `console.html` / `console.css` control the console, and `GUIDE.html` / `guide.css` provide the guide. Edit the text or styles and reload to check ordinary changes.
 
 Replacing an image also requires updating its embedded image data. See the [editing guide](web/README.txt).

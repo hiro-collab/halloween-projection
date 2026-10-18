@@ -178,6 +178,8 @@ PCだけで試すときは、同じ画面に操作窓と投影窓を並べ、投
 <details>
 <summary>自分用に見た目や文章を変える方へ</summary>
 
+変更箇所・値の流れ・梱包と検証は[開発ガイド](docs/DEVELOPMENT.md)にまとめています。
+
 ZIPには編集可能なHTML・CSS・JavaScriptが入っています。`アプリ本体/` の `console.html` / `console.css` は操作画面、`GUIDE.html` / `guide.css` は案内ページです。文章やスタイルの変更は、テキストを編集して再読込みすると確認できます。
 
 画像の差し替えには、埋め込まれた画像データも一緒に更新する必要があります。詳しくは[編集案内](web/README.txt)をご覧ください。
