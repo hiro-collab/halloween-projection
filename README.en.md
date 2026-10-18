@@ -2,6 +2,14 @@
 
 # Bring Halloween to walls and floors with your keyboard
 
+Use a PC and projector to bring skulls and bats to walls or floors. Change their motion, color and accompanying text with your keyboard.
+
+<img src="docs/images/td-projection-bigsight.jpg" width="440" alt="A real projection at Tokyo Big Sight: a projector mounted above a suitcase casts blue-white skulls onto the floor, with the venue visible around it. Earlier TouchDesigner version.">
+
+*Tokyo Big Sight — earlier TouchDesigner version, not the distributed browser version.*
+
+## Shape the scene with your keyboard
+
 <img src="docs/images/how-it-works.jpg" width="760" alt="Illustration of a standing party guest using a compact wireless keyboard, holding a drink and talking with friends while Halloween visuals are projected onto a wall.">
 
 *Using a keyboard to control the projection. This is an explanatory illustration; see the browser captures below for the actual visuals.*
@@ -10,6 +18,29 @@
 - **Change motion and color live** — use your keyboard to match the mood.
 - **Add your own words** — put a greeting or event name into the visuals.
 
+## Switch between two visuals
+
+Press **Z** to switch between skulls and bats.
+
+### Skulls: three heads turning independently
+
+![Actual browser capture with strong motion: three skulls face forward, sideways and at an angle.](docs/images/halloween-preview.jpg)
+
+A capture with motion set high. Each skull turns independently, revealing the model from the side and at different angles.
+
+The skull uses CDmir’s “[Human Skull](https://opengameart.org/content/human-skull-0)” 3D model. Thank you for making it available.
+
+### Bats: change their motion and color
+
+![Actual browser capture of pink bats flying around Halloween text.](docs/images/bats-preview.jpg)
+
+Change the movement and color of the flapping bats while projecting. Both images above are captures of the browser app.
+
+### A keyboard demonstration
+
+![Real-time demo: rotating skulls, Z switches to bats, and T and I change their color.](docs/media/halloween-demo.gif)
+
+About 20 seconds, without audio: rotating skulls → **Z** to switch → bat motion and **T / I** color changes. Recorded at its actual speed. The GIF loops. [View or save the higher-quality MP4](docs/media/halloween-demo.mp4).
 
 ## Try it
 
@@ -63,30 +94,6 @@ Edit the words in the console text box. `9` / `0` selects 1–6 skulls; `C` retu
 
 </details>
 
-## Switch between two visuals
-
-Press **Z** to switch between skulls and bats.
-
-### Skulls: three heads turning independently
-
-![Actual browser capture with strong motion: three skulls face forward, sideways and at an angle.](docs/images/halloween-preview.jpg)
-
-A capture with motion set high. Each skull turns independently, revealing the model from the side and at different angles.
-
-The skull uses CDmir’s “[Human Skull](https://opengameart.org/content/human-skull-0)” 3D model. Thank you for making it available.
-
-### Bats: change their motion and color
-
-![Actual browser capture of pink bats flying around Halloween text.](docs/images/bats-preview.jpg)
-
-Change the movement and color of the flapping bats while projecting. Both images above are captures of the browser app.
-
-### A keyboard demonstration
-
-![Real-time demo: rotating skulls, Z switches to bats, and T and I change their color.](docs/media/halloween-demo.gif)
-
-About 20 seconds, without audio: rotating skulls → **Z** to switch → bat motion and **T / I** color changes. Recorded at its actual speed. The GIF loops. [View or save the higher-quality MP4](docs/media/halloween-demo.mp4).
-
 ## Before projecting
 
 Start with reduced projector brightness and a small window. Avoid directing the beam into people's eyes, and consider viewers sensitive to bright, rapidly changing imagery. Follow your projector's placement and ventilation instructions.
@@ -109,7 +116,7 @@ For the equipment and assembly, see [mamo's portable outdoor projector setup gui
 
 The author’s code, bat artwork and data used to reproduce movement and appearance use the **MIT license**. CDmir’s “Human Skull” 3D model uses **CC0 1.0**. See [LICENSE](LICENSE) and the [asset-specific terms](web/RIGHTS.txt).
 
-The opening and portable-setup illustrations were generated to explain this README. They are separate from the browser captures and CDmir’s 3D model.
+The keyboard-use and portable-setup illustrations were generated for this README. The opening venue photograph, browser captures and CDmir’s 3D model are separate materials. The venue photograph and explanatory illustrations are not included under the MIT or CC0 grants above.
 
 <details>
 <summary>Change the appearance or wording</summary>

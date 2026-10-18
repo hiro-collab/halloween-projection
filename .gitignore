@@ -42,3 +42,6 @@ coverage/
 # Reviewed actual browser scene capture and private README demo.
 !docs/images/bats-preview.jpg
 !docs/media/halloween-demo.mp4
+
+# Reviewed historical TouchDesigner venue photograph for the private README.
+!docs/images/td-projection-bigsight.jpg
