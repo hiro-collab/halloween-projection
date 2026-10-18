@@ -6,7 +6,7 @@ Project skulls and bats onto walls or floors, and change motion, color and text 
 
 **[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
 
-*Earlier TouchDesigner projections; not footage of this browser app.*
+*The photos show projections made with the TouchDesigner version, adapted for each setting. You can use this app in the same way to project skulls and bats onto the walls and floors around you.*
 
 <img src="./docs/images/td-projection-gallery-mobile-en.jpg" width="440" alt="Three real projections from the earlier TouchDesigner version: Santa-hat skulls at Shibuya Blue Cave, skulls close up at an unconfirmed location, and bats at Osaki Station, with the ground and surroundings visible.">
 

@@ -6,7 +6,7 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 
 **[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
 
-*旧TouchDesigner版の投影例です。配布ブラウザ版の実写ではありません。*
+*写真は、TouchDesigner版を場面に合わせてアレンジして投影した例です。このソフトでも同じように、ドクロやコウモリの映像を周囲の壁や床へ投影して楽しめます。*
 
 <img src="./docs/images/td-projection-gallery-mobile-ja.jpg" width="440" alt="旧TouchDesigner版の実投影3例。渋谷・青の洞窟のサンタ帽ドクロ、撮影場所未確認の床面ドクロ近景、大崎駅のコウモリ。床や周囲の風景も写っている。">
 
