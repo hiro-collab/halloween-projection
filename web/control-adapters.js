@@ -19,8 +19,8 @@ window.HalloweenControlAdapters=(()=>{
  function renderStatus(d,doc,apiSnapshot){
  const $=id=>doc.getElementById(id),settings=d.settings,phase=d.phase,fullscreenError=d.fullscreenError,assetError=d.assetError,active=d.liveEffects?(d.sprite||d.skull?{probe:()=>d.sprite||d.skull}:{}):null;
  const label=settings.effect==='skull3d'?'3Dドクロ（CC0別候補）':settings.effect==='skeleton'?'くるくる骸骨':'コウモリと文字';
- $('status').textContent=label+' · '+(phase==='running'?'表示中':phase==='paused'?'一時停止':phase==='error'?'読み込みエラー':'停止・解放済み')+(fullscreenError?' · '+fullscreenError:'')+(assetError?' · '+assetError:'');
- $('pause').textContent=phase==='paused'?'再開':'一時停止';$('pause').disabled=!active;$('reset').disabled=!active;
+ $('status').textContent=label+' · '+(phase==='running'?'表示中':phase==='paused'?'一時停止':phase==='error'?'読み込みエラー':'中断中（描画・GPU資源は解放済み）')+(fullscreenError?' · '+fullscreenError:'')+(assetError?' · '+assetError:'');
+ $('pause').textContent=phase==='paused'?'動きを再開':'動きを一時停止';$('pause').disabled=!active;$('reset').disabled=!active;
  for(const b of doc.querySelectorAll('[data-effect]'))b.setAttribute('aria-pressed',String(b.dataset.effect===settings.effect));
  if($('text').value!==settings.text)$('text').value=settings.text;$('speed').value=settings.speed;$('size').value=settings.size*100;
  $('speed-value').textContent=settings.speed.toFixed(1)+' ×';$('size-value').textContent=Math.round(settings.size*100)+' %';

@@ -11,3 +11,4 @@
 .keycap small{overflow-wrap:anywhere}.row{flex-wrap:wrap}.row button{white-space:normal;height:auto;overflow-wrap:anywhere}select{max-width:100%}
 
 .row>label{min-width:0}.row label input[type=range]{display:block;min-width:0;max-width:100%}
+[data-skull-only][hidden]{display:none!important}.keycap[aria-disabled=true]{border-style:dashed}.keycap.look small{min-height:2.6em}.colour-help,#keyboard-scene-note{font-size:15px;color:#d5d0df}.color-swatch{height:14px;min-width:22px}.cue-readout .color-swatch{vertical-align:middle}.cue-positions small{line-height:1.4;overflow-wrap:anywhere}

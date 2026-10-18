@@ -264,6 +264,32 @@
  const sourceTitle=document.title;
  // Release wording: UI text only; translation behavior and projected user text stay unchanged.
  Object.assign(dictionary,{"3段のキーで、映像を操作":"Control the visuals with three keyboard rows","キー操作一覧":"Keyboard controls","動きの激しさを8段階から選ぶ":"Choose one of eight motion levels","色相を8段階から選ぶ":"Choose one of eight hues","文字サイズを8段階から選ぶ":"Choose one of eight text sizes","1回押して選択":"Press once to choose","キーボード操作を止める（映像は続く）":"Stop keyboard controls (visuals continue)","映像の動きをリセット（文字・設定は保持）":"Reset motion (keep text and settings)","保存した設定とリセット":"Saved appearance and reset","Windows・Chrome向け。プロジェクターの接続と画面配置は、Windowsで設定してください。":"For Windows and Chrome. Set up the projector connection and display arrangement in Windows.","Windows・Chrome向け / 0.1.57":"For Windows and Chrome / 0.1.57","羽ばたくコウモリ":"Animated bats","CDmir / Human Skull（CC0）":"CDmir / Human Skull (CC0)","動きを止める・映像を消す":"Pause or blank the image","動きだけ止めるときはSpace。映像を黒くして中断するときは「投影の補正・中断・終了」→「停止・解放」。戻すときは「再開」→必要なら「演奏開始」です。Escはキー操作だけを止め、映像は続きます。プロジェクターの光を止める操作は機器側で行ってください。":"Space pauses motion. To blank the image, open “Output, stop & exit” and choose “Stop & release”. Choose “Resume” and, if needed, “Enable keys” to return. Esc stops keyboard controls while the visuals continue. Use the projector’s own controls to stop its light output."});
+ Object.assign(dictionary,{
+  'ドクロのキー配置':'Skull key layout','コウモリのキー配置':'Bat key layout',
+  '9 / 0は体数、L / Mは顎。Cは顎の自動モード、Vは前景の光です。':'9 / 0 change skull count; L / M control the jaw. C selects the automatic jaw mode; V adds foreground light.',
+  '9 / 0、L / Mはこの映像では未使用です。Cは旋回の配分、Vは新しい個体の速さと回り方です。':'9 / 0 and L / M are unused in this scene. C changes the turning mix; V changes new bats’ speed and turning.',
+  '動き0%で頭部は定位置に戻って静止します。背景は続くため、映像全体の一時停止はSpaceです。':'At 0% motion, the skulls return to their resting positions. The background continues. Space pauses the whole scene.',
+  '動き0%で中央付近にたむろし、羽ばたきは続きます。映像全体の一時停止はSpaceです。':'At 0% motion, bats gather near the centre and keep flapping. Space pauses the whole scene.',
+  '背景の色合いを回します。0°は変換前の色、180°はその反対側です。見本は背景の青い成分の目安で、画面全体の色ではありません。骨Glowも連動します。':'Rotate the background colours. 0° keeps the input colours; 180° moves them to the opposite side. Swatches show one blue component, not the whole image. Bone glow also changes.',
+  'コウモリ本体の色を選びます。元の青は240°、反対側の黄は60°です。白い輪郭や光はそのままなので、見本は本体色の目安です。':'Choose the bat body colour. The original blue is 240°; its opposite yellow is 60°. White outlines and light keep their colours. Swatches represent the body tint.',
+  '目標位置は8段階です。約0.15秒で滑らかに移り、移行中の再指定も現在値からつながります。細かい値はスライダーで選べます。':'Choose one of eight targets. Values move smoothly over about 0.15 seconds, including when you choose another target mid-transition. Use sliders for finer values.',
+  '顎を動かす / 閉じる / 開く。手動の顎からは自動へ戻る。':'Move / close / open the jaw. Return from manual jaw control to automatic motion.',
+  '渦寄り / 中間 / ゆるい旋回の3配分を切り替える。':'Cycle through vortex / mixed / gentle turning.',
+  '体数を減らす':'Fewer skulls','体数を増やす':'More skulls','未使用':'Unused','コウモリでは使いません':'Unused for bats','顎モード':'Jaw mode','旋回の配分':'Turning mix','速さ・旋回':'Speed / turning',
+  '変換前の色':'Input colours','反対側の色':'Opposite colours','標準の色合い':'Default appearance','元の青':'Original blue','反対側の黄':'Opposite yellow',
+  '赤':'Red','橙':'Orange','黄':'Yellow','黄緑':'Yellow-green','緑':'Green','青緑':'Teal','水色':'Cyan','青':'Blue','青紫':'Blue-violet','紫':'Violet','桃':'Pink','赤紫':'Magenta','色合い':'Colour',
+  'キー入力：有効':'Keys: enabled','キー入力：無効':'Keys: disabled','キー入力だけ解除（Esc）':'Disable keys only (Esc)',
+  '映像を消して中断':'Blank visuals','映像を再表示':'Show visuals again','投影窓を閉じる':'Close projection window','この表示を終了':'End this display','動きを再開':'Resume motion','動きを一時停止':'Pause motion','中断中（描画・GPU資源は解放済み）':'Blanked (rendering stopped; GPU resources released)',
+  '中断は黒画面にし、描画とGPU資源を解放します。投影窓は開いたままです。再表示は、一時停止中なら続きから、中断後なら同じ映像を作り直します。文字・設定・向きは保持します。':'Blanking stops rendering and releases GPU resources. The projection window stays open and black. Show visuals again continues a paused scene, or recreates a blanked scene. Text, settings and orientation are kept.',
+  '投影窓を閉じると、その窓の映像と保持データを破棄し、キー入力も解除します。操作席は開いたままです。':'Closing the projection window discards its visuals and retained data and disables keys. This operator window stays open.',
+  'Escはキー入力だけを解除します。映像は続き、GPU資源は解放しません。動きだけの一時停止はSpaceです。':'Esc disables keys only. Visuals continue and GPU resources remain allocated. Space pauses motion.',
+  '中断すると黒画面にし、描画とGPU資源を解放します。再表示は、一時停止中なら続きから、中断後なら同じ映像を作り直します。':'Blanking stops rendering and releases GPU resources. Show visuals again continues a paused scene, or recreates a blanked scene.',
+  '映像と保持データを破棄します。このタブは残るため、終了後に閉じてください。':'Discard visuals and retained data. This tab stays open; close it after ending the display.',
+  'この窓を再読込み':'Reload this window','映像を準備できませんでした。再読込みして、もう一度お試しください。':'The visuals could not be prepared. Reload this window to try again.',
+  '動きだけ止めるときはSpace。映像を黒くして中断するときは「投影の補正・中断・終了」→「映像を消して中断」。戻すときは「映像を再表示」→必要なら「演奏開始」です。Escはキー操作だけを止め、映像は続きます。プロジェクターの光を止める操作は機器側で行ってください。':'Space pauses motion. To blank the image, open “Output, stop & exit” and choose “Blank visuals”. Choose “Show visuals again” and, if needed, “Enable keys” to return. Esc disables keys while visuals continue. Use the projector controls to stop its light output.',
+  '詳細欄「投影窓を閉じる」。機器の電源・画面配置は機器とOSの手順で操作します。':'Choose “Close projection window” in the details section. Use the device and OS controls for power and display arrangement.',
+  '一時停止はSpace。終了は操作画面の「投影の補正・中断・終了」から「投影窓を閉じる」。閉じた後の文字・設定は初期値になります。':'Space pauses motion. To end, open “Output, stop & exit” in the operator window and choose “Close projection window”. Text and settings return to their defaults after closing.'
+ });
  const dict=new Map(Object.entries(dictionary));
  const escape=s=>s.replace(/[.*+?^$()|[\]{}\\]/g,'\\$&');
  const pattern=new RegExp([...dict.keys()].filter(s=>s.length>1).sort((a,b)=>b.length-a.length).map(escape).join('|'),'g');
