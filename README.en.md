@@ -129,7 +129,7 @@ Use `Space` to pause motion. To blank the image, open **Output, stop & exit** an
 
 Start with reduced projector brightness and a small window. Avoid directing the beam into people's eyes, and consider viewers sensitive to bright, rapidly changing imagery. Follow your projector's placement and ventilation instructions.
 
-How dark the black background appears and how bright the image looks depend on the projector, surface and ambient light. Adjust color, motion and text size with the keyboard to suit the appearance and mood on the spot.
+How dark the black background appears and how bright the image looks depend on the projector, surface and ambient light. Try adjusting color, motion and text size with the keyboard to suit the appearance and mood on the spot.
 
 ## Pair it with a portable projection setup
 
