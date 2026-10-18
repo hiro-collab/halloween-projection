@@ -129,7 +129,7 @@ Use `Space` to pause motion. To blank the image, open **Output, stop & exit** an
 
 Start with reduced projector brightness and a small window. Avoid directing the beam into people's eyes, and consider viewers sensitive to bright, rapidly changing imagery. Follow your projector's placement and ventilation instructions.
 
-How dark the black background appears depends on the projector, surface and ambient light. Automatic display placement, keystone correction and phone control are not provided. Check physical projector setups and other computers before use.
+How dark the black background appears and how bright the image looks depend on the projector, surface and ambient light. Adjust color, motion and text size with the keyboard to suit the appearance and mood on the spot.
 
 ## Pair it with a portable projection setup
 
@@ -151,13 +151,17 @@ For the equipment and assembly, see [mamo's portable outdoor projector setup gui
 | Standard skull rendering | **WebGL2** and `OES_texture_float_linear` (floating-point texture filtering) must be available to the browser. GPU fluid processing also uses `EXT_color_buffer_float` (floating-point render targets). Availability depends on the GPU, driver and browser combination. |
 | Fallback | The fluid implementation can switch to CPU processing when GPU fluid is unavailable, but identical appearance or speed is not guaranteed. |
 | Untested | Ubuntu/Linux, macOS and other operating systems, and Edge, Firefox and Safari, are untested. On Ubuntu/Linux the entry HTML is also intended to be opened in a browser, without a Windows-only launcher, but it has not been tested on a physical Linux machine. |
-| GPU and memory baseline | No minimum GPU model or memory capacity has been measured. Try it with your own equipment and resolution beforehand. |
+| GPU and memory baseline | No minimum GPU model or memory capacity has been measured. Try launching the app and using its keys on your PC and browser, and check how smoothly it runs. |
+
+### Features not currently provided
+
+Automatic display placement, keystone correction and phone control are not provided.
 
 For equipment, extended desktop, the PC-side console and open-lid operation, see **What you need** and **Set up the PC and projector** above.
 
 ## Modifications, support and projection precautions
 
-You are welcome to make your own modifications. I do not take on individual modification requests or provide help with operating the app. Operation is not guaranteed, so please test it with the equipment you plan to use. Obtain permission for the projection location, keep the light away from people's eyes and vehicles, and consider people who are sensitive to flashing or bright imagery.
+You are welcome to make your own modifications. I do not take on individual modification requests or provide help with operating the app. Operation is not guaranteed; please check beforehand that the app launches and responds to controls on your PC and browser. Obtain permission for the projection location, keep the light away from people's eyes and vehicles, and consider people who are sensitive to flashing or bright imagery.
 
 ## License and personal changes
 
