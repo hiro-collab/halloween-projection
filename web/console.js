@@ -47,5 +47,5 @@
  const onLanguage=()=>post({kind:'language',value:window.HalloweenI18n?.getLanguage()});window.addEventListener('halloween-language-change',onLanguage);
  const timer=setInterval(()=>{if(popup?.closed){if(connected)lost('投影窓を閉じました。開き直すと動きは再初期化します。');return;}if(connected&&performance.now()-lastState>2600)lost('通信を確認できません。演奏停止。再接続を押してください。');if(port)ping();},500);
  window.addEventListener('pagehide',()=>{if(destroyed)return;window.removeEventListener('halloween-language-change',onLanguage);keyboard.dispose();for(const clear of holdCleanups)clear();ping();destroyed=true;clearInterval(timer);if(connectTimer)clearInterval(connectTimer);port?.close();port=null;for(const p of pending.values()){clearTimeout(p.timer);p.reject(Error('操作窓を終了'));}pending.clear();},{once:true});
- window.halloweenConsole=Object.freeze({status:()=>({connected,snapshot,keyboard:keyboard.status(),pending:pending.size,rendererOwners:0,version:'0.1.55-jaw-edge-preview'}),intent:sendIntent,request,disarm:()=>keyboard.disarm(),session:token});render();
+ window.halloweenConsole=Object.freeze({status:()=>({connected,snapshot,keyboard:keyboard.status(),pending:pending.size,rendererOwners:0,version:'0.1.56-startup-preview'}),intent:sendIntent,request,disarm:()=>keyboard.disarm(),session:token});render();
 })();

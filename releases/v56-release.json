@@ -1,0 +1,22 @@
+{
+  "version": "0.1.56-startup-preview",
+  "build": "0.1.56-startup-preview-460f4cf03f45",
+  "releaseTag": "v0.1.56",
+  "asset": "halloween-projection-web-v0.1.56-startup-preview.zip",
+  "bytes": 555841,
+  "sha256": "918ae845be625559728ebe97acc1fa4c0e2d98bb767b1431537a7109ca0c5ba6",
+  "entryCount": 53,
+  "offlineAssetCount": 50,
+  "basedOnRelease": "v0.1.55",
+  "verification": {
+    "unitPassed": 475,
+    "preparationBrowserPassed": 10,
+    "cleanOfflineExtractionPassed": 25,
+    "keyboardAndSecurityPassed": 68,
+    "totalPassed": 578,
+    "failed": 0,
+    "packageSecretOrPrivatePathFindings": 0
+  },
+  "scope": "Windows isolated headless Chrome; no physical projector, native IME or hardware keyboard certification. No new steady-frame-rate benchmark; existing rendering and key behavior retained.",
+  "changes": "Initial projection-only mamo branding during actual preparation, without a minimum display hold; bundled owner-confirmed icon and offline assets."
+}

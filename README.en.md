@@ -4,7 +4,7 @@
 
 Project skulls and bats onto walls or floors, and change motion, color and text with your keyboard.
 
-**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
+**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
 
 *The photos show projections made with the TouchDesigner version, adapted for each setting. You can use this app in the same way to project skulls and bats onto the walls and floors around you.*
 
@@ -49,9 +49,9 @@ About 20 seconds, without audio: rotating skulls → **Z** to switch → bat mot
 <details>
 <summary>Download and start projecting in three steps</summary>
 
-**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
+**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
 
-<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip -->
+<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip -->
 
 ### Start in three steps
 
@@ -62,6 +62,8 @@ Tested with **Windows and Chrome**. Prepare the projector connection and display
 3. **Start the projection window.** Choose **Open projection window**, move that window to the projector display, and click **Start windowed** or **Start fullscreen**. Return to the console, prepare your text, then choose **Enable keys**.
 
 Keep both windows open. Once extracted, the complete folder can run offline.
+
+While the projection window prepares, it shows mamo's icon and **mamo presents** on black. No minimum display time is added; fast preparation may finish before the brand becomes visible.
 
 </details>
 

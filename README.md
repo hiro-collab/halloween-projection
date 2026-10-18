@@ -4,7 +4,7 @@
 
 PCとプロジェクターで、壁や床にドクロやコウモリを投影。手元のキーボードで、動き・色・文字を変えられます。
 
-**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
+**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
 
 *写真は、TouchDesigner版を場面に合わせてアレンジして投影した例です。このソフトでも同じように、ドクロやコウモリの映像を周囲の壁や床へ投影して楽しめます。*
 
@@ -49,9 +49,9 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 <details>
 <summary>ダウンロードと、投影を始める3手順</summary>
 
-**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
+**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
 
-<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip -->
+<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.56/halloween-projection-web-v0.1.56-startup-preview.zip -->
 
 ### 3手順で投影する
 
@@ -62,6 +62,8 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 3. **投影を開始する。** 「投影窓を開く」→その窓を投影先へ移動→「ウィンドウで始める」または「全画面で始める」。操作画面へ戻って文字を準備し、「演奏開始」を押します。
 
 操作画面と投影窓の両方を開いたまま使います。展開した一式があれば、ネット接続なしでも動作します。
+
+投影窓の準備中は、作者のアイコンと **mamo presents** を黒背景に表示します。準備が速い環境では一瞬、または表示されない場合があります。表示のための待ち時間は加えていません。
 
 </details>
 

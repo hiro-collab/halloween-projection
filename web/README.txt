@@ -1,4 +1,4 @@
-ハロウィン投影 0.1.55 / Halloween Projection
+ハロウィン投影 0.1.56 / Halloween Projection
 
 【始め方】
 1. 配布ZIPを右クリックして「すべて展開」。フォルダー全体を一緒に保持してください。
