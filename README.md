@@ -8,7 +8,7 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 
 *写真は、TouchDesigner版を場面に合わせてアレンジして投影した例です。このソフトでも同じように、ドクロやコウモリの映像を周囲の壁や床へ投影して楽しめます。*
 
-<img src="./docs/images/td-projection-gallery-mobile-ja.jpg" width="440" alt="旧TouchDesigner版の実投影3例。渋谷・青の洞窟のサンタ帽ドクロ、撮影場所未確認の床面ドクロ近景、大崎駅のコウモリ。床や周囲の風景も写っている。">
+<img src="./docs/images/td-projection-gallery-mobile-ja-caption.svg" width="440" alt="旧TouchDesigner版の実投影3例。渋谷・青の洞窟のサンタ帽ドクロ、屋内でのドクロ投影例、大崎駅のコウモリ。床や周囲の風景も写っている。">
 
 ## キーボードひとつで、映像に変化を
 
