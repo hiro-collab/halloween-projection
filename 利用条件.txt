@@ -1,20 +1,14 @@
 利用条件 / Terms
 
-入口は はじめに_START-HERE.html。アプリ本体フォルダーを一緒に保持してください。
-Open はじめに_START-HERE.html and keep the アプリ本体 folder together.
+はじめに_START-HERE.htmlをChromeで開き、アプリ本体フォルダーを一緒に保持してください。
+Open はじめに_START-HERE.html in Chrome and keep the アプリ本体 folder with it.
 
-自作コード・本人作成コウモリPNG/埋込み・本人作品由来の採取値: 標準MIT。
-Copyright (c) 2026 hiro-collab。全文: アプリ本体/LICENSE.txt（本文は変更していません）。
-ソースGitの本人作品由来の検証JSON5件も同じMIT条件です。
-第三者模型 CDmir / Human Skull: CC0 1.0を保持。
-素材の出所・ハッシュ・個別区分: アプリ本体/RIGHTS.txt。
-今回の納品とリポジトリーは非公開のままです。公開Releaseやpublic化は実行していません。
-非公開という納品状態は、MITへ追加する利用制限ではありません。
+作者が作成したプログラム、コウモリ画像（埋込みを含む）、動きや表示を再現するためのデータはMITライセンスです。
+Copyright (c) 2026 hiro-collab。標準のライセンス全文はアプリ本体/LICENSE.txtにあります。
+CDmir様の3Dモデル「Human Skull」はCC0 1.0です。
+素材の出所と個別の条件はアプリ本体/RIGHTS.txtをご覧ください。
 
-Own code, owner-created bat PNG/embedded payload and owner-scene sampled numeric data: standard MIT.
-Copyright (c) 2026 hiro-collab. See アプリ本体/LICENSE.txt for the unchanged license.
-The five developer validation JSON datasets in the source repository have the same MIT terms.
-Third-party CDmir / Human Skull model: CC0 1.0, retained separately.
-See アプリ本体/RIGHTS.txt for provenance, hashes and scope.
-Delivery and repository remain private; no public Release or visibility change has been performed.
-Private delivery status adds no restriction to the MIT terms.
+The author's code, bat artwork (including its embedded copy), and movement and appearance data use the MIT license.
+Copyright (c) 2026 hiro-collab. The standard license is in アプリ本体/LICENSE.txt.
+CDmir's “Human Skull” 3D model uses CC0 1.0.
+See アプリ本体/RIGHTS.txt for asset sources and individual terms.

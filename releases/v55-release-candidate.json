@@ -1,0 +1,23 @@
+{
+  "version": "0.1.55-jaw-edge-preview",
+  "build": "0.1.55-jaw-edge-preview-452e2bb99a64",
+  "releaseTagPlanned": "v0.1.55",
+  "asset": "halloween-projection-web-v0.1.55-jaw-edge-preview.zip",
+  "bytes": 542030,
+  "sha256": "8aa3cbf2dc239f44a643fe96c4394eab63b3f6a5107b14bb63333d694f14737c",
+  "entryCount": 50,
+  "entry": "はじめに_START-HERE.html",
+  "runtimeInitialTextSize": 0.25,
+  "baselineCommit": "f6d45ee99227953cb36fa4430bc623126c79a508",
+  "verification": {
+    "unitChecks": 475,
+    "keyboardAndSecurityBrowserChecks": 68,
+    "cleanOfflineExtractionChecks": 25,
+    "noExternalHTTPInCleanLaunch": true,
+    "zipCRCAndAll50AssetHashesMatch": true,
+    "MITAndCDmirCC0Retained": true,
+    "packageSecretOrPersonalPathFindings": 0
+  },
+  "scope": "Isolated headless Chrome on Windows; no physical projector, native IME or hardware keyboard certification. No new performance benchmark in this documentation/default-size revision.",
+  "publicationStatus": "Release prepared; publication and main integration await final review."
+}

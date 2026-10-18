@@ -54,7 +54,8 @@ window.HalloweenBMotion=(()=>{
    if(track)orientationExtendedSamples++;
    return sample+360*(spatialNoise(x,y,z,131)-spatialNoise(...edge,131));
   }
-  function step(settings={},aspectY=720/1280,phaseFrame=Math.floor(flapTime*60+1e-8)+phaseFrameOffset,updatePhase=true){
+  // Initial speed is read at birth; changing it does not overwrite velocities of bats already flying.
+ function step(settings={},aspectY=720/1280,phaseFrame=Math.floor(flapTime*60+1e-8)+phaseFrameOffset,updatePhase=true){
    if(disposed)throw new Error('Motion disposed');finite(aspectY,'aspectY');
    const p=parameters(settings),center=[settings.emitterX??0,settings.emitterY??0,.03];center.forEach(v=>finite(v,'Emitter center'));lastCenter=center;flightTime+=DT;steps++;lastSettings={...settings};
    const oldIndices=new Map(flock.map((b,i)=>[b.i,i]));
@@ -90,6 +91,7 @@ window.HalloweenBMotion=(()=>{
    lastEvent={step:steps,seconds:flightTime,removedIds,born,reindexed,turbulencePhase};
    return {...lastEvent,born:born.map(b=>({...b})),reindexed:reindexed.map(b=>({...b}))};
   }
+  // Flight integration and wing phase keep separate accumulators so rendering does not choose the wing frame.
   function advance(delta,settings={}, {aspectY=720/1280}={}){
    if(disposed)throw new Error('Motion disposed');nonnegative(delta,'elapsed');parameters(settings);
    const speed=nonnegative(settings.speed??1,'flight rate'),flapRate=nonnegative(settings.flapRate??1,'flap rate'),oldFlap=flapTime,oldPending=pending,oldPhasePending=phasePending;

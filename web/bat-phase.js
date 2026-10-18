@@ -13,6 +13,7 @@ window.HalloweenBatPhase=(()=>{
    history=Array.from({length:samples},(_,i)=>history[Math.min(i,history.length-1)]).slice(1);history.push(current);updates++;
    return indices();
   }
+  // Hold the current input across missed samples instead of inventing intermediate birth/count states.
   function capture(particleCount,sourceFrame,elapsedSamples=1){
    if(!Number.isSafeInteger(elapsedSamples)||elapsedSamples<1)throw new RangeError('Positive elapsed sample count required');
    // Native one-sample input is held across a Time Slice, including dropped frames.

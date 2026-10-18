@@ -8,6 +8,7 @@ window.HalloweenAReturn=(()=>{
   function initialize(id,position,velocity=[0,0]){if(disposed)throw Error('Return disposed');const p=vector(position),v=vector(velocity);states.set(id,{id,p,v,target:[...p],active:true});revision++;}
   function target(id,value){const t=vector(value);let s=states.get(id);if(!s?.active){initialize(id,t);s=states.get(id);}s.target=t;return [...s.p];}
   function moving(s){return s.active&&(Math.hypot(s.target[0]-s.p[0],s.target[1]-s.p[1])>epsilon||Math.hypot(...s.v)>epsilon*response);}
+  // Bound acceleration with small time steps; arrival follows distance and velocity, not a fixed deadline.
   function advance(dt){
    if(!Number.isFinite(dt)||dt<0)throw RangeError('Nonnegative finite elapsed time required');if(disposed||!dt)return;
    elapsedSeconds+=dt;const n=Math.ceil(dt/stepLimit),h=dt/n;let changed=false;

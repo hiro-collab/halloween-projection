@@ -1,67 +1,42 @@
-素材と権利 / Assets & rights — 0.1.55-jaw-edge-preview
+素材と権利 / Assets and licenses
 
-自作のアプリコード、説明文、新規2D描画はMITです。
-Copyright (c) 2026 hiro-collab。標準全文はLICENSE.txt（原文のまま）です。
-コピーや相当部分の再配布では、著作権表示と許諾表示を保持します。
-MIT本文へ追加条件を入れていません。画像・模型・採取済みデータは以下の区分です。
+■ プログラムと説明文 / Code and documentation
+作者が作成したプログラム、説明文、新規2D描画はMITライセンスです。
+Copyright (c) 2026 hiro-collab。標準全文はLICENSE.txtにあります。本文への追加条件は設けていません。
+The author's code, documentation and new 2D drawings use the MIT license.
+Keep the copyright and permission notice when redistributing copies or substantial portions. See LICENSE.txt.
 
-Own application code, documentation and new 2D drawings are MIT licensed.
-Keep the copyright and permission notice in copies or substantial portions.
-See LICENSE.txt for the unchanged standard license. Assets and sampled data have separate status below.
-
-■ 本人作成のコウモリ / Owner-created bat
-assets/owner-bat-atlas.png と、その同一バイトの埋込み bat-atlas-data.js。
-台帳は、本人作品の bat_set/bat/batImgs/bat_img_generator にて円・矩形から生成した
-60フレームと記録しています。旧候補Bat_FBXやbase2の雪とは別物です。
-1600×540 RGBA8 PNG、1コマ160×90、10列×6行。JPEGではありません。
+■ コウモリ画像 / Bat artwork
+作者が円・矩形から作成した60フレームのコウモリ画像です。MITライセンスで利用・改変・再配布できます。
+Copyright (c) 2026 hiro-collab。
+assets/owner-bat-atlas.png と bat-atlas-data.js の埋込みは同じ画像データです。
+1600×540 RGBA8 PNG、1コマ160×90、10列×6行。
 SHA256: 9da78cbc8d5721f136f3385354ea94345f9fe5bdae4cc7ce5cc4e8f45d5a317a
-2026-10-17の本人承認により、このPNGと同一バイトの埋込みにもMITを適用します。
-Copyright (c) 2026 hiro-collab。標準全文はLICENSE.txtです。
-利用・改変・再配布・商用利用を含む条件は標準MITに従います。素材用の追加制限は設けません。
-従来のMIT対象外・private限定という素材許諾表示は、この承認で更新されました。
-v55は元PNGを変更せず、表示時だけ2倍の高品質サンプリングと被覆alpha処理を適用します。
+The author created these 60 frames from circles and rectangles. The PNG and embedded copy have identical bytes and use MIT.
 
-The ledger identifies these 60 frames as the owner's circle/rectangle-generated artwork.
-They are separate from the old Bat_FBX candidate. PNG and embedded bytes are identical.
-On 2026-10-17 the owner explicitly approved MIT licensing of this artwork and its identical embedded payload.
-Copyright (c) 2026 hiro-collab. See LICENSE.txt for the standard MIT terms, including use, modification, redistribution and commercial use.
-The previous private-only asset notice is superseded; no additional asset restrictions are imposed.
-v55 keeps original image bytes and refines runtime sampling / alpha compositing only.
+■ 動き・表示のデータ / Movement and appearance data
+bat-motion.js、bat-phase.js、a-fluid.js、output-uv.jsの数値データもMITライセンスです。
+Copyright (c) 2026 hiro-collab。本人の旧TouchDesigner作品の演算出力から得た、回転・位相・流体・投影座標のデータです。
+第三者の映像やTD/NVIDIAの実装ソースを同梱するものではありません。
+ソースリポジトリー内の検証データ5ファイルも同じMIT条件です（tests/DATA-LICENSE.txt）。
+The numeric fields in these four modules use MIT. They come from operator outputs of the author's earlier TouchDesigner work.
+They are separate from third-party video and TD/NVIDIA implementation source. The five source-repository validation datasets use the same MIT terms.
 
-■ 第三者のCC0模型 / Third-party CC0 model
-CDmir / Human Skull
+■ ドクロの3Dモデル / Skull model
+CDmir / Human Skull — CC0 1.0
 Source: https://opengameart.org/content/human-skull-0
-CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
-skull-obj.zip 内 skull-obj/skull-Low4K.obj を変換し、app.jsに埋込。
-原TDのドクロ模型ではありません。テクスチャ・normal/AO画像は未同梱。
-fan三角化、float32座標、頭/上歯と顎/下歯へのラベル、独自binaryへ変換。
-archive SHA256: 067899af520649177c0dd5de1a4b18bd4f46daf667df04a405dc9a27d206011b
+License: https://creativecommons.org/publicdomain/zero/1.0/
+公開してくださった作者様に感謝します。Thank you to CDmir for making the model available.
+skull-obj.zip内のskull-obj/skull-Low4K.objを、頭部と顎を分けた独自形式へ変換してapp.jsに埋め込んでいます。
+元TouchDesigner作品のドクロとは別モデルです。元テクスチャ・normal/AO画像は含みません。
+The converted mesh remains CC0, separately from the MIT renderer. Source textures are not included.
+Archive SHA256: 067899af520649177c0dd5de1a4b18bd4f46daf667df04a405dc9a27d206011b
 OBJ SHA256: f24014fa02de4b3e3be2926df887114f42cb49361592b103a47d7cac8d8225af
-converted SHA256: bb38451e202e30ce2d84cdc224433ac27aafd43539ed362e6127a980b3538706
-The converted mesh is CC0, separately from the MIT renderer. Source textures are not included.
+Converted SHA256: bb38451e202e30ce2d84cdc224433ac27aafd43539ed362e6127a980b3538706
 
-■ 本人作品からの採取済み数値 / Sampled values from the owner's work
-bat-motion.js: 回転用Sparse Noise格子33³、Lag応答、粒子数別Random応答、球面42発生点/法線。
-bat-phase.js: seed1/depth60のRandom応答。動く画像の60コマ選択に使用。
-a-fluid.js: 時刻0の100×57 RG速度場（half-float）。固定入力/比較フォールバック。
-output-uv.js: 1280×720 RG投影補正座標。元Remap用。
-これらは本人作品内のTD演算から採取した値で、第三者の完成映像を取り込んだ記録はありません。
-演算結果の数値であり、TD/NVIDIAのソースコードそのものとは区別します。
-2026-10-17の本人承認により、上記の採取済み数値もMITです。Copyright (c) 2026 hiro-collab。
-ソースGitの本人作品由来の検証値5ファイルも同じMIT条件です（tests/DATA-LICENSE.txt）。
-詳細な出所・実行時の用途・外せる範囲はリポジトリー docs/PUBLIC-READINESS.md。
-These are measured operator outputs/settings from the owner's scene, not recorded third-party video or bundled TD source.
-The owner-scene sampled datasets and the five developer validation JSON files are MIT licensed by the same owner approval.
-Copyright (c) 2026 hiro-collab. The unchanged standard license is LICENSE.txt; tests/DATA-LICENSE.txt identifies developer-only data.
-
-■ 実装と非同梱物 / Implementation and exclusions
-実行時第三者JSライブラリ/CDNなし。OS/ブラウザーのフォントを使用し、フォントファイルは同梱しません。
-流体、Sobel、HSV、補間、noise等の独自Web実装。元shaderを同梱したと台帳は記録していません。
-ヘッダーだけで独立作成を証明したものではありません。特許の網羅調査は実施していません。
-元TOE/TOG、元TD模型、音楽、元歌詞、動画、私的ログ、TD/NVIDIAランタイムは同梱しません。
+■ 実行環境 / Runtime
+第三者JSライブラリやCDN、追加フォント、TouchDesigner/NVIDIAランタイムは同梱していません。
+フォントはOS・ブラウザーのものを使用します。元TOE/TOG、元TD模型、音楽、歌詞、動画、私的ログは配布ZIPに含みません。
 No third-party JS runtime library, CDN, bundled font, TD/NVIDIA runtime, original TOE/TOG, original TD mesh, music, lyrics, video or private log is included.
-Generic numerical methods and independently written code are distinguished from literal source copying. This notice is not a complete patent search or a guarantee about every possible claim.
 
-今回の納品・リポジトリーは引き続き非公開です。素材のMIT許諾と公開操作は別であり、公開Releaseや可視性変更は実施していません。
-本作品の公開URLは未確認のため創作していません。リポジトリーURLは https://github.com/hiro-collab/halloween-projection 。
-This delivery remains a private owner preview. That delivery status adds no restriction to the MIT terms. No public Release or visibility change has been performed.
+Source repository: https://github.com/hiro-collab/halloween-projection

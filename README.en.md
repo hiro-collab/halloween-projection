@@ -4,6 +4,8 @@
 
 Project skulls and bats onto walls or floors, and change motion, color and text with your keyboard.
 
+**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
+
 *Earlier TouchDesigner projections; not footage of this browser app.*
 
 <img src="./docs/images/td-projection-gallery-mobile-en.jpg" width="440" alt="Three real projections from the earlier TouchDesigner version: Santa-hat skulls at Shibuya Blue Cave, skulls close up at an unconfirmed location, and bats at Osaki Station, with the ground and surroundings visible.">
@@ -47,9 +49,9 @@ About 20 seconds, without audio: rotating skulls → **Z** to switch → bat mot
 <details>
 <summary>Download and start projecting in three steps</summary>
 
-**The download ZIP is being prepared. Its link will appear here when it is published.**
+**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
 
-<!-- RELEASE_DOWNLOAD_URL: After publishing an approved Release with the verified application ZIP attached, replace the notice above with its actual link. The automatic Source code ZIP is a different package. -->
+<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip -->
 
 ### Start in three steps
 
@@ -95,6 +97,8 @@ Edit the words in the console text box. `9` / `0` selects 1–6 skulls; `C` retu
 </details>
 
 ## Before projecting
+
+Use `Space` to pause motion. To blank the image, open **Output, stop & exit** and select **Stop & release**; select **Resume** to return. `Esc` stops keyboard controls while the visuals continue.
 
 Start with reduced projector brightness and a small window. Avoid directing the beam into people's eyes, and consider viewers sensitive to bright, rapidly changing imagery. Follow your projector's placement and ventilation instructions.
 

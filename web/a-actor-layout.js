@@ -43,6 +43,7 @@ window.HalloweenActorLayout=(()=>{
   const validCount=n=>{if(!Number.isInteger(n)||n<1||n>6)throw RangeError('Actor count1..6 required');};
   validCount(initialCount);let requestedCount=initialCount,revision=0,disposed=false;
   let records=Array.from({length:6},(_,id)=>({id,sourceIndex:presenceSources[id],scale:id<initialCount?1:0,from:id<initialCount?1:0,target:id<initialCount?1:0,elapsed:0,duration:0,state:id<initialCount?'visible':'hidden',entries:id<initialCount?1:0}));
+  // Reuse each actor identity and current scale so count changes do not pop surviving actors.
   function trigger(record,show){
    const target=show?1:0;if(record.target===target)return;
    if(show&&record.state==='hidden'){record.scale=0;record.entries++;}
@@ -64,6 +65,7 @@ window.HalloweenActorLayout=(()=>{
  }
  // Original locked position/rotation is the rest transform. Jaw remains an
  // independent child; the performance layer controls its existing Noise input.
+ // Move the displayed pose toward rest without rewriting its source motion state.
  function blendRest(pose,rest,strength=1){
   if(!Number.isFinite(strength)||strength<0||strength>1)throw RangeError('Rest strength0..1 required');
   return {...pose,position:pose.position.map((v,k)=>rest.position[k]+(v-rest.position[k])*strength),rotation:pose.rotation.map((v,k)=>rest.rotation[k]+(v-rest.rotation[k])*strength)};

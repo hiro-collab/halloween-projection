@@ -8,10 +8,10 @@
 <aside id="stage-start"><h1>投影窓の準備</h1><p id="stage-start-note">この窓を投影先へ移し、開始を押してください。開始後は操作UIを表示しません。</p><button id="stage-fullscreen">全画面で始める</button><button id="stage-windowed">ウィンドウで始める</button></aside>
 <aside id="controls" aria-label="操作パネル">
 <p><a href="./console.html">キーボード操作席を開く（2窓）</a></p><div class="brand">HALLOWEEN / PROJECTION</div><h1>壁が、ハロウィンの<br>ステージになる。</h1>
-<p class="lead">ブラウザで開いて、そのまま投影。<br>本人向け導入確認版 0.1.55-jaw-edge-preview</p>
+<p class="lead">ブラウザで開いて、そのまま投影。<br>Windows・Chrome向け / 0.1.55</p>
 <nav class="help-links" aria-label="使い方"><button id="guide">はじめての投影ガイド</button><a href="./START-HERE.html" target="_blank" rel="noopener noreferrer">かんたん手順</a><a href="./GUIDE.html" target="_blank" rel="noopener noreferrer">くわしい使い方・困ったとき</a><a href="./PERFORMANCE-PLAN.html" target="_blank" rel="noopener noreferrer">使える操作とキー一覧</a></nav><div class="label">エフェクト</div><div class="effects">
 <button id="skeleton" data-effect="skeleton" aria-pressed="true">くるくる骸骨<small>簡易 2D ベクター</small></button>
-<button id="bats" data-effect="bats" aria-pressed="false">コウモリと文字<small>本人の原図案60フレーム</small></button><button id="skull3d" data-effect="skull3d" aria-pressed="false">3Dドクロ<small>CC0別候補・私的比較</small></button></div>
+<button id="bats" data-effect="bats" aria-pressed="false">コウモリと文字<small>羽ばたくコウモリ</small></button><button id="skull3d" data-effect="skull3d" aria-pressed="false">3Dドクロ<small>CDmir / Human Skull（CC0）</small></button></div>
 <section id="text-options"><label><input id="text-manual-size" type="checkbox">文字サイズを自分で決める</label><label class="range-label" for="text-size-normalized"><span>主文字サイズ</span><output id="text-size-value">自動調整</output></label><input id="text-size-normalized" type="range" min="0" max="1" step="any" value="0.625" disabled><p class="help">手動サイズでは長い文字が切れることがあります。小さくするか、自動調整へ戻してください。0でも小さい文字が残ります。</p><label class="range-label" for="text-width"><span>文字の表示幅</span><output id="text-width-value">82%</output></label><input id="text-width" type="range" min="0.1" max="1" step="0.01" value="1"><label class="range-label" for="text-height"><span>文字の表示高さ</span><output id="text-height-value">48%</output></label><input id="text-height" type="range" min="0.1" max="1" step="0.01" value="1"><label for="text">文字を入力</label><textarea id="text" maxlength="240" spellcheck="false">HAPPY
 HALLOWEEN</textarea>
 <p class="help">ドクロの背景・コウモリの中央に表示。最大240字・8行。長い文字は自動調整で小さくなります。</p>

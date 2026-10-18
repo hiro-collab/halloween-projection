@@ -109,7 +109,6 @@
  "押し直すたび1回": "Release and press again",
  "キー演奏を解除（映像は続く）": "Disable keys (video continues)",
  "いつでも": "Any time",
- "0.1.55-jaw-edge-preview / Windows・Chrome向け本人導入確認版。実プロジェクター・別端末は別途確認します。": "0.1.55-jaw-edge-preview / Owner preview for Windows / Chrome. Physical projectors and other devices need separate checks.",
  "3段キーの使い方 / Halloween 0.1.55-jaw-edge-preview": "Three-row key guide / Halloween 0.1.55-jaw-edge-preview",
  "3段の8位置で、狙った値へ": "Three rows, eight targets each",
  "操作窓を開く": "Open console",
@@ -134,7 +133,6 @@
  "投影窓で「全画面で始める」をクリック。抜けるにはその窓でEscです。Xは向きで、全画面キーではありません。": "Click Start fullscreen in the projection window. Esc there exits fullscreen. X changes orientation.",
  "終了": "Exit",
  "詳細欄「投影を終了」。機器の電源・画面配置は機器とOSの手順で操作します。": "Choose End projection in output details. Use your equipment and OS instructions for power and display arrangement.",
- "0.1.55-jaw-edge-preview / 本人導入確認版。実プロジェクター・別端末は別途確認します。": "0.1.55-jaw-edge-preview / Owner preview. Physical projectors and other devices need separate checks.",
  "素材と権利": "Assets & rights",
  "コードのライセンス": "Code license",
  "現在の映像：": "Scene: ",
@@ -260,8 +258,10 @@
  "文字サイズの8目標位置": "Eight text size targets",
  "現在の値": "Current value"
 };
- Object.assign(dictionary,{"使える操作": "Available controls", "現在使える操作": "Available controls", "キー一覧・困ったとき": "Keys & help", "キー一覧": "Key reference", "二窓の操作席、キーボード、文字とサイズ、映像切替、ドクロ1〜6体、一時停止とResetが使えます。操作は": "Use the separate console and projection, performance keys, text, scene changes, 1–6 skulls, Pause and Reset. See the ", "を確認してください。": " for instructions.", "ゲームパッド・スマホ・OS全体の入力捕捉・自動画面配置は実装していません。": "Gamepads, phone control, global OS key capture and automatic display arrangement are not implemented.", "Windows・Chrome向け本人導入確認版。実会場での投影・別端末の性能は別途確認します。": "Owner preview for Windows / Chrome. Venue projection and other devices need separate checks."});
+ Object.assign(dictionary,{"使える操作": "Available controls", "現在使える操作": "Available controls", "キー一覧・困ったとき": "Keys & help", "キー一覧": "Key reference", "二窓の操作席、キーボード、文字とサイズ、映像切替、ドクロ1〜6体、一時停止とResetが使えます。操作は": "Use the separate console and projection, performance keys, text, scene changes, 1–6 skulls, Pause and Reset. See the ", "を確認してください。": " for instructions.", "ゲームパッド・スマホ・OS全体の入力捕捉・自動画面配置は実装していません。": "Gamepads, phone control, global OS key capture and automatic display arrangement are not implemented."});
  const sourceTitle=document.title;
+ // Release wording: UI text only; translation behavior and projected user text stay unchanged.
+ Object.assign(dictionary,{"3段のキーで、映像を操作":"Control the visuals with three keyboard rows","キー操作一覧":"Keyboard controls","動きの激しさを8段階から選ぶ":"Choose one of eight motion levels","色相を8段階から選ぶ":"Choose one of eight hues","文字サイズを8段階から選ぶ":"Choose one of eight text sizes","1回押して選択":"Press once to choose","キーボード操作を止める（映像は続く）":"Stop keyboard controls (visuals continue)","映像の動きをリセット（文字・設定は保持）":"Reset motion (keep text and settings)","保存した設定とリセット":"Saved appearance and reset","Windows・Chrome向け。プロジェクターの接続と画面配置は、Windowsで設定してください。":"For Windows and Chrome. Set up the projector connection and display arrangement in Windows.","Windows・Chrome向け / 0.1.55":"For Windows and Chrome / 0.1.55","羽ばたくコウモリ":"Animated bats","CDmir / Human Skull（CC0）":"CDmir / Human Skull (CC0)","動きを止める・映像を消す":"Pause or blank the image","動きだけ止めるときはSpace。映像を黒くして中断するときは「投影の補正・中断・終了」→「停止・解放」。戻すときは「再開」→必要なら「演奏開始」です。Escはキー操作だけを止め、映像は続きます。プロジェクターの光を止める操作は機器側で行ってください。":"Space pauses motion. To blank the image, open “Output, stop & exit” and choose “Stop & release”. Choose “Resume” and, if needed, “Enable keys” to return. Esc stops keyboard controls while the visuals continue. Use the projector’s own controls to stop its light output."});
  const dict=new Map(Object.entries(dictionary));
  const escape=s=>s.replace(/[.*+?^$()|[\]{}\\]/g,'\\$&');
  const pattern=new RegExp([...dict.keys()].filter(s=>s.length>1).sort((a,b)=>b.length-a.length).map(escape).join('|'),'g');

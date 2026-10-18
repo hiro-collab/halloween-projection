@@ -4,6 +4,8 @@
 
 PCとプロジェクターで、壁や床にドクロやコウモリを投影。手元のキーボードで、動き・色・文字を変えられます。
 
+**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
+
 *旧TouchDesigner版の投影例です。配布ブラウザ版の実写ではありません。*
 
 <img src="./docs/images/td-projection-gallery-mobile-ja.jpg" width="440" alt="旧TouchDesigner版の実投影3例。渋谷・青の洞窟のサンタ帽ドクロ、撮影場所未確認の床面ドクロ近景、大崎駅のコウモリ。床や周囲の風景も写っている。">
@@ -47,9 +49,9 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 <details>
 <summary>ダウンロードと、投影を始める3手順</summary>
 
-**配布用ZIPは準備中です。公開後、ここにダウンロードリンクを掲載します。**
+**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
 
-<!-- RELEASE_DOWNLOAD_URL: 承認されたReleaseへ検証済み配布ZIPを添付してから、上の案内を実際のリンクへ差し替える。自動生成のSource code ZIPとは別。 -->
+<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.55/halloween-projection-web-v0.1.55-jaw-edge-preview.zip -->
 
 ### 3手順で投影する
 
@@ -95,6 +97,8 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 </details>
 
 ## 投影する前に
+
+動きを止めるときは `Space`。映像を黒くして中断するときは「投影の補正・中断・終了」→「停止・解放」、戻すときは「再開」です。`Esc` はキー操作だけを止め、映像は続きます。
 
 最初はプロジェクターの明るさを控えめにし、小さいウィンドウで試してください。投影光を人の目へ向けず、明るく変化する映像が苦手な人にも配慮してください。設置・排熱はプロジェクターの説明書に従います。
 

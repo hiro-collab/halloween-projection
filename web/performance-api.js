@@ -5,7 +5,8 @@ window.HalloweenPerformance=(()=>{
  const jawLevels=Object.freeze([15,30,60,90]),jawLabels=Object.freeze(['小','中','大','最大']);
  const bindings=Object.freeze({motion:'1 2 3 4 5 6 7 8',look:'Q W E R T Y U I',text:'A S D F G H J K',count:'9 / 0',scene:'Z',flip:'X',mode:'C',accent:'V',baseline:'B (0.6秒)',reset:'N (0.6秒)',jawLevel:'L',jawToggle:'M',pause:'Space',disarm:'Esc'});
  function create(api,{batch=fn=>fn(),clock=()=>performance.now()/1000,requestUpdate=()=>false}={}){
-  let scene='a',size=.625,accent=false,ended=false,revision=0;
+  // Keep the shipped two-line greeting inside the projection mask; the full user size range stays available.
+  let scene='a',size=.25,accent=false,ended=false,revision=0;
   let profiles={a:{motion:.5,look:138/360,glow:0,mode:0,jawLevel:1,jawIsOpen:false,jawManual:false},b:{motion:.5,look:2/3,rotation:.5,mode:1}},baseline={profiles:copy(profiles),size};
   const transitions=new Map(),targets=new Map(),duration=.15;
   const set=(k,v)=>api.set(k,v,{source:'performance-cue'}),key=(axis,s=scene)=>axis==='text'?'text':s+':'+axis;
@@ -18,6 +19,7 @@ window.HalloweenPerformance=(()=>{
    for(const [id,t] of transitions){const elapsed=Math.max(0,now-t.started),u=elapsed>=duration-1e-9?1:clamp(elapsed/duration),v=u===1?t.to:t.from+t.delta*u;write(t.axis,t.scene,v);if(t.scene===scene||t.axis==='text')changed=true;if(u===1)transitions.delete(id);}
    if(changed)apply();return changed;
   }
+  // Retarget from the current value; elapsed time, rather than key repeats, drives the 150ms transition.
   function queue(axis,value,position=null,s=scene,now=clock()){
    const from=read(axis,s),to=axis==='look'?wrap(value):value;let delta=to-from;if(axis==='look'){if(delta>.5)delta--;if(delta<-.5)delta++;}
    targets.set(key(axis,s),{target:to,position});if(Math.abs(delta)<1e-12){write(axis,s,to);transitions.delete(key(axis,s));return;}
