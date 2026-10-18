@@ -6,10 +6,7 @@ Project skulls and bats onto walls or floors, and change motion, color and text 
 
 *Earlier TouchDesigner projections; not footage of this browser app.*
 
-<picture>
-  <source media="(max-width: 1000px)" srcset="docs/images/td-projection-gallery-mobile-en.jpg">
-  <img src="docs/images/td-projection-gallery-desktop-en.jpg" width="960" alt="Three real projections from the earlier TouchDesigner version: Santa-hat skulls at Shibuya Blue Cave, skulls close up at an unconfirmed location, and bats at Osaki Station, with the ground and surroundings visible.">
-</picture>
+<img src="./docs/images/td-projection-gallery-mobile-en.jpg" width="440" alt="Three real projections from the earlier TouchDesigner version: Santa-hat skulls at Shibuya Blue Cave, skulls close up at an unconfirmed location, and bats at Osaki Station, with the ground and surroundings visible.">
 
 ## Shape the scene with your keyboard
 
