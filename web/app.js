@@ -663,6 +663,7 @@
             responseValues().foreground,
             settings.backgroundHue,
             settings.headGlowMix,
+            settings.boneWhiteness,
             settings.foregroundBurst,
             presence.revision()
           ].join(',');
@@ -738,6 +739,7 @@
             responseValues().foreground,
             settings.backgroundHue,
             settings.headGlowMix,
+            settings.boneWhiteness,
             settings.foregroundBurst,
             presence.revision()
           ].join(',');
@@ -1386,6 +1388,7 @@
                 textRevision: sourceTextKey,
                 backgroundHueDegrees: Math.fround(responseValues().hue * 360),
                 headGlowMix: responseValues().glow,
+                boneWhiteness: settings.boneWhiteness,
                 foregroundMix: responseValues().foreground,
                 foregroundEnabled: responseValues().foreground > 1e-6,
                 noiseSeconds: sourceClock.seconds(),

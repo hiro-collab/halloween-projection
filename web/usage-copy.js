@@ -62,7 +62,9 @@ window.HalloweenUsageCopy = (() => {
       el.classList.toggle('unused', !skull);
       el.setAttribute('aria-disabled', String(!skull));
       el.querySelector('small').textContent = skull
-        ? el.dataset.skullKey
+        ? el.querySelector('kbd').textContent === 'O'
+          ? '+25%'
+          : el.dataset.skullKey
         : '未使用';
       el.setAttribute(
         'aria-label',
@@ -75,8 +77,8 @@ window.HalloweenUsageCopy = (() => {
       ? 'ドクロのキー配置'
       : 'コウモリのキー配置';
     $('keyboard-scene-note').textContent = skull
-      ? '9 / 0は体数、L / Mは顎。Cは顎の自動モード、Vは前景の光です。'
-      : '9 / 0、L / Mはこの映像では未使用です。Cは旋回の配分、Vは新しい個体の速さと回り方です。';
+      ? '9 / 0は体数、L / Mは顎、Oは骨の白さ＋25ポイント。Cは顎の自動モード、Vは前景の光です。'
+      : '9 / 0、L / M、Oはこの映像では未使用です。Cは旋回の配分、Vは新しい個体の速さと回り方です。';
     $('motion-scene-note').textContent = skull
       ? '動き0%で頭部は定位置に戻って静止します。背景は続くため、映像全体の一時停止はSpaceです。'
       : '動き0%で中央付近にたむろし、羽ばたきは続きます。映像全体の一時停止はSpaceです。';

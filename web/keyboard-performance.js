@@ -149,7 +149,9 @@ window.HalloweenPerformanceKeyboard = (() => {
       const axis = Object.keys(rows).find((a) => rows[a].includes(k));
       if (
         !axis &&
-        !['9', '0', 'z', 'x', 'c', 'v', 'b', 'n', 'l', 'm', ' '].includes(k)
+        !['9', '0', 'z', 'x', 'c', 'v', 'b', 'n', 'l', 'm', 'o', ' '].includes(
+          k
+        )
       )
         return;
       e.preventDefault();
@@ -174,6 +176,7 @@ window.HalloweenPerformanceKeyboard = (() => {
       else if (k === 'c') send({ action: 'mode' });
       else if (k === 'l') send({ action: 'jawLevel' });
       else if (k === 'm') send({ action: 'jawToggle' });
+      else if (k === 'o') send({ action: 'boneWhitenessStep' });
       else if (k === 'v') send({ action: 'accent', value: true });
       else if (k === 'b') baselineDone = false;
       else if (k === 'n') resetDone = false;

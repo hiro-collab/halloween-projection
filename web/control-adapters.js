@@ -20,6 +20,7 @@ window.HalloweenControlAdapters = (() => {
     jawPeriod: 'a.jawPeriod',
     jawExponent: 'a.jawExponent',
     headGlowMix: 'a.headGlowMix',
+    boneWhiteness: 'a.boneWhiteness',
     foregroundBurst: 'a.foregroundBurst',
     headRate: 'a.headCycleRate',
     jawRate: 'a.jawCycleRate',
@@ -209,6 +210,7 @@ window.HalloweenControlAdapters = (() => {
         'jawPeriod',
         'jawExponent',
         'headGlowMix',
+        'boneWhiteness',
         'headRate',
         'jawRate',
         'jawOpen',
@@ -241,6 +243,7 @@ window.HalloweenControlAdapters = (() => {
       $('skull-foregroundBurst').checked = !!settings.foregroundBurst;
       $('skull-foregroundBurst').disabled = !settings.aCompositeMode;
       $('skull-headGlowMix').disabled = !settings.aCompositeMode;
+      $('skull-boneWhiteness').disabled = !settings.aCompositeMode;
       $('skull-jawTint').checked = !!settings.jawTint;
       $('skull-rigMode').checked = !!settings.rigMode;
       $('skull-jawPivotMode').checked = !!settings.jawPivotMode;

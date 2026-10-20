@@ -75,6 +75,13 @@
             side === 'current' ? 'value' : 'target'
           ]
         ).colour;
+    const bone = v['a.boneWhiteness'];
+    $('bone-whiteness').disabled = !connected || s.ended || sc !== 'a';
+    if (document.activeElement !== $('bone-whiteness'))
+      $('bone-whiteness').value = bone;
+    const bonePercent = Number((bone * 100).toFixed(2)) + '%';
+    $('bone-whiteness-value').textContent = bonePercent;
+    $('bone-whiteness').setAttribute('aria-valuetext', bonePercent);
     const j = p.jaw;
     $('jaw-level').disabled = $('jaw-toggle').disabled = sc !== 'a';
     $('jaw-toggle').setAttribute('aria-pressed', String(j.manual && j.open));
@@ -350,6 +357,13 @@
   }
   $('actor-layout').addEventListener('change', () =>
     api({ type: 'set', key: 'a.actorLayout', value: $('actor-layout').value })
+  );
+  $('bone-whiteness').addEventListener('input', () =>
+    api({
+      type: 'set',
+      key: 'a.boneWhiteness',
+      value: Number($('bone-whiteness').value)
+    })
   );
   $('actor-count').addEventListener('change', () =>
     api({

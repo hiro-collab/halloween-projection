@@ -430,6 +430,21 @@ window.HalloweenAppControl = (() => {
   // The Lag metadata below describes the source response. In the two-window
   // route app.js responseValues() uses performance-api.js's interpolated hue/glow
   // directly, so those two controls do not receive this additional Lag.
+  field(
+    'a.boneWhiteness',
+    'number',
+    [0, 1],
+    'skull3d',
+    'boneWhiteness',
+    '骨の白さ',
+    {
+      default: 0,
+      sourceMatch: 'Web venue adjustment; not a native material parity claim',
+      applicableWhen: 'A composite mode',
+      effect:
+        'Display-only bone/decor adjustment before final Level; original text transmission retained; 0 preserves previous pixels; no fluid/glow/transform change'
+    }
+  );
   field('a.headGlowMix', 'number', [0, 1], 'skull3d', 'headGlowMix', '骨Glow', {
     default: 0,
     sourceMatch: 'reconnected source Cross; sampled Catmull spatial comparison',

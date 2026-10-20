@@ -261,6 +261,7 @@
           ![
             'a.actorCount',
             'a.actorLayout',
+            'a.boneWhiteness',
             'a.text',
             'b.text',
             'text.width',

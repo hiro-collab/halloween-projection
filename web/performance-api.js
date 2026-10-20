@@ -19,6 +19,7 @@ window.HalloweenPerformance = (() => {
     reset: 'N (0.6秒)',
     jawLevel: 'L',
     jawToggle: 'M',
+    boneWhitenessStep: 'O',
     pause: 'Space',
     disarm: 'Esc'
   });
@@ -50,7 +51,7 @@ window.HalloweenPerformance = (() => {
         },
         b: { motion: 0.5, look: 2 / 3, rotation: 0.5, mode: 1 }
       },
-      baseline = { profiles: copy(profiles), size };
+      baseline = { profiles: copy(profiles), size, boneWhiteness: 0 };
     const transitions = new Map(),
       targets = new Map(),
       duration = 0.15;
@@ -292,6 +293,16 @@ window.HalloweenPerformance = (() => {
           throw RangeError('Single count step');
         if (scene === 'a')
           set('a.actorCount', clamp(api.get('a.actorCount') + c.delta, 1, 6));
+      } else if (c.action === 'boneWhitenessStep') {
+        if (scene === 'a') {
+          const current = api.get('a.boneWhiteness') ?? 0;
+          // Preserve the slider's offset, avoid accumulated decimal noise, and visit100 before wrapping.
+          const next =
+            current >= 1
+              ? 0
+              : Math.min(1, Number((current + 0.25).toFixed(12)));
+          set('a.boneWhiteness', next);
+        }
       } else if (c.action === 'accent') {
         if (typeof c.value !== 'boolean') throw TypeError('Boolean accent');
         if (accent !== c.value) {
@@ -318,7 +329,11 @@ window.HalloweenPerformance = (() => {
         apply();
       } else if (c.action === 'capture') {
         advance();
-        baseline = { profiles: copy(profiles), size };
+        baseline = {
+          profiles: copy(profiles),
+          size,
+          boneWhiteness: api.get('a.boneWhiteness') ?? 0
+        };
         revision++;
       } else if (c.action === 'baseline') {
         const now = clock();
@@ -336,6 +351,7 @@ window.HalloweenPerformance = (() => {
             queue(a, baseline.profiles[s][a], null, s, now);
         }
         queue('text', baseline.size, null, scene, now);
+        set('a.boneWhiteness', baseline.boneWhiteness);
         accent = false;
         apply();
         if (!requestUpdate()) advance(now + duration);
@@ -383,6 +399,7 @@ window.HalloweenPerformance = (() => {
           'actorCountStep',
           'jawLevel',
           'jawToggle',
+          'boneWhitenessStep',
           'adjust',
           'accent',
           'mode',
