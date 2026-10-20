@@ -19,6 +19,7 @@ window.HalloweenPerformance = (() => {
     reset: 'N (0.6秒)',
     jawLevel: 'L',
     jawToggle: 'M',
+    boneWhitenessStep: 'O',
     pause: 'Space',
     disarm: 'Esc'
   });
@@ -292,6 +293,16 @@ window.HalloweenPerformance = (() => {
           throw RangeError('Single count step');
         if (scene === 'a')
           set('a.actorCount', clamp(api.get('a.actorCount') + c.delta, 1, 6));
+      } else if (c.action === 'boneWhitenessStep') {
+        if (scene === 'a') {
+          const current = api.get('a.boneWhiteness') ?? 0;
+          // Preserve the slider's offset, avoid accumulated decimal noise, and visit100 before wrapping.
+          const next =
+            current >= 1
+              ? 0
+              : Math.min(1, Number((current + 0.25).toFixed(12)));
+          set('a.boneWhiteness', next);
+        }
       } else if (c.action === 'accent') {
         if (typeof c.value !== 'boolean') throw TypeError('Boolean accent');
         if (accent !== c.value) {
@@ -388,6 +399,7 @@ window.HalloweenPerformance = (() => {
           'actorCountStep',
           'jawLevel',
           'jawToggle',
+          'boneWhitenessStep',
           'adjust',
           'accent',
           'mode',

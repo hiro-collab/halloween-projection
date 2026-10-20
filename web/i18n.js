@@ -437,6 +437,22 @@
     '操作窓の「ドクロの骨の白さ」で調整します。低くすると流体の色になじみ、高くすると半透明の白い骨が見えます。初期値0%は従来の見た目です。文字と重なる部分は、投影先で読みやすさを確認してください。':
       'Use “Skull bone whiteness” in the console. Lower values blend into the fluid color; higher values reveal translucent white bone. The default 0% keeps the previous appearance. Check overlapping text for readability on the projection surface.'
   });
+  Object.assign(dictionary, {
+    'ドクロの骨の白さ（O）': 'Skull bone whiteness (O)',
+    'O（アルファベットのオー）を押し直すと、現在の白さに25ポイント加えます。100%で止まり、次の押下で0%へ戻ります。例えば10→35→60→85→100→0%。演奏開始後、ドクロで有効です。押しっぱなしでは変わりません。数字0はドクロ数を増やすキーです。':
+      'Press O (the letter) again to add 25 percentage points to the current whiteness. It stops at 100%; the next press returns to 0%. For example: 10→35→60→85→100→0%. Available for skulls after enabling keyboard performance. Holding the key does not repeat. Digit 0 increases the skull count.',
+    '骨の白さ＋25%': 'Bone whiteness +25%',
+    '白さ＋25%': 'Whiteness +25%',
+    'O（アルファベット）': 'O (letter)',
+    '骨の白さ＋25ポイント。100%の次は0%（ドクロのみ）':
+      'Bone whiteness +25 percentage points; 100% returns to 0% on the next press (skulls only)',
+    '9 / 0は体数、L / Mは顎、Oは骨の白さ＋25ポイント。Cは顎の自動モード、Vは前景の光です。':
+      '9 / 0 change the skull count, L / M control the jaw, and O adds 25 percentage points of bone whiteness. C selects automatic jaw modes; V adds foreground light.',
+    '9 / 0、L / M、Oはこの映像では未使用です。Cは旋回の配分、Vは新しい個体の速さと回り方です。':
+      '9 / 0, L / M and O are unused in this scene. C selects the flight mix; V changes new bats’ speed and turning.',
+    '操作窓の「ドクロの骨の白さ（O）」のスライダーで調整します。低くすると流体の色になじみ、高くすると半透明の白い骨が見えます。初期値0%は従来の見た目です。文字と重なる部分は、投影先で読みやすさを確認してください。':
+      'Use the “Skull bone whiteness (O)” slider in the console. Lower values blend into the fluid color; higher values reveal translucent white bone. The default 0% keeps the previous appearance. Check overlapping text for readability on the projection surface.'
+  });
   const dict = new Map(Object.entries(dictionary));
   const escape = (s) => s.replace(/[.*+?^$()|[\]{}\\]/g, '\\$&');
   const pattern = new RegExp(

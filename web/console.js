@@ -79,11 +79,9 @@
     $('bone-whiteness').disabled = !connected || s.ended || sc !== 'a';
     if (document.activeElement !== $('bone-whiteness'))
       $('bone-whiteness').value = bone;
-    $('bone-whiteness-value').textContent = Math.round(bone * 100) + '%';
-    $('bone-whiteness').setAttribute(
-      'aria-valuetext',
-      Math.round(bone * 100) + '%'
-    );
+    const bonePercent = Number((bone * 100).toFixed(2)) + '%';
+    $('bone-whiteness-value').textContent = bonePercent;
+    $('bone-whiteness').setAttribute('aria-valuetext', bonePercent);
     const j = p.jaw;
     $('jaw-level').disabled = $('jaw-toggle').disabled = sc !== 'a';
     $('jaw-toggle').setAttribute('aria-pressed', String(j.manual && j.open));
