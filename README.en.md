@@ -4,7 +4,7 @@
 
 Project skulls and bats onto walls or floors, and change motion, color and text with your keyboard.
 
-**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.59/halloween-projection-web-v0.1.59-readability-cleanup.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
+**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-web-v0.1.60-bone-whiteness.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
 
 *The photos show projections made with the TouchDesigner version, adapted for each setting. You can use this app in the same way to project skulls and bats onto the walls and floors around you.*
 
@@ -80,9 +80,9 @@ Keep the laptop lid open. The **PC shows the console; the projector shows the se
 <details>
 <summary>Download and start projecting in three steps</summary>
 
-**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.59/halloween-projection-web-v0.1.59-readability-cleanup.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
+**[Download the application ZIP](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-web-v0.1.60-bone-whiteness.zip)** · Windows / Chrome. Extract All, then open `はじめに_START-HERE.html` in Chrome.
 
-<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.59/halloween-projection-web-v0.1.59-readability-cleanup.zip -->
+<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-web-v0.1.60-bone-whiteness.zip -->
 
 ### Start in three steps
 
@@ -108,6 +108,7 @@ Choose **Enable keys**, then keep the console selected. Use Latin keys without S
 | --- | --- |
 | `1`–`8` | Choose one of eight motion intensities |
 | `Q W E R T Y U I` | Choose a hue |
+| `O` | Add 25 percentage points to skull bone whiteness; 100% wraps to 0%. Fine-tune with the slider |
 | `A S D F G H J K` | Choose a text size |
 | `Z` | Switch skulls / bats |
 | `X` | Cycle normal / horizontal flip / vertical flip / both |

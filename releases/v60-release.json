@@ -107,5 +107,20 @@
     "v0.1.57",
     "v0.1.56",
     "v0.1.55"
-  ]
+  ],
+  "publication": {
+    "releaseUrl": "https://github.com/hiro-collab/halloween-projection/releases/tag/v0.1.60",
+    "downloadUrl": "https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-web-v0.1.60-bone-whiteness.zip",
+    "releaseTargetCommit": "6e337ae2ef8e86b9fe192a6c153ae3dd63ec8403",
+    "reDownloadedSHA256": "ea97aaa5b1e8d8cc42ec4b8648c6b81e6844cb700bc6effbeb20072bfa2b16ba",
+    "reDownloadedBytes": 583345,
+    "zipEntries": 54,
+    "appFilesMatchingGit": 52,
+    "crcVerified": true,
+    "publicBrowserChecks": 7,
+    "publicBrowserRoute": "fresh offline file ZIP",
+    "oldV59SHA256": "581b798f5d5f3f93dc6c359d960e1a6184ba745eb3aaf6652ca88eb702bcb1de",
+    "oldV59DownloadRetained": true,
+    "failed": 0
+  }
 }
