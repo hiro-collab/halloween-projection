@@ -50,7 +50,7 @@ window.HalloweenPerformance = (() => {
         },
         b: { motion: 0.5, look: 2 / 3, rotation: 0.5, mode: 1 }
       },
-      baseline = { profiles: copy(profiles), size };
+      baseline = { profiles: copy(profiles), size, boneWhiteness: 0 };
     const transitions = new Map(),
       targets = new Map(),
       duration = 0.15;
@@ -318,7 +318,11 @@ window.HalloweenPerformance = (() => {
         apply();
       } else if (c.action === 'capture') {
         advance();
-        baseline = { profiles: copy(profiles), size };
+        baseline = {
+          profiles: copy(profiles),
+          size,
+          boneWhiteness: api.get('a.boneWhiteness') ?? 0
+        };
         revision++;
       } else if (c.action === 'baseline') {
         const now = clock();
@@ -336,6 +340,7 @@ window.HalloweenPerformance = (() => {
             queue(a, baseline.profiles[s][a], null, s, now);
         }
         queue('text', baseline.size, null, scene, now);
+        set('a.boneWhiteness', baseline.boneWhiteness);
         accent = false;
         apply();
         if (!requestUpdate()) advance(now + duration);

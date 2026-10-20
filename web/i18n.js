@@ -428,6 +428,15 @@
     '一時停止はSpace。終了は操作画面の「投影の補正・中断・終了」から「投影窓を閉じる」。閉じた後の文字・設定は初期値になります。':
       'Space pauses motion. To end, open “Output, stop & exit” in the operator window and choose “Close projection window”. Text and settings return to their defaults after closing.'
   });
+  Object.assign(dictionary, {
+    'ドクロの骨の白さ': 'Skull bone whiteness',
+    '骨の白さ': 'Bone whiteness',
+    '低くすると流体の色になじみ、高くすると半透明の白い骨が見えます。初期値0%は従来の見た目です。文字と重なる部分は、投影先で読みやすさを確認してください。':
+      'Lower values blend into the fluid color; higher values reveal translucent white bone. The default 0% keeps the previous appearance. Check overlapping text for readability on the projection surface.',
+    '会場に合わせて骨の白さを調整する': 'Adjust bone whiteness for the venue',
+    '操作窓の「ドクロの骨の白さ」で調整します。低くすると流体の色になじみ、高くすると半透明の白い骨が見えます。初期値0%は従来の見た目です。文字と重なる部分は、投影先で読みやすさを確認してください。':
+      'Use “Skull bone whiteness” in the console. Lower values blend into the fluid color; higher values reveal translucent white bone. The default 0% keeps the previous appearance. Check overlapping text for readability on the projection surface.'
+  });
   const dict = new Map(Object.entries(dictionary));
   const escape = (s) => s.replace(/[.*+?^$()|[\]{}\\]/g, '\\$&');
   const pattern = new RegExp(
@@ -456,8 +465,8 @@
   const remote = window.HalloweenStageRole?.remote === true;
   const root = remote
     ? document.getElementById('stage-start')
-    : document.querySelector('main') ||
-      document.getElementById('controls') ||
+    : document.getElementById('controls') ||
+      document.querySelector('main') ||
       document.body;
   const sources = new WeakMap(),
     attributes = new WeakMap(),

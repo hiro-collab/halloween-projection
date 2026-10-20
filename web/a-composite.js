@@ -90,7 +90,7 @@ precision highp float;
 uniform sampler2D t0, t1, t2, t3, t4;
 uniform vec2 resolution, axis;
 uniform int stage;
-uniform float brightness, gammaValue, contrastValue, gain, strength, hueValue, noiseSeconds;
+uniform float brightness, gammaValue, contrastValue, gain, strength, hueValue, noiseSeconds, boneWhiteness;
 uniform float blurWeights[12];
 uniform vec2 center;
 in vec2 uv;
@@ -167,7 +167,16 @@ void main() {
     vec4 text = level(min(b, glyph), 5., 2.02, 1.);
     c = over(a, text);
   }
-  else if (stage == 11) c = mix(a + b, over(a, b), .824);
+  else if (stage == 11) {
+    c = mix(a + b, over(a, b), .824);
+    // Change the bone/decor base only; preserve the original text transmission and alpha.
+    if (boneWhiteness > 0.) {
+      vec4 bone = texture(t2, uv);
+      vec3 base = a.rgb + texture(t3, uv).rgb * (1. - .824 * a.a);
+      vec3 white = clamp(bone.rgb / max(bone.a, 1.e-5), 0., 1.);
+      c.rgb += mix(clamp(base, 0., 1.), white, .65 * boneWhiteness * bone.a) - base;
+    }
+  }
   else if (stage == 12) {
     a.rgb = mix(a.rgb, vec3(1) - a.rgb, .098);
     c = level(a, 2., .86, 4.38);
@@ -225,6 +234,7 @@ void main() {
       lastForeground = null,
       lastBackgroundHueDegrees = 138,
       lastHeadGlowMix = 0,
+      lastBoneWhiteness = 0,
       lastForegroundEnabled = false,
       lastNoiseSeconds = 0,
       lastDecorationEnabled = false;
@@ -393,6 +403,7 @@ void main() {
         gl.uniform1fv(uniform('blurWeights[0]'), options.weights);
       gl.uniform2f(uniform('center'), ...(options.center || [0.5, 0.5]));
       gl.uniform1f(uniform('noiseSeconds'), options.noiseSeconds ?? 0);
+      gl.uniform1f(uniform('boneWhiteness'), options.boneWhiteness ?? 0);
       for (const key of [
         'brightness',
         'gammaValue',
@@ -710,6 +721,7 @@ void main() {
         textRevision = null,
         backgroundHueDegrees = 138,
         headGlowMix = 0,
+        boneWhiteness = 0,
         foregroundEnabled = false,
         foregroundMix = foregroundEnabled ? 1 : 0,
         noiseSeconds = 0,
@@ -838,7 +850,16 @@ void main() {
         );
         blur('decor', 'textBlur', 32, 21 / 6);
         pass('textComposite', 10, ['decor', 'textBlur', 'glyph']);
-        pass('behind', 11, ['headBright', 'textComposite']);
+        if (
+          !Number.isFinite(boneWhiteness) ||
+          boneWhiteness < 0 ||
+          boneWhiteness > 1
+        )
+          throw Error('Bone whiteness0..1 required');
+        lastBoneWhiteness = boneWhiteness;
+        pass('behind', 11, ['headBright', 'textComposite', 'head', 'decor'], {
+          boneWhiteness
+        });
         const branches = [
           'front1',
           'front2',
@@ -1036,6 +1057,10 @@ void main() {
         maxMs,
         backgroundHueDegrees: lastBackgroundHueDegrees,
         backgroundHueStage: 'base2/hsvadj3 after source Lag',
+        boneWhiteness: lastBoneWhiteness,
+        boneLayerAlpha: 0.65 * lastBoneWhiteness,
+        boneLayerSource:
+          'unblurred head; bone/decor adjustment at stage11 before final Level; original text transmission retained',
         headGlowMix: lastHeadGlowMix,
         headGlowContributions: ['effectiveHeadGlow', 'effectiveHeadBlur'],
         headGlowOffPreservesSimulationInput: false,
