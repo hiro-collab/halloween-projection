@@ -10,6 +10,12 @@ Project skulls and bats onto walls or floors, and change motion, color and text 
 
 <img src="./docs/images/td-projection-gallery-mobile-en-caption.svg" width="440" alt="Three real projections from the earlier TouchDesigner version: Santa-hat skulls at Shibuya Blue Cave, an indoor skull projection, and bats at Osaki Station, with the ground and surroundings visible.">
 
+**Real projection with this app (12 seconds, no audio)**
+
+<a href="https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-live-demo-12s-silent.mp4"><img src="./docs/images/halloween-projection-live-12s.jpg" width="360" alt="Two frames of real bats and skulls projected onto a wall with this app."></a>
+
+Skulls and bats projected onto a real wall using this app. [Open or save the video (MP4, about 16 MB)](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-live-demo-12s-silent.mp4). The video is separate from the application ZIP.
+
 ## Shape the scene with your keyboard
 
 <img src="docs/images/how-it-works.jpg" width="760" alt="Illustration of a standing party guest using a compact wireless keyboard, holding a drink and talking with friends while Halloween visuals are projected onto a wall.">
@@ -174,7 +180,7 @@ You are welcome to make your own modifications. I do not take on individual modi
 
 The author’s code, bat artwork and data used to reproduce movement and appearance use the **MIT license**. CDmir’s “Human Skull” 3D model uses **CC0 1.0**. See [LICENSE](LICENSE) and the [asset-specific terms](web/RIGHTS.txt).
 
-The keyboard-use and portable-setup illustrations were generated for this README. The opening projection photographs, browser captures and CDmir’s 3D model are separate materials. The projection photographs and explanatory illustrations are not included under the MIT or CC0 grants above.
+The keyboard-use and portable-setup illustrations were generated for this README. The opening projection photographs, browser captures and CDmir’s 3D model are separate materials. The projection photographs, real-projection video and its thumbnail, and explanatory illustrations are not included under the MIT or CC0 grants above.
 
 <details>
 <summary>Change the appearance or wording</summary>

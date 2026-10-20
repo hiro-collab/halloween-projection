@@ -60,3 +60,6 @@ coverage/
 
 # Actual public-release operator-console screenshot for README.
 !docs/images/operator-controls-v57-ja.png
+
+# User-approved still frames from the current app real-projection video.
+!docs/images/halloween-projection-live-12s.jpg

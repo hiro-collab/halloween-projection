@@ -10,6 +10,12 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 
 <img src="./docs/images/td-projection-gallery-mobile-ja-caption.svg" width="440" alt="旧TouchDesigner版の実投影3例。渋谷・青の洞窟のサンタ帽ドクロ、屋内でのドクロ投影例、大崎駅のコウモリ。床や周囲の風景も写っている。">
 
+**今回配布ソフトの実投影（12秒・無音）**
+
+<a href="https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-live-demo-12s-silent.mp4"><img src="./docs/images/halloween-projection-live-12s.jpg" width="360" alt="このソフトで壁にコウモリとドクロを投影した、実映像の2場面。"></a>
+
+このソフトで、ドクロとコウモリを実際の壁に投影した映像です。[動画を開く・保存する（MP4・約16MB）](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-live-demo-12s-silent.mp4)。動画は配布ZIPとは別です。
+
 ## キーボードひとつで、映像に変化を
 
 <img src="docs/images/how-it-works.jpg" width="760" alt="小型の無線キーボードを抱えてキーを押し、飲み物を持ったまま友人と話す人と、壁へのハロウィン投影を描いた使用イメージ。">
@@ -174,7 +180,7 @@ PCだけで試すときは、同じ画面に操作窓と投影窓を並べ、投
 
 作者が作成したプログラム・コウモリ画像・動きや表示を再現するためのデータは **MITライセンス**です。CDmir様のドクロの3Dモデル「Human Skull」は **CC0 1.0** です。[LICENSE](LICENSE) と [素材ごとの利用条件](web/RIGHTS.txt)をご確認ください。
 
-キーボード操作と持ち運び例は、このREADME向けに生成した説明用イラストです。冒頭の投影写真、ブラウザの画面キャプチャ、CDmir様の3Dモデルは、それぞれ別の素材です。投影写真と説明用イラストは、上記のMIT・CC0の対象には含めていません。
+キーボード操作と持ち運び例は、このREADME向けに生成した説明用イラストです。冒頭の投影写真、ブラウザの画面キャプチャ、CDmir様の3Dモデルは、それぞれ別の素材です。投影写真・実投影の動画とサムネイル・説明用イラストは、上記のMIT・CC0の対象には含めていません。
 
 <details>
 <summary>自分用に見た目や文章を変える方へ</summary>
