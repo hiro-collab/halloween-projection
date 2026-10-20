@@ -539,7 +539,7 @@
       keyboard: keyboard.status(),
       pending: pending.size,
       rendererOwners: 0,
-      version: '0.1.59-readability-cleanup'
+      version: '0.1.60-bone-whiteness'
     }),
     intent: sendIntent,
     request,

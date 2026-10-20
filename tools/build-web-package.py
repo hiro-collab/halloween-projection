@@ -6,7 +6,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / 'web'
-APP_VERSION = '0.1.59-readability-cleanup'
+APP_VERSION = '0.1.60-bone-whiteness'
 ASSETS = ['index.html', 'styles.css', 'app.js', 'offline.js', 'README.txt','console.html','console.css','console.js','usage-copy.js','stage-role.js','stage-receiver.js','performance-api.js','keyboard-performance.js','window-safety.js', 'START-HERE.html', 'GUIDE.html', 'PERFORMANCE-PLAN.html', 'guide.css', 'LICENSE.txt', 'RIGHTS.txt', 'motion-clock.js','control-response.js','a-source-blur.js','a-motion-lag.js','a-motion.js','a-actor-layout.js','a-return-motion.js','a-jaw-control.js','i18n.js','a-skull-raster.js','control-api.js','text-operators.js', 'app-control-api.js', 'control-adapters.js', 'bat-motion.js','bat-phase.js','b-motion-runtime.js', 'bat-art.js', 'bat-atlas-data.js', 'bat-fire.js', 'text-sequence.js','output-uv.js','output-operators.js','a-source-noise.js','a-fluid.js', 'a-composite.js', 'assets/owner-bat-atlas.png', 'assets/OWNER-BAT-ASSET.txt', 'projection-startup.js', 'assets/mamo-profile.jpg', 'assets/MAMO-ICON-SOURCE.txt']
 # The local-file route uses the same MIT-licensed owner image bytes, without file fetch/CORS.
 import base64
@@ -103,7 +103,7 @@ worker = worker_template.replace('__BUILD__', json.dumps(build)).replace('__HASH
 (WEB / 'sw.js').write_text(worker, encoding='utf-8', newline='\n')
 out = ROOT / 'dist'
 out.mkdir(exist_ok=True)
-dest = out / 'halloween-projection-web-v0.1.59-readability-cleanup.zip'
+dest = out / 'halloween-projection-web-v0.1.60-bone-whiteness.zip'
 names = ASSETS + ['sw.js']
 prefix = 'アプリ本体/'
 entry = (WEB / 'START-HERE.html').read_text(encoding='utf-8').replace('href="./', 'href="./' + prefix).replace('src="./', 'src="./' + prefix).encode('utf-8')
@@ -111,7 +111,7 @@ contents = {'はじめに_START-HERE.html': entry, '利用条件.txt': (ROOT / '
 contents.update({prefix + name: (WEB / name).read_bytes() for name in names})
 with zipfile.ZipFile(dest, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
     for name, raw in contents.items():
-        info = zipfile.ZipInfo(name, date_time=(2026, 10, 18, 0, 0, 0))
+        info = zipfile.ZipInfo(name, date_time=(2026, 10, 20, 0, 0, 0))
         info.compress_type = zipfile.ZIP_DEFLATED
         info.create_system = 0
         info.external_attr = 0o100644 << 16

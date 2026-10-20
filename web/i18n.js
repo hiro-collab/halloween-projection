@@ -130,8 +130,8 @@
     '押し直すたび1回': 'Release and press again',
     'キー演奏を解除（映像は続く）': 'Disable keys (video continues)',
     'いつでも': 'Any time',
-    '3段キーの使い方 / Halloween 0.1.59-readability-cleanup':
-      'Three-row key guide / Halloween 0.1.59-readability-cleanup',
+    '3段キーの使い方 / Halloween 0.1.60-bone-whiteness':
+      'Three-row key guide / Halloween 0.1.60-bone-whiteness',
     '3段の8位置で、狙った値へ': 'Three rows, eight targets each',
     '操作窓を開く': 'Open console',
     'キーボードの位置': 'Keyboard positions',
@@ -344,7 +344,7 @@
     '保存した設定とリセット': 'Saved appearance and reset',
     'Windows・Chrome向け。プロジェクターの接続と画面配置は、Windowsで設定してください。':
       'For Windows and Chrome. Set up the projector connection and display arrangement in Windows.',
-    'Windows・Chrome向け / 0.1.59': 'For Windows and Chrome / 0.1.59',
+    'Windows・Chrome向け / 0.1.60': 'For Windows and Chrome / 0.1.60',
     '羽ばたくコウモリ': 'Animated bats',
     'CDmir / Human Skull（CC0）': 'CDmir / Human Skull (CC0)',
     '動きを止める・映像を消す': 'Pause or blank the image',

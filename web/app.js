@@ -2218,7 +2218,7 @@
     textSequence: textSequence.status(settings.text),
     output: outputOperators.status(),
     outputResources: HalloweenOutput.diagnostics(),
-    version: '0.1.59-readability-cleanup',
+    version: '0.1.60-bone-whiteness',
     renderer:
       (settings.effect === 'bats' &&
         active?.probe?.().composite?.mode === 'source-circle-candidate') ||

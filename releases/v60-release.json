@@ -1,0 +1,111 @@
+{
+  "version": "0.1.60-bone-whiteness",
+  "tag": "v0.1.60",
+  "build": "0.1.60-bone-whiteness-bfd157937534",
+  "zip": "halloween-projection-web-v0.1.60-bone-whiteness.zip",
+  "bytes": 583345,
+  "sha256": "ea97aaa5b1e8d8cc42ec4b8648c6b81e6844cb700bc6effbeb20072bfa2b16ba",
+  "entryCount": 54,
+  "offlineAssetCount": 51,
+  "sourceCandidate": "6f7b7da644c950cdf502e302bf6ea59199c114eb",
+  "previousMain": "883451388a17cae2edef81661ee9cb6a9458f27c",
+  "candidateMerge": "a8548a2d8d889468b7cd320d85622afd0e970228",
+  "scope": "Bone-whiteness slider and O25-point shortcut; release metadata and docs. No unrelated security implementation, model or further optimization changes.",
+  "candidateAppDifferences": {
+    "versionMetadataOnly": [
+      "index.html",
+      "app.js",
+      "README.txt",
+      "console.html",
+      "console.js",
+      "START-HERE.html",
+      "GUIDE.html",
+      "PERFORMANCE-PLAN.html",
+      "i18n.js"
+    ],
+    "worker": "Regenerated version and51asset hashes; worker template unchanged"
+  },
+  "checks": {
+    "unitSuites": 18,
+    "browserChecks": 87,
+    "browserCases": [
+      {
+        "name": "packaged-entry",
+        "passed": 7,
+        "failed": 0,
+        "checks": [
+          {
+            "name": "root entry loads current guide",
+            "ok": true
+          },
+          {
+            "name": "root link reaches packaged console",
+            "ok": true
+          },
+          {
+            "name": "owned stage handshake connected",
+            "ok": true
+          },
+          {
+            "name": "release version ready and drawing",
+            "ok": true
+          },
+          {
+            "name": "shared GPU path retained",
+            "ok": true
+          },
+          {
+            "name": "O cycles25,50,75,100,0",
+            "ok": true
+          },
+          {
+            "name": "End closes only owned stage without errors/network",
+            "ok": true
+          }
+        ],
+        "errors": [],
+        "requests": []
+      },
+      {
+        "name": "bone-whiteness-key",
+        "passed": 27,
+        "failed": 0
+      },
+      {
+        "name": "keyboard-lifecycle",
+        "passed": 53,
+        "failed": 0
+      }
+    ],
+    "zipEntries": 54,
+    "appFilesMatchingSource": 52,
+    "offlineHashesVerified": 51,
+    "crcVerified": true,
+    "failed": 0
+  },
+  "notebookConfirmation": {
+    "source": "user report",
+    "date": "2026-10-20T11:20:00+09:00",
+    "summary": "Candidate runs smoothly on notebook; user explicitly approved merge.",
+    "agentNotebookMeasurement": false,
+    "notebookHardwareAndFPSMeasured": false
+  },
+  "performance": {
+    "desktop": "i7-12700KF/RTX3070,Chrome155,internal1280x720/DPR1",
+    "gpuSpanP95PercentIncrease": 10.2,
+    "gpuSpanP95IncreaseMs": [
+      0.252,
+      0.395
+    ],
+    "newPasses": 0,
+    "newRenderTargets": 0,
+    "commonIntermittentGetErrorStallRetained": true
+  },
+  "oldReleasesRetained": [
+    "v0.1.59",
+    "v0.1.58",
+    "v0.1.57",
+    "v0.1.56",
+    "v0.1.55"
+  ]
+}
