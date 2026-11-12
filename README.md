@@ -194,3 +194,7 @@ ZIPには編集可能なHTML・CSS・JavaScriptが入っています。`アプ�
 GitHubの「Code → Download ZIP」はソース一式です。配布用ZIPとは構成が異なりますが、展開して一番上の `START-HERE.html` を開くと試せます。
 
 </details>
+
+## 制作過程とノウハウ
+
+[目的・課題・試行・結果と技の解説](docs/CREATIVE_PROCESS.md)を記録しています。実装済みの内容と未検証・今後の実験を区別しています。
