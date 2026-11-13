@@ -6,6 +6,43 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 
 **[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-web-v0.1.60-bone-whiteness.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
 
+<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-web-v0.1.60-bone-whiteness.zip -->
+
+## まずはここから
+
+これは**動画プレーヤーではなく、動き・色・文字をその場で操るブラウザーアプリ**です。イベントやパーティーの壁・床への投影に使えます。PCだけでも試せます。
+
+| 知りたいこと | 読む場所 |
+| --- | --- |
+| すぐ起動したい | 下の「最短で試す」 |
+| プロジェクターへ出したい | [機材と接続手順](#使ってみる) |
+| どのキーを押すのか | [キー操作一覧](#キーボードで操作する) |
+| 仕組みを学びたい・改変したい | [制作ノウハウ](docs/CREATIVE_PROCESS.md) / [開発ガイド](docs/DEVELOPMENT.md) |
+
+### 最短で試す（PCだけでも可）
+
+1. 上の**完成ZIP**をダウンロードし、右クリック→「すべて展開」します。フォルダー全体を一緒に保持します。
+2. `はじめに_START-HERE.html` をChromeで開き、「映像をはじめる」→「投影窓を開く」。
+3. 開いた投影窓で「ウィンドウで始める」を押します。PC側の操作画面へ戻り、「演奏開始」を押します。
+4. **Zでドクロ／コウモリ、1〜8で動き、Q〜Iで色**を変えてみてください。止めるときは **Space**。操作中は操作画面を選んだままにします。
+
+Windows・Chrome向けです。通常利用にPython・Node.jsやコマンド入力は不要。展開済みの一式はオフラインでも使えます。GitHubの「Code → Download ZIP」で取得した**ソース版**は入口名が `START-HERE.html` なので、配布ZIPと取り違えないでください。
+
+### 実際の画面
+
+**投影する映像**
+
+<img src="docs/images/halloween-preview.jpg" width="600" alt="ブラウザー版の投影画面。3体のドクロが違う向きへ回転している。">
+
+**手元の操作画面**
+
+<img src="docs/images/operator-controls-v57-ja.png" width="440" alt="v0.1.57の実際の操作画面。演奏開始ボタン、3段のキー、動き・色・文字サイズのスライダー。">
+
+上は既存のブラウザー実画面、下は **v0.1.57** の操作画面です。説明用イラストではありません。現在のv0.1.60では **Oキーによる骨の白さ調整**などが追加されており、画像と一部表示が異なります。キー操作は下の一覧を参照してください。
+
+<details>
+<summary>実際の壁・床への投影例を見る</summary>
+
 *写真は、TouchDesigner版を場面に合わせてアレンジして投影した例です。このソフトでも同じように、ドクロやコウモリの映像を周囲の壁や床へ投影して楽しめます。*
 
 <img src="./docs/images/td-projection-gallery-mobile-ja-caption.svg" width="440" alt="旧TouchDesigner版の実投影3例。渋谷・青の洞窟のサンタ帽ドクロ、屋内でのドクロ投影例、大崎駅のコウモリ。床や周囲の風景も写っている。">
@@ -15,6 +52,8 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 <a href="https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-live-demo-12s-silent.mp4"><img src="./docs/images/halloween-projection-live-12s.jpg" width="360" alt="このソフトで壁にコウモリとドクロを投影した、実映像の2場面。"></a>
 
 このソフトで、ドクロとコウモリを実際の壁に投影した映像です。[動画を開く・保存する（MP4・約16MB）](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-live-demo-12s-silent.mp4)。動画は配布ZIPとは別です。
+
+</details>
 
 ## キーボードひとつで、映像に変化を
 
@@ -32,9 +71,7 @@ PCとプロジェクターで、壁や床にドクロやコウモリを投影。
 
 ### ドクロ：それぞれ違う向きへ回転
 
-![動きを大きくしたブラウザ実画面。3体のドクロが正面寄り、横、斜めへ向いている。](docs/images/halloween-preview.jpg)
-
-動きを大きめにした実画面です。3体がそれぞれ違う向きに回転し、横顔や斜めからの形が見えます。
+[冒頭の実画面](#実際の画面)のように、3体がそれぞれ違う向きに回転し、横顔や斜めからの形が見えます。
 
 ドクロには、CDmir様の3Dモデル「[Human Skull](https://opengameart.org/content/human-skull-0)」を使用しています。公開してくださった作者様に感謝します。
 
@@ -77,32 +114,7 @@ PCだけで試すときは、同じ画面に操作窓と投影窓を並べ、投
 
 **電源とふた：** 演奏中にスリープや画面消灯が起きないか、Windowsの電源設定を事前に確認してください。ふたを閉じるとスリープや表示の切替が起きる場合があります。閉じたままの運用は機種・電源設定・表示構成により異なり、このアプリでは未検証で、動作を保証していません。
 
-### こんな画面で操作します
 
-<img src="docs/images/operator-controls-v57-ja.png" width="760" alt="公開v0.1.57の実際の操作画面。演奏開始・解除・一時停止のボタン、キーボード配列、動きの激しさ・色相・文字サイズの選択とスライダー。">
-
-*実際の操作画面（v0.1.57）のキー操作・主要スライダー部分です。投影窓の接続前の状態を写しています。画像を開くと拡大できます。*
-
-<details>
-<summary>ダウンロードと、投影を始める3手順</summary>
-
-**[完成ZIPをダウンロード](https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-web-v0.1.60-bone-whiteness.zip)** · Windows・Chrome向け。「すべて展開」→ `はじめに_START-HERE.html` をChromeで開きます。
-
-<!-- RELEASE_DOWNLOAD_URL: https://github.com/hiro-collab/halloween-projection/releases/download/v0.1.60/halloween-projection-web-v0.1.60-bone-whiteness.zip -->
-
-### 3手順で投影する
-
-動作確認環境は **Windows・Chrome**。PCとプロジェクターの接続・画面配置は、先にWindows側で設定してください。追加ソフトやコマンド入力は不要です。
-
-1. **ZIPをすべて展開する。** ZIPを右クリックして「すべて展開」。フォルダー全体を一緒に保持します。
-2. **はじめにHTMLを開く。** 展開先の `はじめに_START-HERE.html` をChromeで開き、「映像をはじめる」を押します。
-3. **投影を開始する。** 「投影窓を開く」→その窓を投影先へ移動→「ウィンドウで始める」または「全画面で始める」。操作画面へ戻って文字を準備し、「演奏開始」を押します。
-
-操作画面と投影窓の両方を開いたまま使います。展開した一式があれば、ネット接続なしでも動作します。
-
-投影窓の準備中は、作者のアイコンと **mamo presents** を黒背景に表示します。準備が速い環境では一瞬、または表示されない場合があります。表示のための待ち時間は加えていません。
-
-</details>
 
 ## キーボードで操作する
 
